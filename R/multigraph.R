@@ -5,7 +5,7 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     att = NULL, lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 
         1, 1), main = NULL, cex.main, bg, mar, pos, asp, lwd, 
     pch, lty, ecol, vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, 
-    ...) 
+    col, ...) 
 {
     if (isTRUE(is.array(net)) == FALSE) 
         stop("\"net\" should be an array.")
@@ -201,6 +201,7 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     }
     if (missing(vcol) == TRUE) {
         vcol <- grDevices::gray.colors(nclu)
+        ifelse(missing(col) == TRUE, NA, vcol <- col)
     }
     else {
         if (isTRUE(length(vcol) == 1L) == TRUE) {
@@ -587,8 +588,8 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
                 }
                 else {
                   neta <- multiplex::zbind(net, att)
-                  clss <- multiplex::expos(rel.sys(neta, att = (dim(net)[3] + 
-                    1L):dim(neta)[3]), classes = TRUE)$Classes
+                  clss <- multiplex::expos(multiplex::rel.sys(neta, 
+                    att = (dim(net)[3] + 1L):dim(neta)[3]), classes = TRUE)$Classes
                   attr(clss, "names")[which(attr(clss, "names") == 
                     "ALL")] <- multiplex::jnt(dimnames(att)[[3]], 
                     prsep = "")
