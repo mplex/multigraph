@@ -5,12 +5,13 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     main = NULL, cex.main, bg, mar, cex, pos, lwd, lty, ecol, 
     vcol, vcol0, asp, directed, collRecip, seed = NULL, maxiter, 
     bwd, clu, pch, tcol, hds, vedist, rot, mirrorX, mirrorY, 
-    ...) 
+    col, ...) 
 {
+    net <- multiplex::dichot(net, c = 1L)
     ifelse(missing(directed) == TRUE, directed <- FALSE, NA)
     ifelse(missing(collRecip) == TRUE, collRecip <- TRUE, NA)
     ifelse(missing(tcol) == TRUE, tcol <- c(1, 1), NA)
-    ifelse(missing(pch) == TRUE, pch <- 1:0, NA)
+    ifelse(missing(pch) == TRUE, pch <- c(19, 15), NA)
     if (missing(clu)) {
         ifelse(isTRUE(length(pch) > 1L) == TRUE, pch <- pch[1:2], 
             pch <- rep(pch, 2))
@@ -254,8 +255,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     if (missing(vcol) == TRUE) {
         ifelse(isTRUE(flgclu == TRUE) == TRUE, vcol <- grDevices::gray.colors(nclu), 
             vcol <- rep(1, 2))
+        ifelse(missing(col) == TRUE, NA, vcol <- col)
     }
     else if (isTRUE(length(vcol) == 1L) == TRUE) {
+        ifelse(isTRUE(vcol == 0) == TRUE, vcol <- "transparent", 
+            NA)
         vcol <- rep(vcol, n)
     }
     if (isTRUE(length(vcol) == nclu) == TRUE) {
@@ -416,7 +420,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
                   (rat))
                 fds <- 120L
             } else {
-                fds <- 70L
+                fds <- 60L
             }
             are <- 30L + (lwd * 10L)
         }, bip3 = {
