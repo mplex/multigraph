@@ -657,9 +657,9 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             xx <- seq(0L, 90L, 1L)
             yy <- c(seq(2L, 1L, length.out = 46), seq(1L, 0.5, 
                 length.out = 46)[2:46])
-            ifelse(isTRUE(gx > 0) == TRUE, asp <- stats::predict(nls(yy ~ 
+            ifelse(isTRUE(gx > 0) == TRUE, asp <- stats::predict(stats::nls(yy ~ 
                 (a * exp(-b * xx)), start = list(a = 2L, b = (2L * 
-                log(2L)/2L))))[gxx], asp <- stats::predict(nls(yy ~ 
+                log(2L)/2L))))[gxx], asp <- stats::predict(stats::nls(yy ~ 
                 (a * exp(-b * xx)), start = list(a = 2L, b = (2L * 
                 log(2L)/2L))))[1])
             if (isTRUE(gxx > 45) == TRUE && isTRUE(flgpos == 
