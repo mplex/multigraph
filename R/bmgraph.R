@@ -365,11 +365,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             ifelse(missing(maxiter) == TRUE, maxiter <- 99L, 
                 NA)
             if (missing(seed) == TRUE) {
-                cds <- stss(as.matrix(mnplx(bmnet)), seed = set.seed(NULL), 
-                  maxiter = maxiter)
+                cds <- stss(as.matrix(multiplex::mnplx(bmnet)), 
+                  seed = set.seed(NULL), maxiter = maxiter)
             } else {
-                cds <- stss(as.matrix(mnplx(bmnet)), seed = seed, 
-                  maxiter = maxiter)
+                cds <- stss(as.matrix(multiplex::mnplx(bmnet)), 
+                  seed = seed, maxiter = maxiter)
             }
             if (missing(rot) == FALSE) {
                 cds <- xyrt(cds, as.numeric(rot))
