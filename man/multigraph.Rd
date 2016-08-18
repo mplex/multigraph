@@ -8,7 +8,7 @@ Create multigraph
 A function to create and manipulate multigraphs with different layouts
 }
 \usage{
-multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE, collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), main = NULL, cex.main, bg, mar, pos, asp, lwd, pch, lty, ecol, vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, ...)
+multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE, collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), main = NULL, cex.main, bg, mar, pos, asp, lwd, pch, lty, ecol, vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
