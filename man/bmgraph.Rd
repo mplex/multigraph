@@ -8,7 +8,7 @@ Create bipartite multigraph
 A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
-bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"), coord = NULL, tcex = NULL, alpha = c(1, 1, 1), showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, directed, collRecip, seed = NULL, maxiter, bwd, clu, pch, tcol, hds, vedist, rot, mirrorX, mirrorY, ...)
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"), coord = NULL, tcex = NULL, alpha = c(1, 1, 1), showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, directed, collRecip, seed = NULL, maxiter, bwd, clu, pch, tcol, hds, vedist, rot, mirrorX, mirrorY, col, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
