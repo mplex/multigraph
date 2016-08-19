@@ -1,128 +1,140 @@
 \name{multigraph}
 \alias{multigraph}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Create multigraph
+Multigraph
 }
 \description{
 A function to create and manipulate multigraphs with different layouts
 }
 \usage{
-multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE, collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), main = NULL, cex.main, bg, mar, pos, asp, lwd, pch, lty, ecol, vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col,...)
+multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE, 
+           collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, 
+           cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, 
+           lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
+           main = NULL, cex.main, bg, mar, pos, asp, lwd, pch, lty, ecol, vcol, 
+           vcol0, hds, vedist, rot, mirrorX, mirrorY, col, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
-%%     ~~Describe \code{net} here~~
+	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
 }
   \item{layout}{
-%%     ~~Describe \code{layout} here~~
+	the layout for the visualization:
+
+       \code{circ} circular
+
+       \code{stress} ``stress majorization'' force-directed algorithm 
+
+       \code{rand} random
 }
   \item{directed}{
-%%     ~~Describe \code{directed} here~~
+	(logical) whether or not graph is directed or unidrected
 }
   \item{collRecip}{
-%%     ~~Describe \code{collRecip} here~~
+	(logical) whether or not collapse reciprocated edges in the unidrected graph
 }
   \item{coord}{
-%%     ~~Describe \code{coord} here~~
+	(optional) data frame with the coordinates of the vertices. If given \code{layout} is ignored
 }
   \item{tcol}{
-%%     ~~Describe \code{tcol} here~~
+	(optional) the color of the vertices' labels
 }
   \item{bwd}{
-%%     ~~Describe \code{bwd} here~~
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size)
 }
   \item{clu}{
-%%     ~~Describe \code{clu} here~~
+	(optional) the clustering of the vertices (see \emph{details})
 }
   \item{cex}{
-%%     ~~Describe \code{cex} here~~
+	(optional) the size of the vertices
 }
   \item{tcex}{
-%%     ~~Describe \code{tcex} here~~
+	size of the vertex labels. If \code{NULL}, it depends on the value of \code{cex}
 }
   \item{showLbs}{
-%%     ~~Describe \code{showLbs} here~~
+	(logical) whether or not show the vertex labels
 }
   \item{showAtts}{
-%%     ~~Describe \code{showAtts} here~~
+	(logical) whether or not show the vertex attribute labels
 }
   \item{att}{
-%%     ~~Describe \code{att} here~~
+	(optional) a vector or an array representing the vertices' attributes
 }
   \item{lbat}{
-%%     ~~Describe \code{lbat} here~~
+	(optional) the labels for the vertices' attributes
 }
   \item{seed}{
-%%     ~~Describe \code{seed} here~~
+	(optional) the random seed number for the vertices' initial coordinates. Only for \code{stress} and \code{rand}
 }
   \item{maxiter}{
-%%     ~~Describe \code{maxiter} here~~
+	(optional) the maximum number of iterations in the stress majorization (default \code{100})
 }
   \item{alpha}{
-%%     ~~Describe \code{alpha} here~~
+	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{main}{
-%%     ~~Describe \code{main} here~~
+	(optional) title of the plot
 }
   \item{cex.main}{
-%%     ~~Describe \code{cex.main} here~~
+	(optional) the size of the plot's title
 }
   \item{bg}{
-%%     ~~Describe \code{bg} here~~
+	(optional) the background color of the plot
 }
   \item{mar}{
-%%     ~~Describe \code{mar} here~~
+	(optional) the margins of the plot
 }
   \item{pos}{
-%%     ~~Describe \code{pos} here~~
+	(optional) the position of the vertices' labels (\code{0} means ``in the middle of the vertex'')
 }
   \item{asp}{
-%%     ~~Describe \code{asp} here~~
+	(optional) the aspect ratio of the plot
 }
   \item{lwd}{
-%%     ~~Describe \code{lwd} here~~
+	(optional) the width of the edges
 }
   \item{pch}{
-%%     ~~Describe \code{pch} here~~
+	(optional) the symbol representing the vertices
 }
   \item{lty}{
-%%     ~~Describe \code{lty} here~~
+	(optional) the shape of the edges
 }
   \item{ecol}{
-%%     ~~Describe \code{ecol} here~~
+	(optional) the color of the edges
 }
   \item{vcol}{
-%%     ~~Describe \code{vcol} here~~
+	(optional) the color of the vertices
 }
   \item{vcol0}{
-%%     ~~Describe \code{vcol0} here~~
+	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{hds}{
-%%     ~~Describe \code{hds} here~~
+	(optional, experimental) arcs' head scale
 }
   \item{vedist}{
-%%     ~~Describe \code{vedist} here~~
+	(optional, experimental) a real with vertex - edge distance
 }
   \item{rot}{
-%%     ~~Describe \code{rot} here~~
+	(optional) rotation of the graph in degrees
 }
   \item{mirrorX}{
-%%     ~~Describe \code{mirrorX} here~~
+	(optional) mirror of the X axis
 }
   \item{mirrorY}{
-%%     ~~Describe \code{mirrorY} here~~
+	(optional) mirror of the Y axis
+}
+  \item{col}{
+	(optional) same as \code{vcol}
 }
   \item{\dots}{
-Additional items
+	Additional items
 }
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+Multigraph are graph having parallel edges depicting different types of relations in a network. By default a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For a better visualization, undirected multigraphs automatically collapse the reciprocal ties, and there as an argument to prevent this to happen. It is possible to combine the symbols and color of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
+}
 \value{
-A multigraph
+A plot of the network as a multigraph.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -139,10 +151,17 @@ Antonio Rivero Ostoic
 \seealso{
 \code{\link{bmgraph}}
 }
-%\examples{
-%
-%}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+\examples{
+## Create the data: two binary relations among three elements
+arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
+
+## Plot the multigraph of this network
+multigraph(arr)
+
+## Now with a force directed algorithm
+multigraph(arr, layout = "stress")
+
+}
 \keyword{ graphics }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
