@@ -219,6 +219,7 @@ multigraph(floflies, directed = FALSE, layout = "stress", seed = 1, cex = flofli
 ![stress layout of `floflies` with clustering](figs/flofliesatt-stress2.png)
 [vector image](figs/flofliesatt-stress2.pdf)
 
+Hence colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
 
 *Beware that alpha transparency renders differently according to the device used by* **`grDevices`**
 
