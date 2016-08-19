@@ -189,7 +189,7 @@ STROZZI      146      74    29
 TORNABUON     48       0     7
 ```
 
-That’s much better now.
+That's much better now.
 
 
 <br /> 
