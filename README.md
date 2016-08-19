@@ -23,7 +23,7 @@ We work with Padgett's Florentine Families data set, which is publicly available
 ```{r }
 ### Read the Padgett Florentine Families data set as a Ucinet DL file
 ### from a public repository and storage it as an object
-floflies <- read.dl(file="http://moreno.ss.uci.edu/padgett.dat")
+floflies <- read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
 
 
 ### take a look at this data
@@ -134,7 +134,7 @@ In a similar way than before, we obtain some actor attributes of the Florentine 
 
 
 ```{r }
-flofliesatt <- read.dl(file="http://moreno.ss.uci.edu/padgw.dat")
+flofliesatt <- read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
 ```
 
 and we take a look at the ` flofliesatt` that storages this type of information
