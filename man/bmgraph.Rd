@@ -1,128 +1,149 @@
 \name{bmgraph}
 \alias{bmgraph}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Create bipartite multigraph
+Bipartite multigraph
 }
 \description{
 A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
-bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"), coord = NULL, tcex = NULL, alpha = c(1, 1, 1), showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, directed, collRecip, seed = NULL, maxiter, bwd, clu, pch, tcol, hds, vedist, rot, mirrorX, mirrorY, col, ...)
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"), 
+        coord = NULL, tcex = NULL, alpha = c(1, 1, 1), showLbs = TRUE, 
+        showAtts = TRUE, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, 
+        cex, pos, lwd, lty, ecol, vcol, vcol0, asp, directed, collRecip, 
+        seed = NULL, maxiter, bwd, clu, pch, tcol, hds, vedist, rot, 
+        mirrorX, mirrorY, col, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
-%%     ~~Describe \code{net} here~~
+	data frame or array representing the two-mode network (see \emph{details})
 }
   \item{layout}{
-%%     ~~Describe \code{layout} here~~
+	the layout for the visualization:
+
+       \code{bip} (default) bipartite graph
+
+       \code{bip3} bipartite graph with three columns
+
+       \code{bip3e} bipartite graph with three columns for events
+
+       \code{bip4} ``square'' bipartite graph
+
+       \code{stress} ``stress majorization'' force-directed algorithm 
+
+       \code{rand} random
+
+       \code{circ} circular
+
 }
   \item{coord}{
-%%     ~~Describe \code{coord} here~~
+	(optional) data frame with the coordinates of the vertices.  If given \code{layout} is ignored
 }
   \item{tcex}{
-%%     ~~Describe \code{tcex} here~~
+	size of the vertex labels. If \code{NULL}, it depends on the value of \code{cex}
 }
   \item{alpha}{
-%%     ~~Describe \code{alpha} here~~
+	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{showLbs}{
-%%     ~~Describe \code{showLbs} here~~
+	(logical) whether or not show the vertex labels
 }
   \item{showAtts}{
-%%     ~~Describe \code{showAtts} here~~
+	(logical) whether or not show the vertex attribute labels
 }
   \item{att}{
-%%     ~~Describe \code{att} here~~
+	(optional) a vector or an array representing the vertices' attributes
 }
   \item{lbat}{
-%%     ~~Describe \code{lbat} here~~
+	(optional) the labels for the vertices' attributes
 }
   \item{main}{
-%%     ~~Describe \code{main} here~~
+	(optional) title of the plot
 }
   \item{cex.main}{
-%%     ~~Describe \code{cex.main} here~~
+	(optional) the size of the plot's title
 }
   \item{bg}{
-%%     ~~Describe \code{bg} here~~
+	(optional) the background color of the plot
 }
   \item{mar}{
-%%     ~~Describe \code{mar} here~~
+	(optional) the margins of the plot
 }
   \item{cex}{
-%%     ~~Describe \code{cex} here~~
+	(optional) the size of the vertices
 }
   \item{pos}{
-%%     ~~Describe \code{pos} here~~
+	(optional) the position of the vertices' labels (\code{0} means ``in the middle of the vertex'')
 }
   \item{lwd}{
-%%     ~~Describe \code{lwd} here~~
+	(optional) the width of the edges
 }
   \item{lty}{
-%%     ~~Describe \code{lty} here~~
+	(optional) the shape of the edges
 }
   \item{ecol}{
-%%     ~~Describe \code{ecol} here~~
+	(optional) the color of the edges
 }
   \item{vcol}{
-%%     ~~Describe \code{vcol} here~~
+	(optional) the color of the vertices
 }
   \item{vcol0}{
-%%     ~~Describe \code{vcol0} here~~
+	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{asp}{
-%%     ~~Describe \code{asp} here~~
+	(optional) the aspect ratio of the plot
 }
   \item{directed}{
-%%     ~~Describe \code{directed} here~~
+	(optional, logical) whether or not graph is unidrected (default)
 }
   \item{collRecip}{
-%%     ~~Describe \code{collRecip} here~~
+	(optional, logical) whether or not collapse reciprocated edges in the unidrected graph (default \code{TRUE})
 }
   \item{seed}{
-%%     ~~Describe \code{seed} here~~
+	(optional) the random seed number for the vertices' initial coordinates. Ignored for other than \code{stress} or \code{rand}
 }
   \item{maxiter}{
-%%     ~~Describe \code{maxiter} here~~
+	(optional) the maximum number of iterations in the stress majorization (default \code{100})
 }
   \item{bwd}{
-%%     ~~Describe \code{bwd} here~~
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size)
 }
   \item{clu}{
-%%     ~~Describe \code{clu} here~~
+	(optional) the clustering of the vertices (see \emph{details})
 }
   \item{pch}{
-%%     ~~Describe \code{pch} here~~
+	(optional) the symbol representing the vertices
 }
   \item{tcol}{
-%%     ~~Describe \code{tcol} here~~
+	(optional) the color of the vertices' labels
 }
   \item{hds}{
-%%     ~~Describe \code{hds} here~~
+	(optional, experimental) arcs' head scale
 }
   \item{vedist}{
-%%     ~~Describe \code{vedist} here~~
+	(optional, experimental) a real with vertex - edge distance
 }
   \item{rot}{
-%%     ~~Describe \code{rot} here~~
+	(optional) rotation of the graph in degrees
 }
   \item{mirrorX}{
-%%     ~~Describe \code{mirrorX} here~~
+	(optional) mirror of the X axis
 }
   \item{mirrorY}{
-%%     ~~Describe \code{mirrorY} here~~
+	(optional) mirror of the Y axis
+}
+  \item{col}{
+	(optional) same as \code{vcol}
 }
   \item{\dots}{
-Additional items
+	Additional items
 }
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three dimensional arrays where each level corresponds to a particular type of tie, and thus the bipartite graphs in this case will be depicted with parallel edges. Besides, it is possible to obtain a graph of the bipartite network using the binomial approach to two-mode data, and plot it with a forced directed algorithm.
+}
 \value{
-A bipartite multigraph
+A plot of the two-mode networks as bipartite graph or multigraph
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -139,10 +160,14 @@ Antonio Rivero Ostoic
 \seealso{
 \code{\link{multigraph}}
 }
-%\examples{
-%
-%}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+\examples{
+## Create the data: two binary relations among three elements
+arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
+
+## Plot this network as bipartite graph
+bmgraph(arr)
+
+}
 \keyword{ graphics }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
