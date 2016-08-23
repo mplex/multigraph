@@ -1012,4 +1012,5 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     }
     graphics::par(mar = opm)
     graphics::par(bg = obg)
+    x <- NULL; rm(x)
 }
