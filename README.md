@@ -1,4 +1,6 @@
+[![](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph)
 
+<br />
 
 ### **`multigraph`**: Plot and Manipulate Multigraphs in R
 
