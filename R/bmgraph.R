@@ -503,7 +503,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             Evt1 <- cbind(rep(1, ceiling(mm/2)), (evt1 * 0.85) + 
                 0.075)
             nds <- as.data.frame(rbind(Act1, Act2, Evt1, Evt2))
-            nds[which(is.nan(nds))] <- 0.5
+            nds[which(is.na(nds))] <- 0.5
             nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
             if (missing(rot) == FALSE) {
                 nds <- as.data.frame(xyrt(nds, as.numeric(rot)))
