@@ -16,6 +16,12 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
         ifelse(isTRUE(length(pch) > 1L) == TRUE, pch <- pch[1:2], 
             pch <- rep(pch, 2))
     }
+    ifelse(isTRUE(dim(net)[1] == 1L) == TRUE && ((match.arg(layout) == 
+        "bip3") | (match.arg(layout) == "bip4")), layout <- "bip", 
+        NA)
+    ifelse(isTRUE(dim(net)[2] == 1L) == TRUE && ((match.arg(layout) == 
+        "bip3e") | (match.arg(layout) == "bip4")), layout <- "bip", 
+        NA)
     nn <- dim(net)[1]
     mm <- dim(net)[2]
     if (is.na(dim(net)[3]) == TRUE) {
@@ -402,6 +408,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             Act <- cbind(rep(0, nrow(net)), act)
             Evt <- cbind(rep(1, ncol(net)), evt)
             nds <- rbind(Act, Evt)
+            nds[which(is.nan(nds))] <- 0.5
             nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
             rownames(nds) <- lbs
             if (missing(rot) == FALSE) {
@@ -431,6 +438,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             Act2 <- cbind(rep(2, floor(nrow(net)/2)), act2)
             Evt <- cbind(rep(1, ncol(net)), evt)
             nds <- rbind(Act1, Act2, Evt)
+            nds[which(is.nan(nds))] <- 0.5
             nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
             rownames(nds) <- lbs
             if (missing(rot) == FALSE) {
@@ -460,6 +468,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             Evt1 <- cbind(rep(0, ceiling(ncol(net)/2)), evt1)
             Evt2 <- cbind(rep(2, floor(ncol(net)/2)), evt2)
             nds <- rbind(Act, Evt1, Evt2)
+            nds[which(is.nan(nds))] <- 0.5
             nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
             rownames(nds) <- lbs
             if (missing(rot) == FALSE) {
@@ -494,6 +503,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             Evt1 <- cbind(rep(1, ceiling(mm/2)), (evt1 * 0.85) + 
                 0.075)
             nds <- as.data.frame(rbind(Act1, Act2, Evt1, Evt2))
+            nds[which(is.nan(nds))] <- 0.5
             nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
             if (missing(rot) == FALSE) {
                 nds <- as.data.frame(xyrt(nds, as.numeric(rot)))
@@ -1012,5 +1022,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     }
     graphics::par(mar = opm)
     graphics::par(bg = obg)
-    x <- NULL; rm(x)
+    x <- NULL
+    rm(x)
 }
