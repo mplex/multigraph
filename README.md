@@ -3,10 +3,11 @@
 <br />
 
 ### **`multigraph`**: Plot and Manipulate Multigraphs in R
+#### Author: Antonio Rivero Ostoic (@mplex)
 
 <br />
 
-When you load the **`multigraph`** package then **`multiplex`** is automatically invoked
+When you load the **`multigraph`** package then **`multiplex`** is automatically invoked.
 
 ```{r }
 library("multigraph")
@@ -15,7 +16,7 @@ Loading required package: multiplex
 
 <br />
 
-### Example: Florentine Families data set
+### Multigraph: Florentine Families data set
 
 We work with Padgett's Florentine Families data set, which is publicly available as a Ucinet DL file format. We use function `read.dl` of the **`multiplex`** package to retrieve this data with the **R** console.
 
@@ -25,6 +26,7 @@ We work with Padgett's Florentine Families data set, which is publicly available
 ```{r }
 ### Read the Padgett Florentine Families data set as a Ucinet DL file
 ### from a public repository and storage it as an object
+
 floflies <- read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
 
 
@@ -79,14 +81,14 @@ TORNABUON         0       0         0        0         0      0        0        
 <br /> 
 
 
-## Ploting the Multigraph
+### Ploting the Multigraph
 
 Now we plot this network with the `multigraph` function:
 
 ```{r }
 multigraph(floflies)
 ```
-![Default layout of `floflies`](figs/floflies.png)
+![Default layout of `multigraph`](figs/floflies.png)
 
 
 <br /> 
@@ -107,7 +109,7 @@ Besides the circular layout, another possibility is to apply a force-directed la
 multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
            ecol = 1, lwd = 2, bwd = .5)
 ```
-![stress layout of `floflies`](figs/floflies-stress.png)
+![stress layout of `multigraph`](figs/floflies-stress.png)
 [vector image](figs/floflies-stress.pdf)
 
 <br />
@@ -118,12 +120,13 @@ multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tce
 multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
            ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
 ```
-![stress layout of `floflies` different shapes](figs/floflies-stress2.png)
+![stress layout of `multigraph` different shapes](figs/floflies-stress2.png)
 [vector image](figs/floflies-stress2.pdf)
 
 <br />
 
-Note that when the graph is depicted as *undirected* then the reciprocal ties by default are collapsed, and you can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package, and other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the vertices labels, or `ecol` and `vcol` for the color of edges and vertices to set the shape and color of both the vertices and the edges in the multigraph are complementary. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the vertices.
+Note that when the graph is depicted as *undirected* then the reciprocal ties by default are collapsed, and you can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of edges and vertices respectively are complementary in `**multigraph**`. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+
 
 <br /> 
 <br /> 
@@ -204,7 +207,7 @@ The following code serves to depict this network in a way that the size of the v
 multigraph(floflies, directed = FALSE, layout = "stress", seed = 1, cex = flofliesatt[,1],
            tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 ```
-![stress layout of `floflies`](figs/flofliesatt-stress.png)
+![stress layout of `multigraph` with attributes](figs/flofliesatt-stress.png)
 [vector image](figs/flofliesatt-stress.pdf)
 
 
@@ -218,10 +221,10 @@ multigraph(floflies, directed = FALSE, layout = "stress", seed = 1, cex = flofli
            pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
            clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
 ```
-![stress layout of `floflies` with clustering](figs/flofliesatt-stress2.png)
+![stress layout of `multigraph` with clustering](figs/flofliesatt-stress2.png)
 [vector image](figs/flofliesatt-stress2.pdf)
 
-Hence colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
+Hence, colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
 
 *Beware that alpha transparency renders differently according to the device used by* **`grDevices`**
 
@@ -231,9 +234,113 @@ Hence colors can be established in different ways, and the `alpha` vector argume
 <br /> 
 
 
-### Bipartite Graphs
+### Bipartite Graph: Southern Women data set
 
-TBD
+Support for the visualization of two-mode networks is also given by `**multigraph**` and we work with the Southern Women classic data set to illustrate some of the layout options with this package.
+
+```{r }
+### Read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
+### data set from a public repository and storage it as an object
+
+swomen <- read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
+
+### take a look...
+swomen
+
+	  E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14
+EVELYN     1  1  1  1  1  1  0  1  1   0   0   0   0   0
+LAURA      1  1  1  0  1  1  1  1  0   0   0   0   0   0
+THERESA    0  1  1  1  1  1  1  1  1   0   0   0   0   0
+BRENDA     1  0  1  1  1  1  1  1  0   0   0   0   0   0
+CHARLOTTE  0  0  1  1  1  0  1  0  0   0   0   0   0   0
+FRANCES    0  0  1  0  1  1  0  1  0   0   0   0   0   0
+ELEANOR    0  0  0  0  1  1  1  1  0   0   0   0   0   0
+PEARL      0  0  0  0  0  1  0  1  1   0   0   0   0   0
+RUTH       0  0  0  0  1  0  1  1  1   0   0   0   0   0
+VERNE      0  0  0  0  0  0  1  1  1   0   0   1   0   0
+MYRA       0  0  0  0  0  0  0  1  1   1   0   1   0   0
+KATHERINE  0  0  0  0  0  0  0  1  1   1   0   1   1   1
+SYLVIA     0  0  0  0  0  0  1  1  1   1   0   1   1   1
+NORA       0  0  0  0  0  1  1  0  1   1   1   1   1   1
+HELEN      0  0  0  0  0  0  1  1  0   1   1   1   1   1
+DOROTHY    0  0  0  0  0  0  0  1  1   1   0   1   0   0
+OLIVIA     0  0  0  0  0  0  0  0  1   0   1   0   0   0
+FLORA      0  0  0  0  0  0  0  0  1   0   1   0   0   0
+```
+
+In this case the information is contained in a data frame rather than in an array as before.
+
+
+<br/>
+
+
+#### Plotting two-mode data
+
+Function `bmgraph` serves to plot two-mode data or an affiliation network as a bipartite graph.
+
+```{r }
+bmgraph(swomen)
+```
+![Default layout of `bmgraph`](figs/swomen.png)
+[vector image](figs/swomen.pdf)
+
+
+In this case actor and events have different shape by default.
+
+
+<br />
+
+Similarly to `multigraph` the color and shape of edges and vertices can be modified by equal arguments, and we can mirror the *x* axis of the plot.
+
+```{r }
+bmgraph(swomen, cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, mirrorX = TRUE)
+```
+![Mirror X of `bmgraph`](figs/swomen2.png)
+[vector image](figs/swomen2.pdf)
+
+
+<br />
+
+Option `bip3` splits the actors in two columns, whereas `bip3e` will split the events.
+
+
+```{r }
+bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3)
+```
+![Mirror X of `bmgraph`](figs/swomen3.png)
+[vector image](figs/swomen3.pdf)
+
+
+<br />
+
+The binomial projection of a two-mode data set allows obtaining a force directed layout that in his case the image is rotated 65 degrees.
+
+```{r }
+bmgraph(swomen, layout = "stress", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
+        ecol = 8, rot = 65)
+```
+![stress layout of `bmgraph`](figs/swomen-stress.png)
+[vector image](figs/swomen-stress.pdf)
+
+
+<br />
+<br />
+
+Finally, function `bmgraph` stands for a bipartite *multigraph*, and this is because the actors can be affiliated at different levels.
+
+
+```{r }
+bmgraph(floflies, ecol = 1)
+```
+![bipartite graph of `floflies`](figs/floflies-bmgraph.png)
+[vector image](figs/floflies-bmgraph.pdf)
+
+
+<br />
+<br />
+
+
+*Beware that the rendering of raster and vector images varies because of dependencies of third parties when plotting in different devices, and this is a known issue.*
 
 
 
