@@ -247,7 +247,7 @@ swomen <- read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
 ### take a look...
 swomen
 
-	  E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14
+          E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14
 EVELYN     1  1  1  1  1  1  0  1  1   0   0   0   0   0
 LAURA      1  1  1  0  1  1  1  1  0   0   0   0   0   0
 THERESA    0  1  1  1  1  1  1  1  1   0   0   0   0   0
