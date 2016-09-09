@@ -13,7 +13,7 @@ When you load the **`multigraph`** package then **`multiplex`** is automatically
 
 ```{r }
 library("multigraph")
-Loading required package: multiplex
+# Loading required package: multiplex
 ```
 
 <br />
@@ -233,12 +233,13 @@ Hence, colors can be established in different ways, and the `alpha` vector argum
 
 
 <br /> 
+===
 <br /> 
 
 
 ### Bipartite Graph: Southern Women data set
 
-Support for the visualization of two-mode networks is also given by `**multigraph**` and we work with the Southern Women classic data set to illustrate some of the layout options with this package.
+Support for the visualization of two-mode networks is also given by **`multigraph`** and we work with the Southern Women classic data set to illustrate some of the layout options with this package.
 
 ```{r }
 ### Read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
