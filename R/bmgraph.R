@@ -11,7 +11,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     ifelse(missing(directed) == TRUE, directed <- FALSE, NA)
     ifelse(missing(collRecip) == TRUE, collRecip <- TRUE, NA)
     ifelse(missing(tcol) == TRUE, tcol <- c(1, 1), NA)
-    ifelse(missing(pch) == TRUE, pch <- c(19, 15), NA)
+    ifelse(missing(pch) == TRUE, pch <- 1:0, NA)
     if (missing(clu)) {
         ifelse(isTRUE(length(pch) > 1L) == TRUE, pch <- pch[1:2], 
             pch <- rep(pch, 2))
