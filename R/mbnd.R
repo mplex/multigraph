@@ -1,6 +1,6 @@
 mbnd <-
 function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd, 
-    alfa, are, fds, flgcx, m) 
+    alfa, fds, flgcx) 
 {
     ifelse(isTRUE(nrow(pares) > 2L) == TRUE, pares <- pares[c(1, 
         nrow(pares)), ], NA)
@@ -48,7 +48,8 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
     orott <- orot
     orott[1, 1] <- (cx[1]/fds) - orot[1, 1]
     ifelse(isTRUE(flgcx == TRUE) == TRUE, orott[2, 1] <- orot[2, 
-        1] - (cx[2]/(fds + 0)), orott[2, 1] <- orot[2, 1] - (cx[1]/fds))
+        1] - (cx[2]/(fds + 20)), orott[2, 1] <- orot[2, 1] - 
+        (cx[1]/fds))
     lst <- array(0L, dim = c(2, 2, r))
     dat <- data.frame(matrix(nrow = 0L, ncol = 2L))
     for (i in 1:r) {
@@ -63,16 +64,15 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
         rrot[, 2] <- rrot[, 2] - yo
     }
     for (i in 1:r) {
-        graphics::segments(rrot[which(seq(1:nrow(dat))%%2L == 
-            1L)[i], 1], rrot[which(seq(1:nrow(dat))%%2L == 1L)[i], 
-            2], rrot[which(seq(1:nrow(dat))%%2L == 0L)[i], 1], 
-            rrot[which(seq(1:nrow(dat))%%2L == 0L)[i], 2], lty = vlt[i], 
-            lwd = lwd, col = grDevices::adjustcolor(ecol[i], 
+        segments(rrot[which(seq(1:nrow(dat))%%2L == 1L)[i], 1], 
+            rrot[which(seq(1:nrow(dat))%%2L == 1L)[i], 2], rrot[which(seq(1:nrow(dat))%%2L == 
+                0L)[i], 1], rrot[which(seq(1:nrow(dat))%%2L == 
+                0L)[i], 2], lty = vlt[i], lwd = lwd, col = grDevices::adjustcolor(ecol[i], 
                 alpha = alfa))
         if (isTRUE(directed == TRUE) == TRUE) {
             Hd <- data.frame(x = c(-0.8, -0.55, -0.8, 0.2), y = c(-0.5, 
                 0, 0.5, 0))
-            Hd <- Hd * ((as.numeric(lwd))/as.numeric(are))
+            Hd <- Hd * (as.numeric(lwd))/60L
             if (isTRUE(b[i] %in% multiplex::men(b)[1]) == FALSE) {
                 prx <- rrot[which(seq(1:nrow(dat))%%2L == 1L)[i], 
                   1]
@@ -90,7 +90,7 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
             }
             hd[, 1] <- hd[, 1] + prx
             hd[, 2] <- hd[, 2] + pry
-            graphics::polygon((hd), col = grDevices::adjustcolor(ecol[i], 
+            polygon((hd), col = grDevices::adjustcolor(ecol[i], 
                 alpha = alfa), border = NA)
         }
         else {
@@ -98,7 +98,5 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
         }
     }
     rm(i)
-    x <- NULL
-    rm(x)
-    graphics::par(new = FALSE)
+    par(new = FALSE)
 }
