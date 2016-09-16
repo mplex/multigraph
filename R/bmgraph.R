@@ -837,16 +837,14 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
                 if ((isTRUE(is.na(dim(bmnet)[3]) == TRUE | dim(bmnet)[3] == 
                   1) == TRUE)) {
                   mbnd(pars, rr, bds[[k]], vlt, cx, lwd, vecol, 
-                    directed, asp, bwd, alfa, are, fds, flgcx, 
-                    m)
+                    directed, asp, bwd, alfa, fds, flgcx)
                 }
                 else {
                   ifelse(isTRUE(length(lty) == 1L) == TRUE, mbnd(pars, 
                     rr, bds[[k]], vlt1, cx, lwd, vecol[vltc], 
-                    directed, asp, bwd, alfa, are, fds, flgcx, 
-                    m), mbnd(pars, rr, bds[[k]], vlt, cx, lwd, 
-                    vecol[vltc], directed, asp, bwd, alfa, are, 
-                    fds, flgcx, m))
+                    directed, asp, bwd, alfa, fds, flgcx), mbnd(pars, 
+                    rr, bds[[k]], vlt, cx, lwd, vecol[vltc], 
+                    directed, asp, bwd, alfa, fds, flgcx))
                 }
             }
             else {
