@@ -76,8 +76,9 @@ STROZZI           0       0         0        0         0      0        0        
 TORNABUON         0       0         0        0         0      0        0         0      1     0       0     0       0        0       0         0
 ```
 
+<br /> 
 
-`floflies` represents this network where `"PADGM"` are marriage relations, and `"PADGB"` correspond to business ties among 16 Florentine families.
+Object `floflies` represents this network where `"PADGM"` are marriage relations, and `"PADGB"` correspond to business ties among 16 Florentine families.
 
 
 <br /> 
@@ -85,7 +86,7 @@ TORNABUON         0       0         0        0         0      0        0        
 
 ### Ploting the Multigraph
 
-Now we plot this network with the `multigraph` function:
+We plot this network with the `multigraph` function:
 
 ```{r }
 multigraph(floflies)
@@ -127,7 +128,7 @@ multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tce
 
 <br />
 
-Note that when the graph is depicted as *undirected* then the reciprocal ties by default are collapsed, and you can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of edges and vertices respectively are complementary in `**multigraph**`. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+Note that when the graph is depicted as *undirected* then the reciprocal ties by default are collapsed, and you can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of edges and vertices respectively are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
 
 
 <br /> 
@@ -271,7 +272,7 @@ OLIVIA     0  0  0  0  0  0  0  0  1   0   1   0   0   0
 FLORA      0  0  0  0  0  0  0  0  1   0   1   0   0   0
 ```
 
-In this case the information is contained in a data frame rather than in an array as before.
+In this case the information can be contained in a data frame or an array as before.
 
 
 <br/>
@@ -343,7 +344,7 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 
-*Beware that the rendering of raster and vector images varies because of dependencies of third parties when plotting in different devices, and this is a known issue.*
+*Note that the rendering of vector images may vary according to the device used, and we recommend downloading such type of files.*
 
 
 
