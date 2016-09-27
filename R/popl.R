@@ -1,9 +1,9 @@
 popl <-
 function (n, seed = seed) 
 {
-    set.seed(seed)
     alpha <- pi * (3L - sqrt(5L))
-    phase <- stats::runif(1) * 2L * pi
+    set.seed(seed)
+    phase <- runif(1) * 2L * pi
     ptsx <- vector()
     ptsy <- vector()
     for (k in 1:n) {
@@ -13,5 +13,5 @@ function (n, seed = seed)
         ptsy <- append(ptsy, (rr * sin(theta)))
     }
     rm(k)
-    return(abs(cbind(ptsx, ptsy)))
+    return(cbind(ptsx, ptsy) - min(cbind(ptsx, ptsy)))
 }
