@@ -395,13 +395,18 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             }
             nds <- data.frame(X = as.numeric(as.vector(cds[, 
                 1])), Y = as.numeric(as.vector(cds[, 2])))
-            if (isTRUE(n > 6) == TRUE && isTRUE(area(nds) < (1/2.8)) == 
-                TRUE) {
-                nds <- nds * (2.223 - (4.45 * area(nds)))
+            if (isTRUE(n > 6) == TRUE && isTRUE(sqrt(((max(nds[, 
+                1]) - min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 
+                2])))/nrow(nds)) < (1/2.8)) == TRUE) {
+                nds <- nds * (2.223 - (4.45 * sqrt(((max(nds[, 
+                  1]) - min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 
+                  2])))/nrow(nds))))
             } else {
-                nds <- nds * (1 - area(nds))
+                nds <- nds * (1 - sqrt(((max(nds[, 1]) - min(nds[, 
+                  1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)))
             }
-            are <- 50L + (1/area(nds))
+            are <- 50L + (1/sqrt(((max(nds[, 1]) - min(nds[, 
+                1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)))
             ifelse(isTRUE(max(cex) < 2) == TRUE, NA, fds <- fds + 
                 (mean(cex) * 3))
         }, bip = {
@@ -525,7 +530,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             } else {
                 fds <- 120L
             }
-            are <- 40L + (1/area(nds))
+            are <- 40L + (1/sqrt(((max(nds[, 1]) - min(nds[, 
+                1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)))
         }, rand = {
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- 100L + 
                 (m * 2L), fds <- 100L + (n * 2L))
@@ -537,17 +543,24 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             nds <- data.frame(X = round(stats::runif(n) * 1L, 
                 5), Y = round(stats::runif(n) * 1L, 5))
             if (isTRUE(n == 3) == TRUE) {
-                if (isTRUE(area(nds) < 1/6) == TRUE) {
+                if (isTRUE(sqrt(((max(nds[, 1]) - min(nds[, 1])) * 
+                  (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)) < 
+                  1/6) == TRUE) {
                   nds <- nds * (n)
-                } else if (isTRUE(area(nds) < 1/5) == TRUE) {
+                } else if (isTRUE(sqrt(((max(nds[, 1]) - min(nds[, 
+                  1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)) < 
+                  1/5) == TRUE) {
                   nds <- nds * (2)
-                } else if (isTRUE(area(nds) < 1/4) == TRUE) {
+                } else if (isTRUE(sqrt(((max(nds[, 1]) - min(nds[, 
+                  1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)) < 
+                  1/4) == TRUE) {
                   nds <- nds * (1.5)
                 } else {
                   NA
                 }
             }
-            are <- 50L + (1/area(nds))
+            are <- 50L + (1/sqrt(((max(nds[, 1]) - min(nds[, 
+                1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)))
             ifelse(isTRUE(max(cex) < 2) == TRUE, NA, fds <- fds + 
                 (mean(cex) * 3))
             if (missing(rot) == FALSE) {
