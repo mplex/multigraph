@@ -351,15 +351,17 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
                 1])), Y = as.numeric(as.vector(coord[, 2])))
         }
         nds <- (2L/max(nds)) * nds
-        if (isTRUE(flgcx == TRUE) == TRUE && isTRUE(area(nds) < 
-            (1/3)) == TRUE) {
+        if (isTRUE(flgcx == TRUE) == TRUE && isTRUE(sqrt(((max(nds[, 
+            1]) - min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 
+            2])))/nrow(nds)) < (1/3)) == TRUE) {
             nds <- nds * (2.223 - (4.45 * (sqrt(((max(nds[, 1]) - 
                 min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 2])))/n))))
         }
         else {
             nds <- nds * (0.5)
         }
-        are <- 50L + (1/area(nds))
+        are <- 50L + (1/sqrt(((max(nds[, 1]) - min(nds[, 1])) * 
+            (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)))
         m <- n
         ifelse(isTRUE(max(cex) < 2) == TRUE, fds <- fds + (stats::median(cex) * 
             2), NA)
