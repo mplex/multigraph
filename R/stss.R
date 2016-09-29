@@ -116,10 +116,10 @@ function (net, seed = seed, maxiter = maxiter)
         tmpi <- popl(length(cmps$isol), seed = seed)/(length(cmps$isol) * 
             2) * K * length(cmps$isol)
         if (is.null(cmps$com) == FALSE) {
-            locx <- ((tmpi[, 1]/1L) - (min(ndst[, 1])) - 0)
+            locx <- ((tmpi[, 1]/3L) - (min(ndst[, 1])) - 0)
             ifelse(isTRUE(rat > 0) == TRUE, locy <- ((min(ndst[, 
-                2])) - (tmpi[, 2]/1L) - 0), locy <- ((max(ndst[, 
-                2])) + (tmpi[, 2]/1L) + 0))
+                2])) - (tmpi[, 2]/3L) - 0), locy <- ((max(ndst[, 
+                2])) + (tmpi[, 2]/3L) + 0))
             ndst.chull <- grDevices::chull(ndst)
             ndst.chull <- ndst[ndst.chull, ]
             ifelse(isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
