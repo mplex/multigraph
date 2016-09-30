@@ -316,7 +316,7 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     else if (is.null(coord) == TRUE) {
         flgcrd <- FALSE
         switch(match.arg(layout), stress = {
-            coord <- stss04(net, seed = seed, maxiter = maxiter)
+            coord <- stss(net, seed = seed, maxiter = maxiter)
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 15L, NA)
         }, circ = {
