@@ -34,7 +34,54 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     ifelse(missing(lwd) == TRUE, lwd <- 1, NA)
     ifelse(missing(pch) == TRUE, pch <- 21, NA)
     if (missing(pos) == TRUE) {
-        pos <- 4
+        if (match.arg(layout) == "circ") {
+            cdp <- data.frame(X = sin(2L * pi * ((0:(n - 1L))/n)), 
+                Y = cos(2L * pi * ((0:(n - 1L))/n)))
+            cdp[which(cdp[, 2] == -1), 1] <- 0
+            cdp <- replace(cdp, cdp < 0, -1)
+            cdp <- replace(cdp, cdp > 0, 1)
+            pos <- vector()
+            for (i in 1:nrow(cdp)) {
+                if (all(as.vector(cdp[i, ]) == c(-1, -1)) == 
+                  TRUE | all(as.vector(cdp[i, ]) == c(-1, 0)) == 
+                  TRUE | all(as.vector(cdp[i, ]) == c(-1, 1)) == 
+                  TRUE) {
+                  pos <- append(pos, 2)
+                }
+                else if (all(as.vector(cdp[i, ]) == c(1, -1)) == 
+                  TRUE | all(as.vector(cdp[i, ]) == c(1, 0)) == 
+                  TRUE | all(as.vector(cdp[i, ]) == c(1, 1)) == 
+                  TRUE) {
+                  pos <- append(pos, 4)
+                }
+                else if (all(as.vector(cdp[i, ]) == c(0, 1)) == 
+                  TRUE) {
+                  pos <- append(pos, 3)
+                }
+                else {
+                  pos <- append(pos, 1)
+                }
+            }
+            rm(i)
+            if (missing(mirrorX) == FALSE && isTRUE(mirrorX == 
+                TRUE) == TRUE) {
+                pos[which(pos == 2)] <- 0
+                pos[which(pos == 4)] <- 2
+                pos[which(pos == 0)] <- 4
+            }
+            else if (missing(mirrorY) == FALSE && isTRUE(mirrorY == 
+                TRUE) == TRUE) {
+                pos[which(pos == 1)] <- 0
+                pos[which(pos == 3)] <- 1
+                pos[which(pos == 0)] <- 3
+            }
+            else {
+                NA
+            }
+        }
+        else {
+            pos <- 4
+        }
     }
     else {
         if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
@@ -269,7 +316,7 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     else if (is.null(coord) == TRUE) {
         flgcrd <- FALSE
         switch(match.arg(layout), stress = {
-            coord <- stss(net, seed = seed, maxiter = maxiter)
+            coord <- stss04(net, seed = seed, maxiter = maxiter)
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 15L, NA)
         }, circ = {
@@ -343,13 +390,23 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
         4), NA)
     ifelse(is.null(main) == TRUE, graphics::par(mar = mar), graphics::par(mar = mar + 
         c(0, 0, 2, 0)))
+    if (match.arg(layout) == "circ") {
+        ylim <- c(min(nds[, 2]) - (max(cex)/50L), max(nds[, 2]) + 
+            (max(cex)/50L))
+        xlim <- c(min(nds[, 1]) - (max(cex)/50L), max(nds[, 1]) + 
+            (max(cex)/50L))
+    }
+    else {
+        ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
+            2]) + (max(cex)/100L))
+        xlim <- c(min(nds[, 1]) - (max(cex)/100L), max(nds[, 
+            1]) + (max(cex)/100L))
+    }
     obg <- graphics::par()$bg
     graphics::par(bg = grDevices::adjustcolor(bg, alpha = alpha[3]))
     graphics::plot(nds, type = "n", axes = FALSE, xlab = "", 
-        ylab = "", ylim = c(min(nds[, 2]) - (max(cex)/100L), 
-            max(nds[, 2]) + (max(cex)/100L)), xlim = c(min(nds[, 
-            1]) - (max(cex)/100L), max(nds[, 1]) + (max(cex)/100L)), 
-        asp = asp, main = main, cex.main = cex.main)
+        ylab = "", ylim = ylim, xlim = xlim, asp = asp, main = main, 
+        cex.main = cex.main)
     tlbs <- vector()
     for (i in 1:length(attr(bds, "names"))) {
         ifelse(isTRUE(length(multiplex::dhc(attr(bds, "names")[i], 
@@ -553,7 +610,7 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
             graphics::text(nds, labels = atts, cex = tcex, pos = 3, 
                 col = tcol, offset = (cex/4L), adj = c(1.5, 2))
         }
-        else {
+        else if (isTRUE(length(pos) == 1) == TRUE) {
             graphics::text(nds, labels = atts, cex = tcex, pos = pos + 
                 1L, col = tcol, offset = (cex/4L), adj = c(1.5, 
                 2))
