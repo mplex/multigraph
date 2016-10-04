@@ -33,60 +33,6 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     ifelse(missing(asp) == TRUE, asp <- 1, NA)
     ifelse(missing(lwd) == TRUE, lwd <- 1, NA)
     ifelse(missing(pch) == TRUE, pch <- 21, NA)
-    if (missing(pos) == TRUE) {
-        if (match.arg(layout) == "circ") {
-            cdp <- data.frame(X = sin(2L * pi * ((0:(n - 1L))/n)), 
-                Y = cos(2L * pi * ((0:(n - 1L))/n)))
-            cdp[which(cdp[, 2] == -1), 1] <- 0
-            cdp <- replace(cdp, cdp < 0, -1)
-            cdp <- replace(cdp, cdp > 0, 1)
-            pos <- vector()
-            for (i in 1:nrow(cdp)) {
-                if (all(as.vector(cdp[i, ]) == c(-1, -1)) == 
-                  TRUE | all(as.vector(cdp[i, ]) == c(-1, 0)) == 
-                  TRUE | all(as.vector(cdp[i, ]) == c(-1, 1)) == 
-                  TRUE) {
-                  pos <- append(pos, 2)
-                }
-                else if (all(as.vector(cdp[i, ]) == c(1, -1)) == 
-                  TRUE | all(as.vector(cdp[i, ]) == c(1, 0)) == 
-                  TRUE | all(as.vector(cdp[i, ]) == c(1, 1)) == 
-                  TRUE) {
-                  pos <- append(pos, 4)
-                }
-                else if (all(as.vector(cdp[i, ]) == c(0, 1)) == 
-                  TRUE) {
-                  pos <- append(pos, 3)
-                }
-                else {
-                  pos <- append(pos, 1)
-                }
-            }
-            rm(i)
-            if (missing(mirrorX) == FALSE && isTRUE(mirrorX == 
-                TRUE) == TRUE) {
-                pos[which(pos == 2)] <- 0
-                pos[which(pos == 4)] <- 2
-                pos[which(pos == 0)] <- 4
-            }
-            else if (missing(mirrorY) == FALSE && isTRUE(mirrorY == 
-                TRUE) == TRUE) {
-                pos[which(pos == 1)] <- 0
-                pos[which(pos == 3)] <- 1
-                pos[which(pos == 0)] <- 3
-            }
-            else {
-                NA
-            }
-        }
-        else {
-            pos <- 4
-        }
-    }
-    else {
-        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
-            stop("Invalid \"pos\" value.")
-    }
     ifelse(missing(bg) == TRUE, bg <- graphics::par()$bg, NA)
     ifelse(missing(mar) == TRUE, mar <- graphics::par()$mar, 
         NA)
@@ -333,6 +279,71 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     if (missing(rot) == FALSE) {
         coord[, 1:2] <- xyrt(coord[, 1:2], as.numeric(rot))
         coord[, 1:2] <- coord[, 1:2] - min(coord[, 1:2])
+        cnt <- 1L
+    }
+    else {
+        cnt <- 0
+    }
+    if (match.arg(layout) == "circ" && missing(pos) == TRUE) {
+        angl <- vector()
+        length(angl) <- n
+        for (i in 1:n) {
+            ifelse((atan2((coord[i, 2] - cnt), (coord[i, 1] - 
+                cnt)) * (180L/pi)) >= 0, angl[i] <- atan2((coord[i, 
+                2] - cnt), (coord[i, 1] - cnt)) * (180L/pi), 
+                angl[i] <- ((atan2((coord[i, 2] - cnt), (coord[i, 
+                  1] - cnt)) * (180L/pi))%%180L) + 180L)
+        }
+        rm(i)
+        pos <- vector()
+        for (i in 1:length(angl)) {
+            if (isTRUE(65 < angl[i]) == TRUE && isTRUE(115 > 
+                angl[i]) == TRUE) {
+                pos <- append(pos, 3)
+            }
+            else if (isTRUE(115 <= angl[i]) == TRUE && isTRUE(245 >= 
+                angl[i]) == TRUE) {
+                pos <- append(pos, 2)
+            }
+            else if (isTRUE(245 < angl[i]) == TRUE && isTRUE(295 > 
+                angl[i]) == TRUE) {
+                pos <- append(pos, 1)
+            }
+            else {
+                pos <- append(pos, 4)
+            }
+        }
+        rm(i)
+    }
+    if (missing(pos) == TRUE) {
+        pos <- 4
+    }
+    else {
+        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
+            stop("Invalid \"pos\" value.")
+    }
+    ifelse(missing(mirrorX) == FALSE && isTRUE(mirrorX == TRUE) == 
+        TRUE, coord[, 1] <- coord[, 1] * cos(pi) - coord[, 2] * 
+        sin(pi), mirrorX <- FALSE)
+    ifelse(missing(mirrorY) == FALSE && isTRUE(mirrorY == TRUE) == 
+        TRUE, coord[, 2] <- coord[, 2] * cos(pi) - coord[, 1] * 
+        sin(pi), mirrorY <- FALSE)
+    if (match.arg(layout) == "circ") {
+        if (isTRUE(mirrorX == TRUE) == TRUE && isTRUE(length(pos) == 
+            n) == TRUE) {
+            pos[which(pos == 2)] <- 0
+            pos[which(pos == 4)] <- 2
+            pos[which(pos == 0)] <- 4
+        }
+        else if (isTRUE(mirrorY == TRUE) == TRUE && isTRUE(length(pos) == 
+            n) == TRUE) {
+            pos[which(pos == 1)] <- 0
+            pos[which(pos == 3)] <- 1
+            pos[which(pos == 0)] <- 3
+        }
+        else {
+            NA
+        }
     }
     rat <- (max(coord[, 1]) - min(coord[, 1]))/(max(coord[, 2]) - 
         min(coord[, 2]))
@@ -379,12 +390,6 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
         nds <- nds * (0.5)
     }
     ifelse(isTRUE(max(cex) < 2) == TRUE, NA, bwd <- bwd * 0.75)
-    ifelse(missing(mirrorX) == FALSE && isTRUE(mirrorX == TRUE) == 
-        TRUE, nds[, 1] <- nds[, 1] * cos(pi) - nds[, 2] * sin(pi), 
-        NA)
-    ifelse(missing(mirrorY) == FALSE && isTRUE(mirrorY == TRUE) == 
-        TRUE, nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi), 
-        NA)
     opm <- graphics::par()$mar
     ifelse(all(mar == c(5.1, 4.1, 4.1, 2.1)) == TRUE, mar <- rep(0, 
         4), NA)
@@ -559,13 +564,30 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
             ifelse(isTRUE(max(cex) < 2) == TRUE, tcex <- cex * 
                 0.66, tcex <- cex * 0.33)
         }
-        if (isTRUE(pos == 0) == TRUE) {
-            graphics::text(nds, labels = lbs, cex = tcex, adj = 0.5, 
-                col = tcol)
+        if (isTRUE(length(pos) == 1) == TRUE) {
+            if (isTRUE(pos == 0) == TRUE) {
+                graphics::text(nds, labels = lbs, cex = tcex, 
+                  adj = 0.5, col = tcol)
+            }
+            else {
+                graphics::text(nds, lbs, cex = tcex, pos = pos, 
+                  col = tcol, offset = (cex/4L), adj = c(0.5, 
+                    1))
+            }
+        }
+        else if (isTRUE(length(pos) == n) == TRUE) {
+            graphics::text(nds, lbs, cex = tcex, pos = pos, col = tcol[1])
         }
         else {
-            graphics::text(nds, lbs, cex = tcex, pos = pos, col = tcol, 
-                offset = (cex/4L), adj = c(0.5, 1))
+            if (isTRUE(pos[1] == 0) == TRUE) {
+                graphics::text(nds, labels = lbs, cex = tcex, 
+                  adj = 0.5, col = tcol)
+            }
+            else {
+                graphics::text(nds, lbs, cex = tcex, pos = pos[1], 
+                  col = tcol, offset = (cex/4L), adj = c(0.5, 
+                    1))
+            }
         }
     }
     if (isTRUE(showAtts == TRUE) == TRUE) {
@@ -606,15 +628,8 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
         else {
             atts <- rep("", nrow(nds))
         }
-        if (isTRUE(pos == 4) == TRUE) {
-            graphics::text(nds, labels = atts, cex = tcex, pos = 3, 
-                col = tcol, offset = (cex/4L), adj = c(1.5, 2))
-        }
-        else if (isTRUE(length(pos) == 1) == TRUE) {
-            graphics::text(nds, labels = atts, cex = tcex, pos = pos + 
-                1L, col = tcol, offset = (cex/4L), adj = c(1.5, 
-                2))
-        }
+        graphics::text(nds, labels = atts, cex = tcex, pos = pos%%4 + 
+            1L, col = tcol, offset = (cex/4L), adj = c(1.5, 2))
     }
     graphics::par(mar = opm)
     graphics::par(bg = obg)
