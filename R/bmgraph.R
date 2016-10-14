@@ -1,5 +1,5 @@
 bmgraph <-
-function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", 
+function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force", 
     "rand", "circ"), coord = NULL, tcex = NULL, alpha = c(1, 
     1, 1), showLbs = TRUE, showAtts = TRUE, att = NULL, lbat = "1", 
     main = NULL, cex.main, bg, mar, cex, pos, lwd, lty, ecol, 
@@ -206,7 +206,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     }
     flgcx <- FALSE
     if (missing(cex) == TRUE) {
-        if (isTRUE(match.arg(layout) == "stress") == TRUE | isTRUE(match.arg(layout) == 
+        if (isTRUE(match.arg(layout) == "force") == TRUE | isTRUE(match.arg(layout) == 
             "rand") == TRUE) {
             if (isTRUE(length(bds) == 0) == TRUE) {
                 cex <- 1L
@@ -367,16 +367,16 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
             2), NA)
     }
     else if (is.null(coord) == TRUE) {
-        switch(match.arg(layout), stress = {
+        switch(match.arg(layout), force = {
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- 110L - 
                 (m * 2L), fds <- 90L)
             ifelse(missing(maxiter) == TRUE, maxiter <- 99L, 
                 NA)
             if (missing(seed) == TRUE) {
-                cds <- stss(as.matrix(multiplex::mnplx(bmnet)), 
+                cds <- frcd(as.matrix(multiplex::mnplx(bmnet)), 
                   seed = set.seed(NULL), maxiter = maxiter)
             } else {
-                cds <- stss(as.matrix(multiplex::mnplx(bmnet)), 
+                cds <- frcd(as.matrix(multiplex::mnplx(bmnet)), 
                   seed = seed, maxiter = maxiter)
             }
             if (missing(rot) == FALSE) {
@@ -633,8 +633,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "stress",
     else {
         NA
     }
-    if (match.arg(layout) == "stress" | match.arg(layout) == 
-        "rand" | match.arg(layout) == "circ") {
+    if (match.arg(layout) == "force" | match.arg(layout) == "rand" | 
+        match.arg(layout) == "circ") {
         xlim <- c(min(nds[, 1]) - (max(cex)/100L) - (0), max(nds[, 
             1]) + (max(cex)/100L) + (0))
         ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 

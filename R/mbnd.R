@@ -43,8 +43,6 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
     qx <- ((30L + (agx * (6L/45L) * -1L))/100L)
     d <- (rng(r) * ((bwd * 1000L) * ((2L^(abs(sin(angp * (pi/180L)))))/1200L)) * 
         (mean(cx)/2L)) * qx
-    ifelse(isTRUE(lwd > 1) == TRUE, fds <- fds - (lwd * 3L), 
-        NA)
     orott <- orot
     orott[1, 1] <- (cx[1]/fds) - orot[1, 1]
     ifelse(isTRUE(flgcx == TRUE) == TRUE, orott[2, 1] <- orot[2, 
@@ -72,7 +70,8 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd,
         if (isTRUE(directed == TRUE) == TRUE) {
             Hd <- data.frame(x = c(-0.8, -0.55, -0.8, 0.2), y = c(-0.5, 
                 0, 0.5, 0))
-            Hd <- Hd * ((as.numeric(lwd))/60L)
+            Hd <- Hd * (as.numeric(lwd))/((as.numeric(lwd) * 
+                8.571) + 51.429)
             if (isTRUE(b[i] %in% multiplex::men(b)[1]) == FALSE) {
                 prx <- rrot[which(seq(1:nrow(dat))%%2L == 1L)[i], 
                   1]

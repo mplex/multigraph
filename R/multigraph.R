@@ -1,5 +1,5 @@
 multigraph <-
-function (net, layout = c("circ", "stress", "rand"), directed = TRUE, 
+function (net, layout = c("circ", "force", "rand"), directed = TRUE, 
     collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, 
     cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, 
     att = NULL, lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 
@@ -261,8 +261,8 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
     }
     else if (is.null(coord) == TRUE) {
         flgcrd <- FALSE
-        switch(match.arg(layout), stress = {
-            coord <- stss(net, seed = seed, maxiter = maxiter)
+        switch(match.arg(layout), force = {
+            coord <- frcd(net, seed = seed, maxiter = maxiter)
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 15L, NA)
         }, circ = {
@@ -576,7 +576,8 @@ function (net, layout = c("circ", "stress", "rand"), directed = TRUE,
             }
         }
         else if (isTRUE(length(pos) == n) == TRUE) {
-            graphics::text(nds, lbs, cex = tcex, pos = pos, col = tcol[1])
+            graphics::text(nds, lbs, cex = tcex, pos = pos, col = tcol[1], 
+                offset = (cex/4L), adj = c(0.5, 1))
         }
         else {
             if (isTRUE(pos[1] == 0) == TRUE) {
