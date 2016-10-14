@@ -7,7 +7,7 @@ Bipartite multigraph
 A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
-bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"), 
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ"), 
         coord = NULL, tcex = NULL, alpha = c(1, 1, 1), showLbs = TRUE, 
         showAtts = TRUE, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, 
         cex, pos, lwd, lty, ecol, vcol, vcol0, asp, directed, collRecip, 
@@ -29,7 +29,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"
 
        \code{bip4} ``square'' bipartite graph
 
-       \code{stress} ``stress majorization'' force-directed algorithm 
+       \code{force} force-directed algorithm 
 
        \code{rand} random
 
@@ -100,10 +100,10 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "stress", "rand", "circ"
 	(optional, logical) whether or not collapse reciprocated edges in the unidrected graph (default \code{TRUE})
 }
   \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Ignored for other than \code{stress} or \code{rand}
+	(optional) the random seed number for the vertices' initial coordinates. Ignored for other than \code{force} or \code{rand}
 }
   \item{maxiter}{
-	(optional) the maximum number of iterations in the stress majorization (default \code{100})
+	(optional) the maximum number of iterations in the force directed algorithm (default \code{60} plus number of elements)
 }
   \item{bwd}{
 	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size)

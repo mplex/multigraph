@@ -1,5 +1,5 @@
-\name{stss}
-\alias{stss}
+\name{frcd}
+\alias{frcd}
 \title{
 internal function
 }

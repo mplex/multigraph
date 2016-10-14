@@ -7,7 +7,7 @@ Multigraph
 A function to create and manipulate multigraphs with different layouts
 }
 \usage{
-multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE, 
+multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE, 
            collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, 
            cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, 
            lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
@@ -23,7 +23,7 @@ multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE,
 
        \code{circ} circular
 
-       \code{stress} ``stress majorization'' force-directed algorithm 
+       \code{force} force-directed algorithm 
 
        \code{rand} random
 }
@@ -64,10 +64,10 @@ multigraph(net, layout = c("circ", "stress", "rand"), directed = TRUE,
 	(optional) the labels for the vertices' attributes
 }
   \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Only for \code{stress} and \code{rand}
+	(optional) the random seed number for the vertices' initial coordinates. Ignored for other than \code{force} or \code{rand}
 }
   \item{maxiter}{
-	(optional) the maximum number of iterations in the stress majorization (default \code{100})
+	(optional) the maximum number of iterations in the force directed algorithm (default \code{60} plus number of elements)
 }
   \item{alpha}{
 	vector (vertex, edge, \code{bg}) with the alpha color transparecy
@@ -160,7 +160,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 multigraph(arr)
 
 ## Now with a force directed algorithm
-multigraph(arr, layout = "stress")
+multigraph(arr, layout = "force")
 
 }
 \keyword{ graphics }
