@@ -1,14 +1,15 @@
 Package: multigraph
 Type: Package
-Title: Create and manipulate multigraphs
-Version: 0.30
-Depends: R (>= 3.2.3), multiplex (>= 1.9.9)
-Date: 2016-08-08
-Suggests: Rgraphviz, knitr
-Authors@R: person(given = "Antonio", family = "Rivero Ostoic", role = c("aut", "cre"), email = "jaro@econ.au.dk")
-Author: Antonio Rivero Ostoic (Aarhus University) [aut, cre]
-Maintainer: Antonio Rivero Ostoic <jaro@econ.au.dk>
-Description: Functions to create and manipulate multigraphs and bipartite multigraphs. This package is based on the 
-	    funcionalities of multiplex and it has three diffferent layouts possibilities.
-License: GPL-3
+Title: Plot and Manipulate Multigraphs
+Version: 0.40
+Depends: R (>= 3.3.1), multiplex (>= 2.2)
 Imports: methods
+Date: 2016-10-14
+Authors@R: person(given = "Antonio", family = "Rivero Ostoic", role = c("aut", "cre"), email = "jaro@econ.au.dk")
+Author: Antonio Rivero Ostoic [aut, cre]
+Maintainer: Antonio Rivero Ostoic <jaro@econ.au.dk>
+Description: Functions to plot and manipulate multigraphs and bipartite graphs with different layout options.
+URL: http://github.com/mplex/multigraph/
+BugReports: https://github.com/mplex/multigraph/issues/
+Repository: CRAN
+License: GPL-3
