@@ -101,30 +101,30 @@ The network is symmetric and the default layout is circular. Check also out the 
 <br /> 
 
 
-#### Stress majorization layout
+#### Force directed layout
 
-Besides the circular layout, another possibility is to apply a force-directed layout for the visualization, and below the Florentine Families data set is depicted with the stress majorization algorithm with a number of arguments. 
+Besides the circular layout, another possibility is to apply a force-directed layout for the visualization, and below the Florentine Families data set is depicted with the force directed algorithm with a number of arguments. 
 
 <br /> 
 
 
 ```{r }
-multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
+multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
            ecol = 1, lwd = 2, bwd = .5)
 ```
-![stress layout of `multigraph`](figs/floflies-stress.png)
-[vector image](figs/floflies-stress.pdf)
+![Force directed layout of `multigraph`](figs/floflies-force.png)
+[vector image](figs/floflies-force.pdf)
 
 <br />
 <br /> 
 
 
 ```{r }
-multigraph(floflies, directed = FALSE, layout = "stress", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
+multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
            ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
 ```
-![stress layout of `multigraph` different shapes](figs/floflies-stress2.png)
-[vector image](figs/floflies-stress2.pdf)
+![Force directed layout of `multigraph` different shapes](figs/floflies-force2.png)
+[vector image](figs/floflies-force2.pdf)
 
 <br />
 
@@ -207,11 +207,11 @@ The following code serves to depict this network in a way that the size of the v
 
 
 ```{r }
-multigraph(floflies, directed = FALSE, layout = "stress", seed = 1, cex = flofliesatt[,1],
+multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1],
            tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 ```
-![stress layout of `multigraph` with attributes](figs/flofliesatt-stress.png)
-[vector image](figs/flofliesatt-stress.pdf)
+![Force directed layout layout of `multigraph` with attributes](figs/flofliesatt-force.png)
+[vector image](figs/flofliesatt-force.pdf)
 
 
 <br /> 
@@ -220,12 +220,12 @@ And with the `clu` argument we establish the clustering of the network with thre
 
 
 ```{r }
-multigraph(floflies, directed = FALSE, layout = "stress", seed = 1, cex = flofliesatt[,1], tcex = .8, 
+multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1], tcex = .8, 
            pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
            clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
 ```
-![stress layout of `multigraph` with clustering](figs/flofliesatt-stress2.png)
-[vector image](figs/flofliesatt-stress2.pdf)
+![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
+[vector image](figs/flofliesatt-force2.pdf)
 
 Hence, colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
 
@@ -320,11 +320,11 @@ bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5,
 The binomial projection of a two-mode data set allows obtaining a force directed layout that in his case the image is rotated 65 degrees.
 
 ```{r }
-bmgraph(swomen, layout = "stress", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
+bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
         ecol = 8, rot = 65)
 ```
-![stress layout of `bmgraph`](figs/swomen-stress.png)
-[vector image](figs/swomen-stress.pdf)
+![Force directed layout of `bmgraph`](figs/swomen-force.png)
+[vector image](figs/swomen-force.pdf)
 
 
 <br />
