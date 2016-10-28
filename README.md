@@ -110,7 +110,7 @@ Besides the circular layout, another possibility is to apply a force-directed la
 
 ```{r }
 multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
-           ecol = 1, lwd = 2, bwd = .5)
++  ecol = 1, lwd = 2, bwd = .5)
 ```
 ![Force directed layout of `multigraph`](figs/floflies-force.png)
 [vector image](figs/floflies-force.pdf)
@@ -121,7 +121,7 @@ multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex
 
 ```{r }
 multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
-           ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
++  ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
 ```
 ![Force directed layout of `multigraph` different shapes](figs/floflies-force2.png)
 [vector image](figs/floflies-force2.pdf)
@@ -208,7 +208,7 @@ The following code serves to depict this network in a way that the size of the v
 
 ```{r }
 multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1],
-           tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
++  tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 ```
 ![Force directed layout layout of `multigraph` with attributes](figs/flofliesatt-force.png)
 [vector image](figs/flofliesatt-force.pdf)
@@ -221,15 +221,14 @@ And with the `clu` argument we establish the clustering of the network with thre
 
 ```{r }
 multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1], tcex = .8, 
-           pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
-           clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
++  pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
++  clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
 ```
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
 [vector image](figs/flofliesatt-force2.pdf)
 
 Hence, colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
 
-*Beware that alpha transparency renders differently according to the device used by* **`grDevices`**
 
 
 
@@ -321,7 +320,7 @@ The binomial projection of a two-mode data set allows obtaining a force directed
 
 ```{r }
 bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
-        ecol = 8, rot = 65)
++  ecol = 8, rot = 65)
 ```
 ![Force directed layout of `bmgraph`](figs/swomen-force.png)
 [vector image](figs/swomen-force.pdf)
@@ -344,7 +343,7 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 
-*Note that the rendering of vector images may vary according to the device used, and we recommend downloading such type of files.*
+*Note that the rendering of vector images may vary according to the device used.*
 
 
 
