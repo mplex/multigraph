@@ -3,7 +3,7 @@ function (n, seed = seed)
 {
     alpha <- pi * (3L - sqrt(5L))
     set.seed(seed)
-    phase <- runif(1) * 2L * pi
+    phase <- stats::runif(1) * 2L * pi
     ptsx <- vector()
     ptsy <- vector()
     for (k in 1:n) {
