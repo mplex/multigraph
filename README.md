@@ -9,7 +9,24 @@
 
 <br />
 
-When you load the **`multigraph`** package then **`multiplex`** is automatically invoked.
+Install **`multigraph`** 
+
+```{r }
+### from CRAN
+install.packages("multigraph")
+```
+
+or
+
+```{r }
+### from Github
+devtools::install_github("mplex/multigraph")
+```
+
+<br />
+
+
+When you load the package then **`multiplex`** is automatically invoked.
 
 ```{r }
 library("multigraph")
@@ -316,7 +333,7 @@ bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5,
 
 <br />
 
-The binomial projection of a two-mode data set allows obtaining a force directed layout that in his case the image is rotated 65 degrees.
+The binomial projection of a two-mode data set allows obtaining a force directed layout that in this case the image is clockwise rotated 65 degrees.
 
 ```{r }
 bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
@@ -344,7 +361,4 @@ bmgraph(floflies, ecol = 1)
 
 
 *Note that the rendering of vector images may vary according to the device used.*
-
-
-
 
