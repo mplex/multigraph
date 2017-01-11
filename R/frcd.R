@@ -1,30 +1,38 @@
 frcd <-
-function (net, seed = seed, maxiter) 
+function (net, seed = seed, maxiter, drp, ...) 
 {
     n <- dim(net)[1]
     ifelse(missing(maxiter) == TRUE, maxiter <- (60L + n), NA)
-    mat <- multiplex::mnplx(net, directed = FALSE)
+    if (missing(drp) == FALSE && is.numeric(drp) == TRUE) {
+        netdrp <- replace(net, net <= drp, 0)
+        netd <- multiplex::dichot(netdrp, c = 1L)
+    }
+    else {
+        netd <- multiplex::dichot(net, c = 1L)
+        netdrp <- net
+    }
+    mat <- multiplex::mnplx(netd, directed = FALSE)
     ifelse(is.null(rownames(mat)) == TRUE, lbs <- 1:n, lbs <- rownames(mat))
-    cmps <- multiplex::comps(net)
+    cmps <- multiplex::comps(netd)
     nds <- matrix(0, nrow = n, ncol = 2)
     rownames(nds) <- lbs
     set.seed(seed)
     for (k in 1:length(cmps$com)) {
         if (is.null(cmps$com[[k]]) == FALSE) {
             com <- which(lbs %in% cmps$com[[k]])
-            if (isTRUE(length(cmps$com[[k]]) < 3L) == TRUE) {
+            if (isTRUE(length(cmps$com[[k]]) == 2L) == TRUE) {
                 tmp <- popl(2L, seed = seed)/3L
                 locx <- tmp[, 1]
                 locy <- tmp[, 2]
                 K <- 1
             }
-            else {
+            else if (isTRUE(length(cmps$com[[k]]) > 2L) == TRUE) {
                 mt <- mat[com, com]
-                ndsc <- data.frame(X = round(stats::runif(dim(mt)[1]) * 
+                ndc <- data.frame(X = round(stats::runif(dim(mt)[1]) * 
                   2L, 5), Y = round(stats::runif(dim(mt)[2]) * 
                   2L, 5))
-                locx <- ndsc[, 1]
-                locy <- ndsc[, 2]
+                locx <- ndc[, 1]
+                locy <- ndc[, 2]
                 K <- 0.75 * sqrt(((max(locx) - min(locx)) * (max(locy) - 
                   min(locy)))/nrow(mt))
                 forcex <- rep(0, nrow(mt))
@@ -66,7 +74,8 @@ function (net, seed = seed, maxiter)
             }
             if (all(nds == 0) == FALSE && isTRUE(length(cmps$com) > 
                 1) == TRUE) {
-                ndsc <- nds[which(nds[, 1] != 0), ]
+                ndsc <- nds[which(nds[, 1] != 0 | nds[, 2] != 
+                  0), ]
                 if (isTRUE(length(which(ndsc[, 1] < mean(ndsc[, 
                   1]))) > length(which(ndsc[, 1] > mean(ndsc[, 
                   1])))) == TRUE) {
@@ -152,5 +161,5 @@ function (net, seed = seed, maxiter)
         nds[, 2] <- ((nds[, 2] - min(nds[, 2]))/(max(nds[, 2]) - 
             min(nds[, 2]))) * (rat))
     nds[, 2] <- nds[, 2] * -1
-    nds
+    as.data.frame(nds)
 }
