@@ -434,7 +434,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     else if (missing(coord) == TRUE) {
         flgcrd <- FALSE
         switch(match.arg(layout), force = {
-            crd <- frcd2(as.matrix(multiplex::mnplx(bmnet)), 
+            crd <- frcd(as.matrix(multiplex::mnplx(bmnet)), 
                 seed = seed, maxiter = maxiter)
         }, bip = {
             act <- nrm(rng(nn))
