@@ -9,18 +9,10 @@
 
 <br />
 
-Install **`multigraph`** 
+Install **`multigraph`** beta version
 
 ```{r }
-### from CRAN
-install.packages("multigraph")
-```
-
-or
-
-```{r }
-### from Github
-devtools::install_github("mplex/multigraph")
+devtools::install_github("mplex/multigraph", ref="beta")
 ```
 
 <br />
