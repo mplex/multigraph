@@ -1,13 +1,13 @@
-\name{frcd}
-\alias{frcd}
+\name{stsm}
+\alias{stsm}
 \title{
-Force directed layout
+Stress majorization layout
 }
 \description{
-A function to compute the graph coordinated system with a force directed layout algortihm
+A function to compute the graph coordinated system with a stress majorization layout algortihm
 }
 \usage{
-frcd(net, seed = seed, maxiter, drp, ...)
+stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,12 @@ frcd(net, seed = seed, maxiter, drp, ...)
   \item{drp}{
 	(optional) for \code{weighted} networks, drop values less than specified
 }
+  \item{jitter}{
+	(optional) jitter in the layout
+}
+  \item{method}{
+	(optional) initial distance method (default \code{binary})
+}
   \item{\dots}{
 	Additional argument items 
 }
@@ -34,7 +40,7 @@ This function was meant as an internal routine for graph visaulization; however,
 A data frame with the coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
 }
 \references{
-Fruchterman, T.M.J., & Reingold, E.M. Graph drawing by force-directed placement. \emph{Software-Practice & Experience}, 21(11), 1129-1164. 1991.
+Gansner, E.R., Koren, Y., & North, S. \emph{Graph drawing by stress majorization}. In Graph Drawing: 12th International Symposium, gd 2004, New York, NY, USA, September 29 - October 2, 2004, revised selected papers. Berlin Heidelberg: Springer. pp. 239-250. 2005.
 }
 \author{
 Antonio Rivero Ostoic
@@ -46,7 +52,7 @@ Antonio Rivero Ostoic
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{stsm}}, \code{\link{conc}}
+\code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{conc}}
 }
 %\examples{
 

@@ -1,46 +1,67 @@
 \name{multigraph}
 \alias{multigraph}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Multigraph
+Multigraphs and weighted multigraphs
 }
 \description{
-A function to create and manipulate multigraphs with different layouts
+A function to create and manipulate multigraphs and weighted multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE, 
-           collRecip = TRUE, coord = NULL, tcol = 1, bwd = 1, clu = NULL, 
-           cex = NULL, tcex = NULL, showLbs = TRUE, showAtts = TRUE, att = NULL, 
-           lbat = "1", seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
-           main = NULL, cex.main, bg, mar, pos, asp, lwd, pch, lty, ecol, vcol, 
-           vcol0, hds, vedist, rot, mirrorX, mirrorY, col, ...)
+multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline, 
+           directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1),
+           collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, 
+           pch, lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, 
+           hds, vedist, rot, mirrorX, mirrorY, col, lbat, drp, ...)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
 	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
 }
   \item{layout}{
-	the layout for the visualization:
-
+    the visualization layout:
        \code{circ} circular
-
        \code{force} force-directed algorithm 
-
+       \code{stress} stress-majorization algorithm 
+       \code{conc} concentric
        \code{rand} random
 }
+  \item{outline}{
+   (optional) the outline of the graph (see details)
+}
   \item{directed}{
-	(logical) whether or not graph is directed or unidrected
+	(logical) whether or not the graph is directed or unidrected
+}
+  \item{main}{
+	(optional) title of the plot
+}
+  \item{seed}{
+	(optional) the random seed number for the vertices' initial coordinates. Ignored for \code{circ} and \code{conc}
+}
+  \item{maxiter}{
+	(optional) the maximum number of iterations in layout algorithms. Ignored for \code{circ} and \code{conc}
+}
+  \item{alpha}{
+	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{collRecip}{
-	(logical) whether or not collapse reciprocated edges in the unidrected graph
+	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
+}
+  \item{showLbs}{
+	(optional and logical) whether or not show the vertex labels
+}
+  \item{showAtts}{
+	(optional and logical) whether or not show the vertex attribute labels
+}
+  \item{weighted}{
+	(optional and logical) whether or not the graph is weighted or dichotomous
+}
+  \item{cex.main}{
+	(optional) the size of the plot's title
 }
   \item{coord}{
-	(optional) data frame with the coordinates of the vertices. If given \code{layout} is ignored
-}
-  \item{tcol}{
-	(optional) the color of the vertices' labels
-}
-  \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size)
+	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{clu}{
 	(optional) the clustering of the vertices (see \emph{details})
@@ -48,35 +69,26 @@ multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE,
   \item{cex}{
 	(optional) the size of the vertices
 }
+  \item{lwd}{
+	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+}
+  \item{pch}{
+	(optional) the symbol representing the vertices
+}
+  \item{lty}{
+	(optional) the shape of the edges
+}
+  \item{bwd}{
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
+}
+  \item{tcol}{
+	(optional) the color of the vertices' labels
+}
   \item{tcex}{
 	size of the vertex labels. If \code{NULL}, it depends on the value of \code{cex}
 }
-  \item{showLbs}{
-	(logical) whether or not show the vertex labels
-}
-  \item{showAtts}{
-	(logical) whether or not show the vertex attribute labels
-}
   \item{att}{
 	(optional) a vector or an array representing the vertices' attributes
-}
-  \item{lbat}{
-	(optional) the labels for the vertices' attributes
-}
-  \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Ignored for other than \code{force} or \code{rand}
-}
-  \item{maxiter}{
-	(optional) the maximum number of iterations in the force directed algorithm (default \code{60} plus number of elements)
-}
-  \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
-}
-  \item{main}{
-	(optional) title of the plot
-}
-  \item{cex.main}{
-	(optional) the size of the plot's title
 }
   \item{bg}{
 	(optional) the background color of the plot
@@ -90,15 +102,6 @@ multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE,
   \item{asp}{
 	(optional) the aspect ratio of the plot
 }
-  \item{lwd}{
-	(optional) the width of the edges
-}
-  \item{pch}{
-	(optional) the symbol representing the vertices
-}
-  \item{lty}{
-	(optional) the shape of the edges
-}
   \item{ecol}{
 	(optional) the color of the edges
 }
@@ -109,13 +112,13 @@ multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE,
 	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{hds}{
-	(optional, experimental) arcs' head scale
+	(optional and experimental) arcs' head scale
 }
   \item{vedist}{
-	(optional, experimental) a real with vertex - edge distance
+	(optional and experimental) a real number with vertex - edge distance
 }
   \item{rot}{
-	(optional) rotation of the graph in degrees
+	(optional) clockwise rotation of the graph in degrees 
 }
   \item{mirrorX}{
 	(optional) mirror of the X axis
@@ -124,17 +127,23 @@ multigraph(net, layout = c("circ", "force", "rand"), directed = TRUE,
 	(optional) mirror of the Y axis
 }
   \item{col}{
-	(optional) same as \code{vcol}
+	(optional) alias for \code{vcol}
+}
+  \item{lbat}{
+	(optional) the labels for the vertices' attributes
+}
+  \item{drp}{
+	(optional) for \code{weighted} networks, drop values less than specified
 }
   \item{\dots}{
-	Additional items
+	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
 Multigraph are graph having parallel edges depicting different types of relations in a network. By default a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For a better visualization, undirected multigraphs automatically collapse the reciprocal ties, and there as an argument to prevent this to happen. It is possible to combine the symbols and color of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 }
 \value{
-A plot of the network as a multigraph.
+A plot of the network as a multigraph or a weighted multigraph.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -149,7 +158,7 @@ Antonio Rivero Ostoic
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{bmgraph}}
+\code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
 \examples{
 ## Create the data: two binary relations among three elements
@@ -163,5 +172,5 @@ multigraph(arr)
 multigraph(arr, layout = "force")
 
 }
-\keyword{ graphics }
 
+\keyword{ graphics }
