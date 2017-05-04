@@ -47,7 +47,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             for (k in 2:length(outline)) {
                 if (is.list(outline[[k]]) == TRUE && is.data.frame(outline[[k]]) == 
                   FALSE) {
-                  for (j in 1:length(outline[[k]])) {
+                  for (j in seq_len(length(outline[[k]]))) {
                     tmp[length(tmp) + 1L] <- as.list(outline[[k]][j])
                     names(tmp)[length(tmp)] <- attr(outline[[k]][j], 
                       "names")
@@ -75,7 +75,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         ifelse(isTRUE(flgrev == TRUE) == TRUE, outline <- tmp[length(tmp):1], 
             outline <- tmp)
-        for (i in 1:length(outline)) {
+        for (i in seq_len(length(outline))) {
             if (isTRUE(names(outline)[i] %in% c("seed", "main")) == 
                 TRUE) {
                 tmpi <- as.vector(outline[[i]])
@@ -135,7 +135,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     }
     else {
         bmnetdf <- data.frame(matrix(ncol = (nn + mm)^2, nrow = 0))
-        for (k in 1:dim(net)[3]) {
+        for (k in seq_len(dim(net)[3])) {
             if (isTRUE(directed == TRUE) == FALSE) {
                 temp <- (rbind(cbind(matrix(0, ncol = nn, nrow = nn, 
                   dimnames = list(rownames(net[, , k]), rownames(net[, 
@@ -157,17 +157,17 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         rm(k)
         rm(temp)
         bmnet <- array(dim = c((nn + mm), (nn + mm), nrow(bmnetdf)))
-        for (i in 1:nrow(bmnetdf)) {
-            bmnet[, , i][1:(nn + mm)^2] <- as.numeric(bmnetdf[i, 
+        for (i in seq_len(nrow(bmnetdf))) {
+            bmnet[, , i][seq_len((nn + mm)^2)] <- as.numeric(bmnetdf[i, 
                 ])
         }
         rm(i)
     }
     n <- dim(bmnet)[1]
-    ifelse(is.null(dimnames(net)[[1]]) == TRUE, nlbs <- as.character(1:nn), 
+    ifelse(is.null(dimnames(net)[[1]]) == TRUE, nlbs <- as.character(seq_len(nn)), 
         nlbs <- dimnames(net)[[1]])
     ifelse(is.null(dimnames(net)[[2]]) == TRUE, mlbs <- as.character(nn + 
-        1:mm), mlbs <- dimnames(net)[[2]])
+        seq_len(mm)), mlbs <- dimnames(net)[[2]])
     lbs <- dimnames(bmnet)[[1]] <- dimnames(bmnet)[[2]] <- c(nlbs, 
         mlbs)
     if (is.na(dim(net)[3]) == FALSE && is.null(dimnames(net)[[3]]) == 
@@ -199,7 +199,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         else {
             if (isTRUE(weighted == FALSE) == TRUE) {
                 ucbmnet <- multiplex::dichot(bmnet, c = 1L)
-                for (k in 1:dim(bmnet)[3]) {
+                for (k in seq_len(dim(bmnet)[3])) {
                   nt <- bmnet[, , k] + t(bmnet[, , k])
                   rcp <- multiplex::dichot(nt, c = 2L)
                   if (isTRUE(collRecip == TRUE) == TRUE) {
@@ -215,7 +215,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             else {
                 ucbmnet <- bmnet
                 if (isTRUE(collRecip == TRUE) == TRUE) {
-                  for (k in 1:dim(bmnet)[3]) {
+                  for (k in seq_len(dim(bmnet)[3])) {
                     ucbmnet[upper.tri(ucbmnet[, , k])] <- 0L
                   }
                   rm(k)
@@ -249,23 +249,23 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             r))
     }
     else {
-        ifelse(missing(lty) == TRUE, lty <- 1:r, NA)
+        ifelse(missing(lty) == TRUE, lty <- seq_len(r), NA)
     }
     if (isTRUE(z == 1L) == TRUE) {
         Lt <- lty[1]
         vecol <- ecol[1]
     }
     else {
-        ifelse(isTRUE(length(lty) == 1L) == TRUE, Lt <- 1:r, 
-            Lt <- rep(lty, r)[1:r])
+        ifelse(isTRUE(length(lty) == 1L) == TRUE, Lt <- seq_len(r), 
+            Lt <- rep(lty, r)[seq_len(r)])
         ifelse(isTRUE(length(ecol) == 1L) == TRUE, vecol <- rep(ecol, 
-            z), vecol <- rep(ecol, z)[1:z])
+            z), vecol <- rep(ecol, z)[seq_len(z)])
         if (isTRUE(length(lty) == length(Lt)) == FALSE) {
             Ltc <- seq_along(vecol)
         }
         else {
             ifelse(isTRUE(seq(lty) == lty) == TRUE, Ltc <- Lt, 
-                Ltc <- 1:r)
+                Ltc <- seq_len(r))
         }
     }
     vltz <- Lt
@@ -281,7 +281,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             stop("'clu' must be a vector")
         if (is.character(clu) == TRUE) {
             tmpclu <- clu
-            for (i in 1:nlevels(factor(clu))) {
+            for (i in seq_len(nlevels(factor(clu)))) {
                 clu[which(levels(factor(tmpclu))[i] == clu)] <- i
             }
             rm(i)
@@ -352,7 +352,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     else if (isTRUE(length(pch) == nclu) == TRUE) {
         if (identical(pch, clu) == FALSE) {
             tmppch <- rep(0, n)
-            for (i in 1:nclu) {
+            for (i in seq_len(nclu)) {
                 tmppch[which(clu == (levels(factor(clu))[i]))] <- pch[i]
             }
             rm(i)
@@ -376,7 +376,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     if (isTRUE(length(vcol) == nclu) == TRUE) {
         if (identical(vcol, clu) == FALSE) {
             tmpvcol <- rep(0, n)
-            for (i in 1:nclu) {
+            for (i in seq_len(nclu)) {
                 tmpvcol[which(clu == as.numeric(levels(factor(clu))[i]))] <- vcol[i]
             }
             rm(i)
@@ -401,7 +401,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         else if (isTRUE(length(vcol0) == nclu) == TRUE) {
             if (identical(vcol0, clu) == FALSE) {
                 tmpvcol0 <- rep(0, n)
-                for (i in 1:nclu) {
+                for (i in seq_len(nclu)) {
                   tmpvcol0[which(clu == as.numeric(levels(factor(clu))[i]))] <- vcol0[i]
                 }
                 rm(i)
@@ -418,13 +418,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         vcol0 <- vcol
     }
     m <- n
-    if (isTRUE(flgcx == TRUE) == FALSE) {
-        ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 90L, 
-            fds <- 90L)
-    }
-    else if (isTRUE(flgcx == TRUE) == TRUE) {
-        fds <- 100L
-    }
+    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 90L, fds <- 100L)
     if (missing(coord) == FALSE) {
         if (isTRUE(nrow(coord) == n) == FALSE) 
             stop("Length of 'coord' does not match network order.")
@@ -436,6 +430,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         switch(match.arg(layout), force = {
             crd <- frcd(as.matrix(multiplex::mnplx(bmnet)), seed = seed, 
                 maxiter = maxiter)
+            fds <- fds + 20L
         }, bip = {
             act <- nrm(rng(nn))
             evt <- nrm(rng(mm))
@@ -525,7 +520,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             "bip3e", pos <- c(2, 1, 4), pos <- c(2, 4))
         ifelse(match.arg(layout) == "bip4", pos <- c(2, 4, 3, 
             1), NA)
-        ifelse(match.arg(layout) == "circ", pos <- c(4, 2), NA)
+        ifelse(match.arg(layout) == "circ" | match.arg(layout) == 
+            "stress", pos <- c(4, 2), NA)
     }
     else {
         flgpos <- FALSE
@@ -557,7 +553,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         lbgml <- tolower(as.vector(crd[, 3]))
         lbnet <- tolower(as.vector(lbs))
         lbp <- vector()
-        for (i in 1:nrow(crd)) {
+        for (i in seq_len(nrow(crd))) {
             lbp <- append(lbp, which(lbnet[i] == lbgml))
         }
         rm(i)
@@ -607,8 +603,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     }
     if (match.arg(layout) == "force" | match.arg(layout) == "rand" | 
         match.arg(layout) == "circ" | match.arg(layout) == "stress") {
-        xlim <- c(min(nds[, 1]) - (max(cex)/100L) - (0), max(nds[, 
-            1]) + (max(cex)/100L) + (0))
+        xlim <- c(min(nds[, 1]) - (max(cex)/50L) - (0), max(nds[, 
+            1]) + (max(cex)/50L) + (0))
         ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
             2]) + (max(cex)/100L))
         ifelse(missing(asp) == TRUE, asp <- 1, NA)
@@ -622,7 +618,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         ifelse(missing(asp) == TRUE, asp <- 1.2, NA)
     }
     else {
-        mx <- ceiling(length(dhc(lbs[1:nn], ""))/nn) * 0.02
+        mx <- ceiling(length(dhc(lbs[seq_len(nn)], ""))/nn) * 
+            0.02
         xlim <- c(min(nds[, 1]) - (max(cex)/100L) - (mx), max(nds[, 
             1]) + (max(cex)/100L) + (mx))
         ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
@@ -688,7 +685,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         ylab = "", ylim = ylim, xlim = xlim, asp = asp, main = main, 
         cex.main = cex.main)
     tlbs <- vector()
-    for (i in 1:length(attr(bds, "names"))) {
+    for (i in seq_len(length(attr(bds, "names")))) {
         ifelse(isTRUE(length(multiplex::dhc(attr(bds, "names")[i], 
             sep = "")) > 4L) == TRUE, tlbs <- append(tlbs, tolower(paste(multiplex::dhc(attr(bds, 
             "names")[i], sep = "")[1:4], collapse = ""))), tlbs <- append(tlbs, 
@@ -699,7 +696,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         10L) == TRUE, fnucbmnet <- (norm(as.matrix(ucbmnet), 
         type = "F")), NA)
     if (isTRUE(length(bds) > 0) == TRUE) {
-        for (k in 1:length(bds)) {
+        for (k in seq_len(length(bds))) {
             prs <- as.numeric(multiplex::dhc(bds[[k]]))
             if (isTRUE(directed == TRUE) == TRUE | isTRUE(collRecip == 
                 TRUE) == FALSE) {
@@ -791,9 +788,9 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                       multiplex::dhc(bds[[k]][1])[2]) == TRUE) {
                       Prs <- vector()
                       length(Prs) <- length(prs)
-                      Prs[which(1:length(prs)%%2L == 1L)] <- prs[which(1:length(prs)%%2L == 
+                      Prs[which(seq_len(length(prs))%%2L == 1L)] <- prs[which(seq_len(length(prs))%%2L == 
                         0L)]
-                      Prs[which(1:length(prs)%%2L == 0L)] <- prs[which(1:length(prs)%%2L == 
+                      Prs[which(seq_len(length(prs))%%2L == 0L)] <- prs[which(seq_len(length(prs))%%2L == 
                         1L)]
                       cx <- cex[Prs]
                     }
@@ -828,7 +825,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 if (isTRUE(weighted == TRUE) == TRUE) {
                   Lw <- vector()
                   i <- 1
-                  for (j in 1:length(bds[[k]])) {
+                  for (j in seq_len(length(bds[[k]]))) {
                     qn <- c(prs[i], prs[(i + 1)])
                     if (isTRUE(directed == FALSE) == TRUE && 
                       isTRUE(collRecip == TRUE) == TRUE) {
@@ -902,13 +899,15 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         if (match.arg(layout) == "bip3") {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(nds[1:length(act1), ], labels = lbs[1:length(act1)], 
-                  cex = tcex, adj = 0.5, col = tcol[1])
+                graphics::text(nds[seq_len(length(act1)), ], 
+                  labels = lbs[seq_len(length(act1))], cex = tcex, 
+                  adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[1:length(act1), ], lbs[1:length(act1)], 
-                  cex = tcex, pos = pos[1], col = tcol[1], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                graphics::text(nds[seq_len(length(act1)), ], 
+                  lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
+                  col = tcol[1], offset = (cex/4L), adj = c(0.5, 
+                    1))
             }
             if (isTRUE(pos[2] == 0) == TRUE) {
                 graphics::text(nds[(nn + 1L):dim(bmnet)[1], ], 
@@ -935,11 +934,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         else if (match.arg(layout) == "bip3e") {
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(nds[1:length(act), ], labels = lbs[1:length(act)], 
+                graphics::text(nds[seq_len(length(act)), ], labels = lbs[seq_len(length(act))], 
                   cex = tcex, adj = 0.5, col = tcol[2])
             }
             else {
-                graphics::text(nds[1:length(act), ], lbs[1:length(act)], 
+                graphics::text(nds[seq_len(length(act)), ], lbs[seq_len(length(act))], 
                   cex = tcex, pos = pos[2], col = tcol[2], offset = (cex/4L), 
                   adj = c(0.5, 1))
             }
@@ -968,16 +967,18 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         else if (match.arg(layout) == "bip4") {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(nds[1:length(act1), ], labels = lbs[1:length(act1)], 
-                  cex = tcex, adj = 0.5, col = tcol[1])
+                graphics::text(nds[seq_len(length(act1)), ], 
+                  labels = lbs[seq_len(length(act1))], cex = tcex, 
+                  adj = 0.5, col = tcol[1])
                 graphics::text(nds[(length(act1) + 1):nn, ], 
                   labels = lbs[(length(act1) + 1):nn], cex = tcex, 
                   adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[1:length(act1), ], lbs[1:length(act1)], 
-                  cex = tcex, pos = pos[1], col = tcol[1], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                graphics::text(nds[seq_len(length(act1)), ], 
+                  lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
+                  col = tcol[1], offset = (cex/4L), adj = c(0.5, 
+                    1))
                 graphics::text(nds[(length(act1) + 1):nn, ], 
                   labels = lbs[(length(act1) + 1):nn], cex = tcex, 
                   pos = pos[3], col = tcol[1], offset = (cex/4L), 
@@ -1005,13 +1006,13 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         else {
             if (isTRUE(length(pos) == 2) == TRUE) {
                 if (isTRUE(pos[1] == 0) == TRUE) {
-                  graphics::text(nds[1:nn, ], labels = lbs[1:nn], 
+                  graphics::text(nds[seq_len(nn), ], labels = lbs[seq_len(nn)], 
                     cex = tcex, adj = 0.5, col = tcol[1])
                 }
                 else {
-                  graphics::text(nds[1:nn, ], lbs[1:nn], cex = tcex, 
-                    pos = pos[1], col = tcol[1], offset = (cex/4L), 
-                    adj = c(0.5, 1))
+                  graphics::text(nds[seq_len(nn), ], lbs[seq_len(nn)], 
+                    cex = tcex, pos = pos[1], col = tcol[1], 
+                    offset = (cex/4L), adj = c(0.5, 1))
                 }
                 if (isTRUE(pos[2] == 0) == TRUE) {
                   graphics::text(nds[(nn + 1L):dim(bmnet)[1], 
