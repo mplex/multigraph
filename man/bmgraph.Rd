@@ -42,7 +42,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels
+	(optional and logical) whether or not show the vertex labels when dimnames available
 }
   \item{showAtts}{
 	(optional and logical) whether or not show the vertex attribute labels
@@ -78,7 +78,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 	(optional) the size of the vertices
 }
   \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``in the middle of the vertex'')
+	(optional) the position of the vertices' labels (\code{0} means ``at the center of the vertex'')
 }
   \item{lwd}{
 	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
