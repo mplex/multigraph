@@ -195,11 +195,11 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ucnet <- netd
     }
     if (isTRUE(directed == TRUE) == FALSE) {
-        bd <- multiplex::bundles(ucnet, loops = FALSE, lb2lb = FALSE, 
+        bd <- multiplex::bundles(ucnet, loops = loops, lb2lb = FALSE, 
             collapse = FALSE)
     }
     else {
-        bd <- multiplex::bundles(netd, loops = FALSE, lb2lb = FALSE, 
+        bd <- multiplex::bundles(netd, loops = loops, lb2lb = FALSE, 
             collapse = FALSE)
     }
     ifelse(isTRUE(z == 1L) == TRUE, r <- 1L, r <- length(bd[[1]]))
