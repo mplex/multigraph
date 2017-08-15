@@ -7,11 +7,11 @@ Multigraphs and weighted multigraphs
 A function to create and manipulate multigraphs and weighted multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
-           directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1),
-           collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd,
-           pch, lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0,
-           hds, vedist, rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, ...)
+multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline, 
+    directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
+    collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, pch, 
+    lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, vedist, 
+    rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, signed, scl, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,8 +21,8 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
   \item{layout}{
     the visualization layout: \\
        \code{circ} circular \\
-       \code{force} force-directed algorithm  \\
-       \code{stress} stress-majorization algorithm  \\
+       \code{force} force-directed   \\
+       \code{stress} stress-majorization  \\
        \code{conc} concentric \\
        \code{rand} random \\
 }
@@ -145,6 +145,12 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
 }
   \item{swp2}{
 	(optional and logical) whether or not swap reciprocals
+}
+  \item{signed}{
+	(optional and logical) whether or not the graph is a signed structure
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
 }
 }
 \details{

@@ -8,10 +8,11 @@ A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
 bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ", 
-        "stress", "CA"), outline, coord, tcex, alpha = c(1, 1, 1), showLbs, showAtts,
-        att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
-        collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, maxiter = 100,
-        bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, jitter, ...)
+        "stress", "CA", "circ2"), outline, coord, tcex, alpha = c(1, 1, 1), showLbs, 
+        showAtts, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, 
+        weighted, collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
+        maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, 
+        jitter, ...)
 }
 \arguments{
   \item{net}{
@@ -28,6 +29,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
        \code{circ} circular
        \code{stress} stress-majorization algorithm 
        \code{CA} correspondence analysis
+       \code{circ2} two semi-circles
 }
   \item{outline}{
    (optional) the outline of the graph (see details)
