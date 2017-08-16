@@ -190,6 +190,25 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         NA)
     ifelse(missing(cex.main) == TRUE, cex.main <- graphics::par()$cex.main, 
         NA)
+    if (!(missing(hds))) {
+        if (isTRUE(hds > 1L) == TRUE) {
+            hds <- (hds/1.5)
+        }
+        else if (isTRUE(hds < 1L) == TRUE) {
+            hds <- (hds/(hds + 0.15))
+        }
+        else if (isTRUE(hds == 0L) == TRUE) {
+            hds <- 0.01
+        }
+        else {
+            NA
+        }
+    }
+    else {
+        hds <- 1L
+    }
+    ifelse(missing(vedist) == TRUE, vedist <- 0, NA)
+    ifelse(isTRUE(vedist > 1L) == TRUE, vedist <- 1L, NA)
     ifelse(missing(rot) == TRUE, NA, rot <- rot * -1)
     if (isTRUE(directed == FALSE) == TRUE) {
         if (isTRUE(z == 1L) == TRUE) {
@@ -566,6 +585,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         min(crd[, 2]))/(max(crd[, 2]) - min(crd[, 2]))) * (1L/rat), 
         crd[, 2] <- ((crd[, 2] - min(crd[, 2]))/(max(crd[, 2]) - 
             min(crd[, 2]))) * (rat))
+    fds <- fds + (vedist * -10)
     if (isTRUE(flgcrd == TRUE) == TRUE && isTRUE(ncol(crd) > 
         2) == TRUE) {
         lbgml <- tolower(as.vector(crd[, 3]))
@@ -690,7 +710,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         else {
             NA
         }
-        fds <- fds + (r * 2)
     }
     opm <- graphics::par()$mar
     ifelse(all(mar == c(5.1, 4.1, 4.1, 2.1)) == TRUE, mar <- rep(0, 
@@ -875,14 +894,16 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 }
                 if (isTRUE(z == 1L) == TRUE) {
                   mbnd(pars, rr, bds[[k]], vlt, cx, lwd, vecol, 
-                    directed, asp, bwd, alfa, fds, flgcx, weighted)
+                    directed, bwd, alfa, fds, flgcx, weighted, 
+                    flgcr, hds, n)
                 }
                 else {
                   ifelse(isTRUE(length(lty) == 1L) == TRUE, mbnd(pars, 
                     rr, bds[[k]], vlt1, cx, lwd, vecol[vltc], 
-                    directed, asp, bwd, alfa, fds, flgcx, weighted), 
-                    mbnd(pars, rr, bds[[k]], vlt, cx, lwd, vecol[vltc], 
-                      directed, asp, bwd, alfa, fds, flgcx, weighted))
+                    directed, bwd, alfa, fds, flgcx, weighted, 
+                    flgcr, hds, n), mbnd(pars, rr, bds[[k]], 
+                    vlt, cx, lwd, vecol[vltc], directed, bwd, 
+                    alfa, fds, flgcx, weighted, flgcr, hds, n))
                 }
             }
             else {
@@ -915,36 +936,37 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             ifelse(isTRUE(max(cex) < 2) == TRUE, tcex <- cex * 
                 0.66, tcex <- cex * 0.33)
         }
+        ndss <- nds
         if (match.arg(layout) == "bip3") {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(nds[seq_len(length(act1)), ], 
+                graphics::text(ndss[seq_len(length(act1)), ], 
                   labels = lbs[seq_len(length(act1))], cex = tcex, 
                   adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[seq_len(length(act1)), ], 
+                graphics::text(ndss[seq_len(length(act1)), ], 
                   lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
                   col = tcol[1], offset = (cex/4L), adj = c(0.5, 
                     1))
             }
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(nds[(nn + 1L):dim(bmnet)[1], ], 
-                  labels = lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
+                graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                  ], labels = lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
                   adj = 0.5, col = tcol[2])
             }
             else {
-                graphics::text(nds[(nn + 1L):dim(bmnet)[1], ], 
-                  lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, pos = pos[2], 
-                  col = tcol[2], offset = (cex/4L), adj = c(0.5, 
-                    1))
+                graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                  ], lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
+                  pos = pos[2], col = tcol[2], offset = (cex/4L), 
+                  adj = c(0.5, 1))
             }
             if (isTRUE(pos[3] == 0) == TRUE) {
-                graphics::text(nds[(length(act1) + 1):nn, ], 
+                graphics::text(ndss[(length(act1) + 1):nn, ], 
                   labels = lbs[(length(act1) + 1):nn], cex = tcex, 
                   adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[(length(act1) + 1):nn, ], 
+                graphics::text(ndss[(length(act1) + 1):nn, ], 
                   lbs[(length(act1) + 1):nn], cex = tcex, pos = pos[3], 
                   col = tcol[1], offset = (cex/4L), adj = c(0.5, 
                     1))
@@ -952,32 +974,34 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         else if (match.arg(layout) == "bip3e") {
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(nds[seq_len(length(act)), ], labels = lbs[seq_len(length(act))], 
-                  cex = tcex, adj = 0.5, col = tcol[2])
+                graphics::text(ndss[seq_len(length(act)), ], 
+                  labels = lbs[seq_len(length(act))], cex = tcex, 
+                  adj = 0.5, col = tcol[2])
             }
             else {
-                graphics::text(nds[seq_len(length(act)), ], lbs[seq_len(length(act))], 
-                  cex = tcex, pos = pos[2], col = tcol[2], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                graphics::text(ndss[seq_len(length(act)), ], 
+                  lbs[seq_len(length(act))], cex = tcex, pos = pos[2], 
+                  col = tcol[2], offset = (cex/4L), adj = c(0.5, 
+                    1))
             }
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(nds[(nn + 1L):(nn + length(evt1)), 
+                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
                   ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
                   cex = tcex, adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[(nn + 1L):(nn + length(evt1)), 
+                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
                   ], lbs[(nn + 1L):(nn + length(evt1))], cex = tcex, 
                   pos = pos[1], col = tcol[1], offset = (cex/4L), 
                   adj = c(0.5, 1))
             }
             if (isTRUE(pos[3] == 0) == TRUE) {
-                graphics::text(nds[(nn + 1 + length(evt1)):dim(bmnet)[1], 
+                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
                   ], labels = lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
                   cex = tcex, adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[(nn + 1 + length(evt1)):dim(bmnet)[1], 
+                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
                   ], lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
                   cex = tcex, pos = pos[3], col = tcol[1], offset = (cex/4L), 
                   adj = c(0.5, 1))
@@ -985,37 +1009,37 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         }
         else if (match.arg(layout) == "bip4") {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(nds[seq_len(length(act1)), ], 
+                graphics::text(ndss[seq_len(length(act1)), ], 
                   labels = lbs[seq_len(length(act1))], cex = tcex, 
                   adj = 0.5, col = tcol[1])
-                graphics::text(nds[(length(act1) + 1):nn, ], 
+                graphics::text(ndss[(length(act1) + 1):nn, ], 
                   labels = lbs[(length(act1) + 1):nn], cex = tcex, 
                   adj = 0.5, col = tcol[1])
             }
             else {
-                graphics::text(nds[seq_len(length(act1)), ], 
+                graphics::text(ndss[seq_len(length(act1)), ], 
                   lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
                   col = tcol[1], offset = (cex/4L), adj = c(0.5, 
                     1))
-                graphics::text(nds[(length(act1) + 1):nn, ], 
+                graphics::text(ndss[(length(act1) + 1):nn, ], 
                   labels = lbs[(length(act1) + 1):nn], cex = tcex, 
                   pos = pos[3], col = tcol[1], offset = (cex/4L), 
                   adj = c(0.5, 1))
             }
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(nds[(nn + 1L):(nn + length(evt1)), 
+                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
                   ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
                   cex = tcex, adj = 0.5, col = tcol[2])
-                graphics::text(nds[(nn + 1 + length(evt1)):dim(bmnet)[1], 
+                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
                   ], labels = lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
                   cex = tcex, adj = 0.5, col = tcol[2])
             }
             else {
-                graphics::text(nds[(nn + 1L):(nn + length(evt1)), 
+                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
                   ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
                   cex = tcex, pos = pos[2], col = tcol[2], offset = (cex/4L), 
                   adj = c(0.5, 1))
-                graphics::text(nds[(nn + 1 + length(evt1)):dim(bmnet)[1], 
+                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
                   ], lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
                   cex = tcex, pos = pos[4], col = tcol[2], offset = (cex/4L), 
                   adj = c(0.5, 1))
@@ -1024,21 +1048,21 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         else {
             if (isTRUE(length(pos) == 2) == TRUE) {
                 if (isTRUE(pos[1] == 0) == TRUE) {
-                  graphics::text(nds[seq_len(nn), ], labels = lbs[seq_len(nn)], 
+                  graphics::text(ndss[seq_len(nn), ], labels = lbs[seq_len(nn)], 
                     cex = tcex, adj = 0.5, col = tcol[1])
                 }
                 else {
-                  graphics::text(nds[seq_len(nn), ], lbs[seq_len(nn)], 
+                  graphics::text(ndss[seq_len(nn), ], lbs[seq_len(nn)], 
                     cex = tcex, pos = pos[1], col = tcol[1], 
                     offset = (cex/4L), adj = c(0.5, 1))
                 }
                 if (isTRUE(pos[2] == 0) == TRUE) {
-                  graphics::text(nds[(nn + 1L):dim(bmnet)[1], 
+                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
                     ], labels = lbs[(nn + 1L):dim(bmnet)[1]], 
                     cex = tcex, adj = 0.5, col = tcol[2])
                 }
                 else {
-                  graphics::text(nds[(nn + 1L):dim(bmnet)[1], 
+                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
                     ], lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
                     pos = pos[2], col = tcol[2], offset = (cex/4L), 
                     adj = c(0.5, 1))
@@ -1046,11 +1070,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             }
             else if (isTRUE(length(pos) == 1) == TRUE) {
                 if (isTRUE(pos == 0) == TRUE) {
-                  graphics::text(nds, labels = lbs, cex = tcex, 
+                  graphics::text(ndss, labels = lbs, cex = tcex, 
                     adj = 0.5, col = tcol[1])
                 }
                 else {
-                  graphics::text(nds, lbs, cex = tcex, pos = pos, 
+                  graphics::text(ndss, lbs, cex = tcex, pos = pos, 
                     col = tcol[1], offset = (cex/4L), adj = c(0.5, 
                       1))
                 }
