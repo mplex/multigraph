@@ -1,14 +1,14 @@
 Package: multigraph
 Type: Package
-Title: Plot and Manipulate Multigraphs - Beta version
+Title: Plot and Manipulate Multigraphs
 Version: 0.70
 Depends: R (>= 3.3.1), multiplex (>= 2.6)
 Imports: methods
-Date: 2017-08-15
+Date: 2017-08-17
 Authors@R: person(given = "Antonio", family = "Rivero Ostoic", role = c("aut", "cre"), email = "multiplex@post.com")
 Author: Antonio Rivero Ostoic [aut, cre]
 Maintainer: Antonio Rivero Ostoic <multiplex@post.com>
-Description: Functions to plot and manipulate multigraphs, weighted multigraphs, and bipartite graphs with different layout options.
+Description: Functions to plot and manipulate multigraphs, signed, weighted multigraphs, and bipartite graphs with different layout options.
 URL: http://github.com/mplex/multigraph/
 BugReports: https://github.com/mplex/multigraph/issues/
 Repository: CRAN
