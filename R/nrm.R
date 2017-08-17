@@ -1,6 +1,9 @@
 nrm <-
 function (x, digits = 3) 
 {
+    if (isTRUE(length(x) == 1L) == TRUE | isTRUE(sum(x) == 0) == 
+        TRUE) 
+        return(x)
     if (is.array(x) == TRUE) {
         xnorm <- (x[, 1] - min(x[, 1]))/(max(x[, 1]) - min(x[, 
             1]))
