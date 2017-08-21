@@ -22,7 +22,7 @@ function (net, seed = seed, maxiter, drp, ...)
             com <- which(lbs %in% cmps$com[[k]])
             if (isTRUE(length(cmps$com[[k]]) == 2L) == TRUE) {
                 tmp <- popl(2L, seed = seed)/3L
-                locx <- tmp[, 1]
+                locx <- tmp[, 1] + 0.1
                 locy <- tmp[, 2]
                 K <- 1
             }
@@ -71,6 +71,9 @@ function (net, seed = seed, maxiter, drp, ...)
                   rm(i)
                 }
                 rm(niter)
+            }
+            else {
+                NA
             }
             if (all(nds == 0) == FALSE && isTRUE(length(cmps$com) > 
                 1) == TRUE) {
@@ -134,12 +137,12 @@ function (net, seed = seed, maxiter, drp, ...)
             ndst.chull <- ndst[ndst.chull, ]
             ifelse(isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
                 1]))) > length(which(ndst.chull[, 1] > mean(ndst.chull[, 
-                1])))) == TRUE, locx <- locx + (K/10L), locx <- locx + 
-                ((K/10L) * -1))
+                1])))) == TRUE, locx <- locx + (K/n), locx <- locx + 
+                ((K/n) * -1))
             ifelse(isTRUE(length(which(ndst.chull[, 2] < mean(ndst.chull[, 
                 2]))) > length(which(ndst.chull[, 2] > mean(ndst.chull[, 
-                2])))) == TRUE, locy <- locy - (K/10L), locy <- locy - 
-                ((K/10L) * -1))
+                2])))) == TRUE, locy <- locy - (K/n), locy <- locy - 
+                ((K/n) * -1))
         }
         else {
             locx <- (tmpi[, 1])
@@ -149,17 +152,17 @@ function (net, seed = seed, maxiter, drp, ...)
     }
     else if (isTRUE(length(cmps$isol) == 1L) == TRUE) {
         ndst <- nds[which(nds[, 1] != 0), ]
-        locx <- max(ndst[, 1]) + (K/10L)
+        locx <- max(ndst[, 1]) + (K/n)
         ifelse(isTRUE(rat < 0) == TRUE, locy <- max(ndst[, 2]) + 
-            (K/10L), locy <- min(ndst[, 2]) - (K/10L))
+            (K/n), locy <- min(ndst[, 2]) - (K/n))
         nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy))
     }
     nds[, 1] <- (nds[, 1] - min(nds[, 1]))/(max(nds[, 1]) - min(nds[, 
-        1]))
+        1])) + (K/n)
     ifelse(isTRUE(rat > 0) == TRUE, nds[, 2] <- ((nds[, 2] - 
         min(nds[, 2]))/(max(nds[, 2]) - min(nds[, 2]))) * (1L/rat), 
         nds[, 2] <- ((nds[, 2] - min(nds[, 2]))/(max(nds[, 2]) - 
-            min(nds[, 2]))) * (rat))
+            min(nds[, 2]))) * (rat) + (K/n))
     nds[, 2] <- nds[, 2] * -1
     as.data.frame(nds)
 }
