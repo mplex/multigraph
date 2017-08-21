@@ -7,11 +7,11 @@ Multigraphs and weighted multigraphs
 A function to create and manipulate multigraphs and weighted multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
-           directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1),
-           collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd,
-           pch, lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0,
-           hds, vedist, rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, ...)
+multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline, 
+    directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
+    collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, pch, 
+    lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, vedist, 
+    rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, signed, scl, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,12 +19,17 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
 	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
 }
   \item{layout}{
-    the visualization layout: \\
-       \code{circ} circular \\
-       \code{force} force-directed algorithm  \\
-       \code{stress} stress-majorization algorithm  \\
-       \code{conc} concentric \\
-       \code{rand} random \\
+    the visualization layout: 
+
+       \code{circ} circular 
+
+       \code{force} force-directed   
+
+       \code{stress} stress-majorization  
+
+       \code{conc} concentric 
+
+       \code{rand} random 
 }
   \item{outline}{
    (optional) the outline of the graph (see details)
@@ -146,6 +151,12 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
   \item{swp2}{
 	(optional and logical) whether or not swap reciprocals
 }
+  \item{signed}{
+	(optional and logical) whether or not the graph is a signed structure
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+}
 }
 \details{
 Multigraph are graph having parallel edges depicting different types of relations in a network. By default a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For a better visualization, undirected multigraphs automatically collapse the reciprocal ties, and there as an argument to prevent this to happen. It is possible to combine the symbols and color of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
@@ -180,6 +191,15 @@ multigraph(arr)
 
 ## Now with a force directed algorithm
 multigraph(arr, layout = "force")
+
+## As weighted graph
+multigraph(arr, weighted = TRUE)
+
+## As signed graph
+multigraph(arr, signed = TRUE)
+
+## With loops and a costumized vertex size
+multigraph(arr, cex = 3, loops = TRUE)
 
 }
 

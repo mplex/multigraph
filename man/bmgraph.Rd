@@ -8,26 +8,38 @@ A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
 bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ", 
-        "stress", "CA"), outline, coord, tcex, alpha = c(1, 1, 1), showLbs, showAtts,
-        att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
-        collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, maxiter = 100,
-        bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, jitter, ...)
+        "stress", "CA", "circ2"), outline, coord, tcex, alpha = c(1, 1, 1), showLbs, 
+        showAtts, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, 
+        weighted, collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
+        maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, 
+        jitter, ...)
 }
 \arguments{
   \item{net}{
 	data frame or array representing the two-mode network (see \emph{details})
 }
   \item{layout}{
-    the visualization layout:
-       \code{bip} (default) bipartite graph
-       \code{bip3} bipartite graph with three columns
-       \code{bip3e} bipartite graph with three columns for events
-       \code{bip4} ``square'' bipartite graph
-       \code{force} force-directed algorithm 
-       \code{rand} random
-       \code{circ} circular
-       \code{stress} stress-majorization algorithm 
-       \code{CA} correspondence analysis
+    the visualization layout:   
+
+       \code{bip} (default) bipartite graph   
+
+       \code{bip3} bipartite graph with three columns   
+
+       \code{bip3e} bipartite graph with three columns for events   
+
+       \code{bip4} ``square'' bipartite graph   
+
+       \code{force} force-directed algorithm    
+
+       \code{rand} random   
+
+       \code{circ} circular   
+
+       \code{stress} stress-majorization algorithm    
+
+       \code{CA} correspondence analysis   
+
+       \code{circ2} two semi-circles  
 }
   \item{outline}{
    (optional) the outline of the graph (see details)
@@ -167,8 +179,17 @@ Antonio Rivero Ostoic
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 3 ) )
 
-## Plot this network as bipartite graph
+## Plot this network as bipartite (multi)graph
 bmgraph(arr)
+
+## As weighted bipartite graph
+bmgraph(arr, weighted = TRUE)
+
+## Now with a stress majorization algorithm
+bmgraph(arr, layout = "stress")
+
+## With a correspondence analysis method
+bmgraph(arr, layout = "CA", asp = NA)
 
 }
 \keyword{ graphics }
