@@ -11,14 +11,14 @@
 
 Install **`multigraph`** 
 
-```{r }
+```r
 ### from CRAN
 install.packages("multigraph")
 ```
 
 or
 
-```{r }
+```r
 ### from Github
 devtools::install_github("mplex/multigraph")
 ```
@@ -28,7 +28,7 @@ devtools::install_github("mplex/multigraph")
 
 When you load the package then **`multiplex`** is automatically invoked.
 
-```{r }
+```r
 library("multigraph")
 # Loading required package: multiplex
 ```
@@ -42,7 +42,7 @@ We work with Padgett's Florentine Families data set, which is publicly available
 <br />
 
 
-```{r }
+```r
 ### Read the Padgett Florentine Families data set as a Ucinet DL file
 ### from a public repository and storage it as an object
 
@@ -105,7 +105,7 @@ Object `floflies` represents this network where `"PADGM"` are marriage relations
 
 We plot this network with the `multigraph` function:
 
-```{r }
+```r
 multigraph(floflies)
 ```
 ![Default layout of `multigraph`](figs/floflies.png)
@@ -125,7 +125,7 @@ Besides the circular layout, another possibility is to apply a force-directed la
 <br /> 
 
 
-```{r }
+```r
 multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
 +  ecol = 1, lwd = 2, bwd = .5)
 ```
@@ -136,7 +136,7 @@ multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex
 <br /> 
 
 
-```{r }
+```r
 multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
 +  ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
 ```
@@ -158,14 +158,14 @@ Note that when the graph is depicted as *undirected* then the reciprocal ties by
 In a similar way than before, we obtain some actor attributes of the Florentine Families network with the `read.dl` function from this repository.
 
 
-```{r }
+```r
 flofliesatt <- read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
 ```
 
 and we take a look at the ` flofliesatt` that storages this type of information
 
 
-```{r }
+```r
 flofliesatt
 
           WEALTH #PRIORS #TIES
@@ -190,7 +190,7 @@ PUCCI          3       0     1
 
 However, in order to depict the multigraph of `floflies` with the information contained in `flofliesatt`, we need to be sure that the order of the actors matches in both objects.
 
-```{r }
+```r
 flofliesatt <- flofliesatt[order(rownames(flofliesatt)), ]
 
 flofliesatt
@@ -223,7 +223,7 @@ That's much better now.
 The following code serves to depict this network in a way that the size of the vertices reflects the wealth of the actors.
 
 
-```{r }
+```r
 multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1],
 +  tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 ```
@@ -236,7 +236,7 @@ multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = floflie
 And with the `clu` argument we establish the clustering of the network with three classes of actors differentiated by the colors of the vertices.
 
 
-```{r }
+```r
 multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1], tcex = .8, 
 +  pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
 +  clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
@@ -258,7 +258,7 @@ Hence, colors can be established in different ways, and the `alpha` vector argum
 
 Support for the visualization of two-mode networks is also given by **`multigraph`** and we work with the Southern Women classic data set to illustrate some of the layout options with this package.
 
-```{r }
+```r
 ### Read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
 ### data set from a public repository and storage it as an object
 
@@ -298,7 +298,7 @@ In this case the information can be contained in a data frame or an array as bef
 
 Function `bmgraph` serves to plot two-mode data or an affiliation network as a bipartite graph.
 
-```{r }
+```r
 bmgraph(swomen)
 ```
 ![Default layout of `bmgraph`](figs/swomen.png)
@@ -312,7 +312,7 @@ In this case actor and events have different shape by default.
 
 Similarly to `multigraph` the color and shape of edges and vertices can be modified by equal arguments, and we can mirror the *x* axis of the plot.
 
-```{r }
+```r
 bmgraph(swomen, cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, mirrorX = TRUE)
 ```
 ![Mirror X of `bmgraph`](figs/swomen2.png)
@@ -324,7 +324,7 @@ bmgraph(swomen, cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, mirr
 Option `bip3` splits the actors in two columns, whereas `bip3e` will split the events.
 
 
-```{r }
+```r
 bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3)
 ```
 ![Mirror X of `bmgraph`](figs/swomen3.png)
@@ -335,7 +335,7 @@ bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5,
 
 The binomial projection of a two-mode data set allows obtaining a force directed layout that in this case the image is clockwise rotated 65 degrees.
 
-```{r }
+```r
 bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
 +  ecol = 8, rot = 65)
 ```
@@ -349,7 +349,7 @@ bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15),
 Finally, function `bmgraph` stands for a bipartite *multigraph*, and this is because the actors can be affiliated at different levels.
 
 
-```{r }
+```r
 bmgraph(floflies, ecol = 1)
 ```
 ![bipartite graph of `floflies`](figs/floflies-bmgraph.png)
