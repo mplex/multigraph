@@ -11,8 +11,8 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
     directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
     collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, pch, 
     lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, vedist, 
-    rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, signed, scl, , add, 
-    mirrorD, mirrorL, ......)
+    rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, signed, scl, add, 
+    mirrorD, mirrorL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
