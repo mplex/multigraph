@@ -7,7 +7,7 @@ Concentric layout
 A function to compute the graph coordinated system with a concentric layout
 }
 \usage{
-conc(net, nr, irot, inv, flip, ...)
+conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,18 @@ conc(net, nr, irot, inv, flip, ...)
 }
   \item{flip}{
 	(optional and logical) should the alternating circles be flipped ?
+}
+  \item{mirror}{
+	mirror transformation
+       \code{N} identity (default)
+
+       \code{X} reflection through the vertical center line
+
+       \code{Y} reflection through the horizontal center line
+
+       \code{D} reflection across diagonal Y=X
+
+       \code{L} reflection across diagonal Y=-X
 }
   \item{\dots}{
 	Additional argument items 
@@ -51,8 +63,17 @@ Antonio Rivero Ostoic
 \seealso{
 \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}
 }
-%\examples{
+\examples{
+## Create the data: two binary relations among three elements
+arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
 
-%}
+## Coordinates for the concentric layout with two radii
+coord <- conc(arr, nr = 2)
+
+## Plot multigraph with costumized coordenates
+multigraph(arr, coord = coord)
+
+}
 \keyword{ graphics }
 \keyword{ manip }
