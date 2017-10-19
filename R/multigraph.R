@@ -530,7 +530,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 10L, NA)
         }, conc = {
-            crd <- conc08(netd, ...)
+            crd <- conc(netd, ...)
         }, rand = {
             set.seed(seed)
             crd <- data.frame(X = round(stats::runif(n) * 1L, 
