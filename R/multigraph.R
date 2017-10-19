@@ -7,7 +7,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     vedist, rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, 
     swp2, signed, scl, add, mirrorD, mirrorL, ...) 
 {
-    if (isTRUE(is.list(net) == TRUE) == TRUE) {
+    if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
+        "class") == "Signed") == FALSE) {
         net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
     }
     else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
