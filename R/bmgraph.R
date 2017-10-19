@@ -892,6 +892,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 else {
                   lwd <- rep(lwd[1], rr)
                 }
+                flgcr <- rep(0L,z)
                 if (isTRUE(z == 1L) == TRUE) {
                   mbnd(pars, rr, bds[[k]], vlt, cx, lwd, vecol, 
                     directed, bwd, alfa, fds, flgcx, weighted, 
