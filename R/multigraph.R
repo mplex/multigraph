@@ -198,8 +198,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if (isTRUE(signed == TRUE) == TRUE) {
         if (isTRUE(attr(net, "class") == "Signed") == TRUE) {
             if (any(net$val %in% c(-1, 0, 1)) == TRUE) {
-                net <- zbind28(dichot28(net$s, c = 1L), 1 - dichot28(net$s, 
-                  c = 0))
+                net <- multiplex::zbind(multiplex::dichot(net$s, 
+                  c = 1L), 1 - multiplex::dichot(net$s, c = 0))
             }
             else {
                 nets <- multiplex::zbnd(net$s, net$s)
@@ -240,10 +240,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     if (missing(drp) == FALSE && is.numeric(drp) == TRUE) {
         netdrp <- replace(net, net <= drp, 0)
-        netd <- dichot28(netdrp, c = 1L)
+        netd <- multiplex::dichot(netdrp, c = 1L)
     }
     else {
-        netd <- dichot28(net, c = 1L)
+        netd <- multiplex::dichot(net, c = 1L)
         netdrp <- net
     }
     if (isTRUE(directed == FALSE) == TRUE && isTRUE(collRecip == 
@@ -266,7 +266,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE) == FALSE | isTRUE(directed == FALSE) == TRUE)) {
         if (isTRUE(z == 1L) == TRUE) {
             nt <- netd + t(netd)
-            rcp <- dichot28(nt, c = 2L)
+            rcp <- multiplex::dichot(nt, c = 2L)
             rcp[lower.tri(rcp, diag = TRUE)] <- 0L
         }
         else {
@@ -277,7 +277,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 nt[, , i] <- netd[, , i] + t(netd[, , i])
             }
             rm(i)
-            rcp <- dichot28(nt, c = 2L)
+            rcp <- multiplex::dichot(nt, c = 2L)
             for (i in seq_len(z)) {
                 rcp[, , i][lower.tri(rcp[, , i], diag = TRUE)] <- 0L
             }
@@ -1108,12 +1108,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   }
                   else {
                     if (missing(lbat) == FALSE) {
-                      atts[which(diag(mnplx28(netd, diag = TRUE)) != 
-                        0)] <- lbat
+                      atts[which(diag(multiplex::mnplx(netd, 
+                        diag.incl = TRUE)) != 0)] <- lbat
                     }
                     else {
                       dimnames(netd)[[3]] <- NULL
-                      neta <- zbind28(netd, att)
+                      neta <- multiplex::zbind(netd, att)
                       clss <- multiplex::expos(multiplex::rel.sys(neta, 
                         att = (z + 1L):dim(neta)[3]), classes = TRUE)$Classes
                       attr(clss, "names")[which(attr(clss, "names") == 
