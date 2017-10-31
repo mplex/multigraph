@@ -1,14 +1,27 @@
 bmgraph <-
 function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force", 
-    "rand", "circ", "stress", "CA", "circ2"), outline, coord, 
-    tcex, alpha = c(1, 1, 1), showLbs, showAtts, att = NULL, 
-    lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
-    collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
+    "rand", "circ", "stress", "CA", "circ2"), scope, coord, tcex, 
+    alpha = c(1, 1, 1), showLbs, showAtts, att = NULL, lbat = "1", 
+    main = NULL, cex.main, bg, mar, directed, weighted, collRecip, 
+    cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
     maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, 
-    col, hds, vedist, jitter, ...) 
+    col, hds, vedist, jitter, add, ...) 
 {
     ifelse(is.data.frame(net) == TRUE, net <- as.matrix(net), 
         NA)
+    if (isTRUE(is.list(net) == TRUE) == TRUE) {
+        net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
+    }
+    else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+        ifelse(missing(add) == FALSE && isTRUE(is.list(add) == 
+            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
+            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
+                add))))), net <- multiplex::trnf(net, tolist = FALSE, 
+            lb2lb = TRUE))
+    }
+    else {
+        NA
+    }
     ifelse(missing(weighted) == FALSE && isTRUE(weighted == TRUE) == 
         TRUE, weighted <- TRUE, weighted <- FALSE)
     ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
@@ -19,50 +32,48 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         TRUE, showAtts <- FALSE, showAtts <- TRUE)
     ifelse(missing(directed) == FALSE && isTRUE(directed == TRUE) == 
         TRUE, directed <- TRUE, directed <- FALSE)
-    if (missing(outline) == FALSE) {
-        if (isTRUE(is.list(outline) == TRUE) == FALSE) 
-            stop("\"outline\" should be a list or a vector of lists.")
-        outline <- list(outline)
-        ifelse(is.null(outline[[1]]) == TRUE, outline <- outline[2:length(outline)], 
+    if (missing(scope) == FALSE) {
+        if (isTRUE(is.list(scope) == TRUE) == FALSE) 
+            stop("\"scope\" should be a list or a vector of lists.")
+        scope <- list(scope)
+        ifelse(is.null(scope[[1]]) == TRUE, scope <- scope[2:length(scope)], 
             NA)
-        if (isTRUE(length(outline) > 1) == TRUE && isTRUE(names(outline[1]) == 
+        if (isTRUE(length(scope) > 1) == TRUE && isTRUE(names(scope[1]) == 
             "coord") == TRUE) {
-            outline <- outline[length(outline):1]
+            scope <- scope[length(scope):1]
             flgrev <- TRUE
         }
         else {
             flgrev <- FALSE
         }
-        tmp <- outline[[1]]
-        if (isTRUE(length(outline) > 1) == TRUE && isTRUE(length(outline[[1]]) > 
+        tmp <- scope[[1]]
+        if (isTRUE(length(scope) > 1) == TRUE && isTRUE(length(scope[[1]]) > 
             1) == TRUE) {
-            for (k in 2:length(outline)) {
-                tmp[length(tmp) + 1L] <- as.list(outline[k])
-                names(tmp)[length(tmp)] <- attr(outline[k], "names")
+            for (k in 2:length(scope)) {
+                tmp[length(tmp) + 1L] <- as.list(scope[k])
+                names(tmp)[length(tmp)] <- attr(scope[k], "names")
             }
             rm(k)
         }
-        else if (isTRUE(length(outline) > 1) == TRUE) {
-            names(tmp) <- attr(outline[1], "names")
-            for (k in 2:length(outline)) {
-                if (is.list(outline[[k]]) == TRUE && is.data.frame(outline[[k]]) == 
+        else if (isTRUE(length(scope) > 1) == TRUE) {
+            names(tmp) <- attr(scope[1], "names")
+            for (k in 2:length(scope)) {
+                if (is.list(scope[[k]]) == TRUE && is.data.frame(scope[[k]]) == 
                   FALSE) {
-                  for (j in seq_len(length(outline[[k]]))) {
-                    tmp[length(tmp) + 1L] <- as.list(outline[[k]][j])
-                    names(tmp)[length(tmp)] <- attr(outline[[k]][j], 
+                  for (j in seq_len(length(scope[[k]]))) {
+                    tmp[length(tmp) + 1L] <- as.list(scope[[k]][j])
+                    names(tmp)[length(tmp)] <- attr(scope[[k]][j], 
                       "names")
                   }
                   rm(j)
                 }
-                else if (is.data.frame(outline[[k]]) == FALSE) {
-                  tmp[length(tmp) + 1L] <- as.list(outline[k])
-                  names(tmp)[length(tmp)] <- attr(outline[k], 
-                    "names")
+                else if (is.data.frame(scope[[k]]) == FALSE) {
+                  tmp[length(tmp) + 1L] <- as.list(scope[k])
+                  names(tmp)[length(tmp)] <- attr(scope[k], "names")
                 }
-                else if (is.data.frame(outline[[k]]) == TRUE) {
-                  tmp[length(tmp) + 1L] <- as.vector(outline[k])
-                  names(tmp)[length(tmp)] <- attr(outline[k], 
-                    "names")
+                else if (is.data.frame(scope[[k]]) == TRUE) {
+                  tmp[length(tmp) + 1L] <- as.vector(scope[k])
+                  names(tmp)[length(tmp)] <- attr(scope[k], "names")
                 }
                 else {
                   NA
@@ -71,21 +82,21 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             rm(k)
         }
         else {
-            tmp <- outline[[1]]
+            tmp <- scope[[1]]
         }
-        ifelse(isTRUE(flgrev == TRUE) == TRUE, outline <- tmp[length(tmp):1], 
-            outline <- tmp)
-        for (i in seq_len(length(outline))) {
-            if (isTRUE(names(outline)[i] %in% c("seed", "main")) == 
+        ifelse(isTRUE(flgrev == TRUE) == TRUE, scope <- tmp[length(tmp):1], 
+            scope <- tmp)
+        for (i in seq_len(length(scope))) {
+            if (isTRUE(names(scope)[i] %in% c("seed", "main")) == 
                 TRUE) {
-                tmpi <- as.vector(outline[[i]])
-                assign(names(outline)[i], get("tmpi"))
+                tmpi <- as.vector(scope[[i]])
+                assign(names(scope)[i], get("tmpi"))
             }
             else {
-                if (is.null((outline[[i]])) == FALSE) {
-                  tmpi <- as.vector(outline[[i]])
-                  ifelse(isTRUE(names(outline)[i] != "") == TRUE, 
-                    assign(names(outline)[i], get("tmpi")), NA)
+                if (is.null((scope[[i]])) == FALSE) {
+                  tmpi <- as.vector(scope[[i]])
+                  ifelse(isTRUE(names(scope)[i] != "") == TRUE, 
+                    assign(names(scope)[i], get("tmpi")), NA)
                 }
             }
         }
@@ -261,8 +272,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     bds <- multiplex::summaryBundles(bd, byties = TRUE)
     ifelse(isTRUE(length(bds) == 0) == TRUE, showAtts <- FALSE, 
         NA)
-    ifelse(missing(ecol) == TRUE, ecol <- grDevices::gray.colors(r), 
-        NA)
+    ifelse(missing(ecol) == TRUE, ecol <- grDevices::gray.colors(r, 
+        start = 0.1, end = 0.5), NA)
     if (isTRUE(weighted == TRUE) == TRUE) {
         ifelse(missing(lty) == TRUE, lty <- rep(1, r), lty <- rep(lty, 
             r))
@@ -521,8 +532,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             M <- svd(outWW)
             crd <- rbind(M$u[, 1L:2L] * 1/sqrt(Wn), M$v[, 1L:2L] * 
                 1/sqrt(Wm))
-            crd[which(crd[, 1] == -Inf), 1] <- max(crd[, 1])
-            crd[which(crd[, 2] == -Inf), 2] <- max(crd[, 2])
+            crd[which(crd[, 1] == -Inf), 1] <- min(crd[, 1])
+            crd[which(crd[, 2] == -Inf), 2] <- min(crd[, 2])
+            crd[which(crd[, 1] == Inf), 1] <- max(crd[, 1])
+            crd[which(crd[, 2] == Inf), 2] <- max(crd[, 2])
+            crd[which(is.nan(crd))] <- 0L
             ifelse(missing(jitter) == FALSE, crd <- jitter(crd, 
                 amount = jitter), NA)
         }, circ2 = {
@@ -656,8 +670,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         ifelse(missing(asp) == TRUE, asp <- 1.2, NA)
     }
     else {
-        mx <- ceiling(length(dhc(lbs[seq_len(nn)], ""))/nn) * 
-            0.02
+        mx <- ceiling(length(multiplex::dhc(lbs[seq_len(nn)], 
+            ""))/nn) * 0.02
         xlim <- c(min(nds[, 1]) - (max(cex)/100L) - (mx), max(nds[, 
             1]) + (max(cex)/100L) + (mx))
         ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
@@ -892,7 +906,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 else {
                   lwd <- rep(lwd[1], rr)
                 }
-                flgcr <- rep(0L,z)
+                flgcr <- rep(0L, z)
                 if (isTRUE(z == 1L) == TRUE) {
                   mbnd(pars, rr, bds[[k]], vlt, cx, lwd, vecol, 
                     directed, bwd, alfa, fds, flgcx, weighted, 

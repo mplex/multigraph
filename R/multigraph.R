@@ -1,6 +1,6 @@
 multigraph <-
 function (net, layout = c("circ", "force", "stress", "conc", 
-    "rand"), outline, directed = TRUE, main = NULL, seed = NULL, 
+    "rand"), scope, directed = TRUE, main = NULL, seed = NULL, 
     maxiter = 100, alpha = c(1, 1, 1), collRecip, showLbs, showAtts, 
     weighted, cex.main, coord, clu, cex, lwd, pch, lty, bwd, 
     tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, 
@@ -29,7 +29,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     ifelse(missing(signed) == FALSE && isTRUE(signed == TRUE) == 
         TRUE, signed <- TRUE, signed <- FALSE)
     if (isTRUE(is.array(net) == TRUE) == FALSE && isTRUE(signed == 
-        TRUE) == FALSE && missing(outline) == TRUE) 
+        TRUE) == FALSE && missing(scope) == TRUE) 
         stop("\"net\" should be an array.")
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
@@ -37,13 +37,27 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE, weighted <- TRUE, weighted <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == TRUE) == 
         TRUE, loops <- TRUE, loops <- FALSE)
-    if (isTRUE(directed == FALSE) == TRUE) {
-        ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
-            FALSE) == TRUE, collRecip <- FALSE, collRecip <- TRUE)
+    if (missing(scope) == TRUE) {
+        if (isTRUE(directed == FALSE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == FALSE, collRecip <- FALSE, collRecip <- TRUE)
+        }
+        else if (isTRUE(directed == TRUE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
+        }
     }
-    else if (isTRUE(directed == TRUE) == TRUE) {
-        ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
-            TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
+    else if (missing(scope) == FALSE) {
+        if (isTRUE(scope[[which(attr(scope, "names") == "directed")]] == 
+            FALSE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == FALSE, collRecip <- FALSE, collRecip <- TRUE)
+        }
+        else if (isTRUE(scope[[which(attr(scope, "names") == 
+            "directed")]] == TRUE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
+        }
     }
     if (missing(showLbs) == FALSE && isTRUE(showLbs == TRUE) == 
         TRUE) {
@@ -65,50 +79,48 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE, swp2 <- TRUE, swp2 <- FALSE)
     ifelse(isTRUE(directed == FALSE) == TRUE, directed <- FALSE, 
         NA)
-    if (missing(outline) == FALSE) {
-        if (isTRUE(is.list(outline) == TRUE) == FALSE) 
-            stop("\"outline\" should be a list or a vector of lists.")
-        outline <- list(outline)
-        ifelse(is.null(outline[[1]]) == TRUE, outline <- outline[2:length(outline)], 
+    if (missing(scope) == FALSE) {
+        if (isTRUE(is.list(scope) == TRUE) == FALSE) 
+            stop("\"scope\" should be a list or a vector of lists.")
+        scope <- list(scope)
+        ifelse(is.null(scope[[1]]) == TRUE, scope <- scope[2:length(scope)], 
             NA)
-        if (isTRUE(length(outline) > 1L) == TRUE && isTRUE(names(outline[1]) == 
+        if (isTRUE(length(scope) > 1L) == TRUE && isTRUE(names(scope[1]) == 
             "coord") == TRUE) {
-            outline <- outline[rev(seq_len(length(outline)))]
+            scope <- scope[length(scope):1]
             flgrev <- TRUE
         }
         else {
             flgrev <- FALSE
         }
-        tmp <- outline[[1]]
-        if (isTRUE(length(outline) > 1L) == TRUE && isTRUE(length(outline[[1]]) > 
+        tmp <- scope[[1]]
+        if (isTRUE(length(scope) > 1L) == TRUE && isTRUE(length(scope[[1]]) > 
             1L) == TRUE) {
-            for (k in 2:length(outline)) {
-                tmp[length(tmp) + 1L] <- as.list(outline[k])
-                names(tmp)[length(tmp)] <- attr(outline[k], "names")
+            for (k in 2:length(scope)) {
+                tmp[length(tmp) + 1L] <- as.list(scope[k])
+                names(tmp)[length(tmp)] <- attr(scope[k], "names")
             }
             rm(k)
         }
-        else if (isTRUE(length(outline) > 1L) == TRUE) {
-            names(tmp) <- attr(outline[1], "names")
-            for (k in 2:length(outline)) {
-                if (is.list(outline[[k]]) == TRUE && is.data.frame(outline[[k]]) == 
+        else if (isTRUE(length(scope) > 1L) == TRUE) {
+            names(tmp) <- attr(scope[1], "names")
+            for (k in 2:length(scope)) {
+                if (is.list(scope[[k]]) == TRUE && is.data.frame(scope[[k]]) == 
                   FALSE) {
-                  for (j in seq_len(length(outline[[k]]))) {
-                    tmp[length(tmp) + 1L] <- as.list(outline[[k]][j])
-                    names(tmp)[length(tmp)] <- attr(outline[[k]][j], 
+                  for (j in seq_len(length(scope[[k]]))) {
+                    tmp[length(tmp) + 1L] <- as.list(scope[[k]][j])
+                    names(tmp)[length(tmp)] <- attr(scope[[k]][j], 
                       "names")
                   }
                   rm(j)
                 }
-                else if (is.data.frame(outline[[k]]) == FALSE) {
-                  tmp[length(tmp) + 1L] <- as.list(outline[k])
-                  names(tmp)[length(tmp)] <- attr(outline[k], 
-                    "names")
+                else if (is.data.frame(scope[[k]]) == FALSE) {
+                  tmp[length(tmp) + 1L] <- as.list(scope[k])
+                  names(tmp)[length(tmp)] <- attr(scope[k], "names")
                 }
-                else if (is.data.frame(outline[[k]]) == TRUE) {
-                  tmp[length(tmp) + 1L] <- as.vector(outline[k])
-                  names(tmp)[length(tmp)] <- attr(outline[k], 
-                    "names")
+                else if (is.data.frame(scope[[k]]) == TRUE) {
+                  tmp[length(tmp) + 1L] <- as.vector(scope[k])
+                  names(tmp)[length(tmp)] <- attr(scope[k], "names")
                 }
                 else {
                   NA
@@ -117,21 +129,21 @@ function (net, layout = c("circ", "force", "stress", "conc",
             rm(k)
         }
         else {
-            tmp <- outline[[1]]
+            tmp <- scope[[1]]
         }
-        ifelse(isTRUE(flgrev == TRUE) == TRUE, outline <- tmp[rev(seq_len(length(tmp)))], 
-            outline <- tmp)
-        for (i in seq_len(length(outline))) {
-            if (isTRUE(names(outline)[i] %in% c("seed", "main")) == 
+        ifelse(isTRUE(flgrev == TRUE) == TRUE, scope <- tmp[rev(seq_len(length(tmp)))], 
+            scope <- tmp)
+        for (i in seq_len(length(scope))) {
+            if (isTRUE(names(scope)[i] %in% c("seed", "main")) == 
                 TRUE) {
-                tmpi <- as.vector(outline[[i]])
-                assign(names(outline)[i], get("tmpi"))
+                tmpi <- as.vector(scope[[i]])
+                assign(names(scope)[i], get("tmpi"))
             }
             else {
-                if (is.null((outline[[i]])) == FALSE) {
-                  tmpi <- as.vector(outline[[i]])
-                  ifelse(isTRUE(names(outline)[i] != "") == TRUE, 
-                    assign(names(outline)[i], get("tmpi")), NA)
+                if (is.null((scope[[i]])) == FALSE) {
+                  tmpi <- as.vector(scope[[i]])
+                  ifelse(isTRUE(names(scope)[i] != "") == TRUE, 
+                    assign(names(scope)[i], get("tmpi")), NA)
                 }
             }
         }
@@ -186,8 +198,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if (isTRUE(signed == TRUE) == TRUE) {
         if (isTRUE(attr(net, "class") == "Signed") == TRUE) {
             if (any(net$val %in% c(-1, 0, 1)) == TRUE) {
-                net <- multiplex::zbind(multiplex::dichot(net$s, 
-                  c = 1L), 1 - multiplex::dichot(net$s, c = 0))
+                net <- zbind28(dichot28(net$s, c = 1L), 1 - dichot28(net$s, 
+                  c = 0))
             }
             else {
                 nets <- multiplex::zbnd(net$s, net$s)
@@ -228,10 +240,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     if (missing(drp) == FALSE && is.numeric(drp) == TRUE) {
         netdrp <- replace(net, net <= drp, 0)
-        netd <- multiplex::dichot(netdrp, c = 1L)
+        netd <- dichot28(netdrp, c = 1L)
     }
     else {
-        netd <- multiplex::dichot(net, c = 1L)
+        netd <- dichot28(net, c = 1L)
         netdrp <- net
     }
     if (isTRUE(directed == FALSE) == TRUE && isTRUE(collRecip == 
@@ -254,7 +266,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE) == FALSE | isTRUE(directed == FALSE) == TRUE)) {
         if (isTRUE(z == 1L) == TRUE) {
             nt <- netd + t(netd)
-            rcp <- multiplex::dichot(nt, c = 2L)
+            rcp <- dichot28(nt, c = 2L)
             rcp[lower.tri(rcp, diag = TRUE)] <- 0L
         }
         else {
@@ -265,7 +277,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 nt[, , i] <- netd[, , i] + t(netd[, , i])
             }
             rm(i)
-            rcp <- multiplex::dichot(nt, c = 2L)
+            rcp <- dichot28(nt, c = 2L)
             for (i in seq_len(z)) {
                 rcp[, , i][lower.tri(rcp[, , i], diag = TRUE)] <- 0L
             }
@@ -1096,12 +1108,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   }
                   else {
                     if (missing(lbat) == FALSE) {
-                      atts[which(diag(multiplex::mnplx(netd, 
-                        diag.incl = TRUE)) != 0)] <- lbat
+                      atts[which(diag(mnplx28(netd, diag = TRUE)) != 
+                        0)] <- lbat
                     }
                     else {
                       dimnames(netd)[[3]] <- NULL
-                      neta <- multiplex::zbind(netd, att)
+                      neta <- zbind28(netd, att)
                       clss <- multiplex::expos(multiplex::rel.sys(neta, 
                         att = (z + 1L):dim(neta)[3]), classes = TRUE)$Classes
                       attr(clss, "names")[which(attr(clss, "names") == 
