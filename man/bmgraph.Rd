@@ -12,7 +12,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
         showAtts, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, 
         weighted, collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
         maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, 
-        jitter, ...)
+        jitter, add, ...)
 }
 \arguments{
   \item{net}{
@@ -148,6 +148,9 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 }
   \item{jitter}{
 	(optional) the jitter in \code{stress} or \code{CA}
+}
+  \item{add}{
+	(optional) nodes to add to the graph
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
