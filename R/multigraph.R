@@ -37,17 +37,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE, weighted <- TRUE, weighted <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == TRUE) == 
         TRUE, loops <- TRUE, loops <- FALSE)
-    if (missing(scope) == TRUE) {
-        if (isTRUE(directed == FALSE) == TRUE) {
-            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
-                TRUE) == FALSE, collRecip <- FALSE, collRecip <- TRUE)
-        }
-        else if (isTRUE(directed == TRUE) == TRUE) {
-            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
-                TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
-        }
-    }
-    else if (missing(scope) == FALSE) {
+    if (missing(scope) == FALSE && isTRUE(any(attr(scope, "names") == 
+        "directed") == TRUE) == TRUE) {
         if (isTRUE(scope[[which(attr(scope, "names") == "directed")]] == 
             FALSE) == TRUE) {
             ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
@@ -55,6 +46,16 @@ function (net, layout = c("circ", "force", "stress", "conc",
         }
         else if (isTRUE(scope[[which(attr(scope, "names") == 
             "directed")]] == TRUE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
+        }
+    }
+    else {
+        if (isTRUE(directed == FALSE) == TRUE) {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                TRUE) == FALSE, collRecip <- FALSE, collRecip <- TRUE)
+        }
+        else if (isTRUE(directed == TRUE) == TRUE) {
             ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
                 TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
         }
@@ -87,7 +88,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             NA)
         if (isTRUE(length(scope) > 1L) == TRUE && isTRUE(names(scope[1]) == 
             "coord") == TRUE) {
-            scope <- scope[length(scope):1]
+            scope <- scope[rev(seq_len(length(scope)))]
             flgrev <- TRUE
         }
         else {
