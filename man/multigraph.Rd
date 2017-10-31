@@ -7,7 +7,7 @@ Multigraphs and weighted multigraphs
 A function to create and manipulate multigraphs and weighted multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline, 
+multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
     directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
     collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, pch, 
     lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, vedist, 
@@ -32,8 +32,8 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
 
        \code{rand} random 
 }
-  \item{outline}{
-   (optional) the outline of the graph (see details)
+  \item{scope}{
+   (optional) the scope of the graph (see details)
 }
   \item{directed}{
 	(logical) whether or not the graph is directed or unidrected
@@ -171,7 +171,7 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), outline,
 \details{
 Multigraph are graph having parallel edges depicting different types of relations in a network. By default a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For a better visualization, undirected multigraphs automatically collapse the reciprocal ties, and there as an argument to prevent this to happen. It is possible to combine the symbols and color of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{outline} option. In this case a vector made of lists and scalars or combinations of these are accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these are accepted.
 }
 \value{
 A plot of the network as a multigraph or a weighted multigraph.
