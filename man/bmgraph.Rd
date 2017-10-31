@@ -8,7 +8,7 @@ A function to create and manipulate bipartite multigraphs with different layouts
 }
 \usage{
 bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ", 
-        "stress", "CA", "circ2"), outline, coord, tcex, alpha = c(1, 1, 1), showLbs, 
+        "stress", "CA", "circ2"), scope, coord, tcex, alpha = c(1, 1, 1), showLbs, 
         showAtts, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, 
         weighted, collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
         maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, 
@@ -41,8 +41,8 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 
        \code{circ2} two semi-circles  
 }
-  \item{outline}{
-   (optional) the outline of the graph (see details)
+  \item{scope}{
+   (optional) the scope of the graph (see details)
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
