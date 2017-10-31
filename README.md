@@ -113,21 +113,28 @@ multigraph(floflies)
 
 <br /> 
 
-The network is symmetric and the default layout is circular. Check also out the [vector image](figs/floflies.pdf) of this multigraph.
+The network is symmetric and the default layout of the function is circular. 
+
+Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that the rendering of vector images may vary according to the device used.*
 
 <br /> 
 
 
 #### Force directed layout
 
-Besides the circular layout, another possibility is to apply a force-directed layout for the visualization, and below the Florentine Families data set is depicted with the force directed algorithm with a number of arguments. 
+Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization as below. Function `multigraph` provides with a number of arguments for the graph, edges, and nodes, which can be recorded in the `scope` argument.
+
 
 <br /> 
 
 
 ```r
-multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
-+  ecol = 1, lwd = 2, bwd = .5)
+# define scope of node / edge / graph characteristics as list object
+scp <- list(directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8, ecol = 1,
++  lwd = 2, bwd = .5)
+
+# plot graph with costumized format
+multigraph(floflies, scope = scp)
 ```
 ![Force directed layout of `multigraph`](figs/floflies-force.png)
 [vector image](figs/floflies-force.pdf)
@@ -137,8 +144,8 @@ multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex
 
 
 ```r
-multigraph(floflies, directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8,
-+  ecol = 1, lwd = 2, bwd = .5, lty = 2:1, pch = 13)
+# plot graph with costumized format
+multigraph(floflies, scope = scp, lty = 2:1, pch = 13)
 ```
 ![Force directed layout of `multigraph` different shapes](figs/floflies-force2.png)
 [vector image](figs/floflies-force2.pdf)
@@ -224,8 +231,11 @@ The following code serves to depict this network in a way that the size of the v
 
 
 ```r
-multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1],
-+  tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
+# redefine scope of node / edge / graph characteristics 
+scp <- list(directed = FALSE, layout = "force", seed = 1, tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
+
+# plot graph with costumized format and actor attributes
+multigraph(floflies, scope = scp, cex = flofliesatt[,1])
 ```
 ![Force directed layout layout of `multigraph` with attributes](figs/flofliesatt-force.png)
 [vector image](figs/flofliesatt-force.pdf)
@@ -237,9 +247,12 @@ And with the `clu` argument we establish the clustering of the network with thre
 
 
 ```r
-multigraph(floflies, directed = FALSE, layout = "force", seed = 1, cex = flofliesatt[,1], tcex = .8, 
-+  pos = 0, lwd = 2, ecol = "white", vcol = c("orange", "blue", "white"), alpha = c(.5, 1, .2), 
-+  clu = c(1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 3, 1, 1, 2, 1), bg = 1)
+# define scope of node / edge / graph characteristics 
+scp2 <- list(directed = FALSE, layout = "force", seed = 1, tcex = .8, pos = 0, lwd = 2, ecol = "white", 
++  vcol = c("orange","blue","white"), clu = c(1,1,1,2,2,1,2,2,1,1,2,3,1,1,2,1), alpha = c(.5, 1, .2))
+
+# plot graph with costumized format and actor attributes
+multigraph(floflies, scope = scp2, cex = flofliesatt[,1], bg = 1)
 ```
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
 [vector image](figs/flofliesatt-force2.pdf)
@@ -313,7 +326,11 @@ In this case actor and events have different shape by default.
 Similarly to `multigraph` the color and shape of edges and vertices can be modified by equal arguments, and we can mirror the *x* axis of the plot.
 
 ```r
-bmgraph(swomen, cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, mirrorX = TRUE)
+# define scope of node / edge / graph characteristics as list object
+scp3 <- list(cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3)
+
+# Plot bipartite graph with costumized format and horizontal reflection
+bmgraph(swomen, scope = scp3, mirrorX = TRUE)
 ```
 ![Mirror X of `bmgraph`](figs/swomen2.png)
 [vector image](figs/swomen2.pdf)
@@ -325,7 +342,7 @@ Option `bip3` splits the actors in two columns, whereas `bip3e` will split the e
 
 
 ```r
-bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3)
+bmgraph(swomen, layout = "bip3", scope = scp3)
 ```
 ![Mirror X of `bmgraph`](figs/swomen3.png)
 [vector image](figs/swomen3.pdf)
@@ -336,8 +353,7 @@ bmgraph(swomen, layout = "bip3", cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5,
 The binomial projection of a two-mode data set allows obtaining a force directed layout that in this case the image is clockwise rotated 65 degrees.
 
 ```r
-bmgraph(swomen, layout = "force", seed = 1, cex = 3, tcex = .8, pch = c(19, 15), lwd = 2, vcol = 2:3, 
-+  ecol = 8, rot = 65)
+bmgraph(swomen, layout = "force", seed = 1, scope = scp3, rot = 65)
 ```
 ![Force directed layout of `bmgraph`](figs/swomen-force.png)
 [vector image](figs/swomen-force.pdf)
@@ -357,8 +373,4 @@ bmgraph(floflies, ecol = 1)
 
 
 <br />
-<br />
-
-
-*Note that the rendering of vector images may vary according to the device used.*
 
