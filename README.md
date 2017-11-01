@@ -263,7 +263,9 @@ Hence, colors can be established in different ways, and the `alpha` vector argum
 
 
 <br /> 
-===
+
+___
+
 <br /> 
 
 
