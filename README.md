@@ -152,7 +152,7 @@ multigraph(floflies, scope = scp, lty = 2:1, pch = 13)
 
 <br />
 
-Note that when the graph is depicted as *undirected* then the reciprocal ties by default are collapsed, and you can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of edges and vertices respectively are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
 
 
 <br /> 
@@ -162,7 +162,7 @@ Note that when the graph is depicted as *undirected* then the reciprocal ties by
 ## Ploting with Actor Attributes
 
 
-In a similar way than before, we obtain some actor attributes of the Florentine Families network with the `read.dl` function from this repository.
+In a similar way, we obtain some actor attributes of the Florentine Families network with the `read.dl` function from this repository.
 
 
 ```r
