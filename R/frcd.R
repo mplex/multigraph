@@ -1,5 +1,5 @@
 frcd <-
-function (net, seed = seed, maxiter, drp, ...) 
+function (net, seed = seed, maxiter, drp, scl, mov, ...) 
 {
     n <- dim(net)[1]
     ifelse(missing(maxiter) == TRUE, maxiter <- (60L + n), NA)
@@ -12,7 +12,8 @@ function (net, seed = seed, maxiter, drp, ...)
         netdrp <- net
     }
     mat <- multiplex::mnplx(netd, directed = FALSE)
-    ifelse(is.null(rownames(mat)) == TRUE, lbs <- 1:n, lbs <- rownames(mat))
+    ifelse(is.null(rownames(mat)) == TRUE, lbs <- seq_len(n), 
+        lbs <- rownames(mat))
     cmps <- multiplex::comps(netd)
     nds <- matrix(0, nrow = n, ncol = 2)
     rownames(nds) <- lbs
@@ -37,11 +38,11 @@ function (net, seed = seed, maxiter, drp, ...)
                   min(locy)))/nrow(mt))
                 forcex <- rep(0, nrow(mt))
                 forcey <- rep(0, nrow(mt))
-                for (niter in 1:maxiter) {
-                  for (i in 1:nrow(mt)) {
+                for (niter in seq_len(maxiter)) {
+                  for (i in seq_len(nrow(mt))) {
                     forcevx <- 0
                     forcevy <- 0
-                    for (j in 1:nrow(mt)) {
+                    for (j in seq_len(nrow(mt))) {
                       if (isTRUE(i != j) == TRUE) {
                         dx <- locx[j] - locx[i]
                         dy <- locy[j] - locy[i]
@@ -62,7 +63,7 @@ function (net, seed = seed, maxiter, drp, ...)
                   }
                   rm(i)
                   TEMP <- 2L/niter
-                  for (i in 1:nrow(mt)) {
+                  for (i in seq_len(nrow(mt))) {
                     forcemag <- sqrt(forcex[i]^2 + forcey[i]^2)
                     scala <- min(forcemag, TEMP)/forcemag
                     locx[i] <- locx[i] + (forcex[i] * scala)
@@ -126,23 +127,24 @@ function (net, seed = seed, maxiter, drp, ...)
             2]) - min(nds[, 2]))) * (rat))
         nds <- as.matrix((nds))
         ndst <- nds[which(nds[, 1] != 0), ]
-        tmpi <- popl(length(cmps$isol), seed = seed)/(length(cmps$isol) * 
-            2) * K * length(cmps$isol)
+        tmpi <- popl(length(cmps$isol), seed = seed) * (length(cmps$isol) * 
+            2L/n)
         if (is.null(cmps$com) == FALSE) {
-            locx <- ((tmpi[, 1]/3L) - (min(ndst[, 1])) - 0)
+            fct <- 4L
+            locx <- ((tmpi[, 1]/fct) - (min(ndst[, 1])) - 0)
             ifelse(isTRUE(rat > 0) == TRUE, locy <- ((min(ndst[, 
-                2])) - (tmpi[, 2]/3L) - 0), locy <- ((max(ndst[, 
-                2])) + (tmpi[, 2]/3L) + 0))
+                2])) - (tmpi[, 2]/fct) - 0), locy <- ((max(ndst[, 
+                2])) + (tmpi[, 2]/fct) + 0))
             ndst.chull <- grDevices::chull(ndst)
             ndst.chull <- ndst[ndst.chull, ]
             ifelse(isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
                 1]))) > length(which(ndst.chull[, 1] > mean(ndst.chull[, 
-                1])))) == TRUE, locx <- locx + (K/n), locx <- locx + 
-                ((K/n) * -1))
+                1])))) == TRUE, locx <- locx + (K/(n - 1L)), 
+                locx <- locx + ((K/(n - 1L)) * -1))
             ifelse(isTRUE(length(which(ndst.chull[, 2] < mean(ndst.chull[, 
                 2]))) > length(which(ndst.chull[, 2] > mean(ndst.chull[, 
-                2])))) == TRUE, locy <- locy - (K/n), locy <- locy - 
-                ((K/n) * -1))
+                2])))) == TRUE, locy <- locy - (K/(n - 1L)), 
+                locy <- locy - ((K/(n - 1L)) * -1))
         }
         else {
             locx <- (tmpi[, 1])
@@ -152,17 +154,25 @@ function (net, seed = seed, maxiter, drp, ...)
     }
     else if (isTRUE(length(cmps$isol) == 1L) == TRUE) {
         ndst <- nds[which(nds[, 1] != 0), ]
-        locx <- max(ndst[, 1]) + (K/n)
+        locx <- max(ndst[, 1]) + (K/(n - 1L))
         ifelse(isTRUE(rat < 0) == TRUE, locy <- max(ndst[, 2]) + 
-            (K/n), locy <- min(ndst[, 2]) - (K/n))
+            (K/(n - 1L)), locy <- min(ndst[, 2]) - (K/(n - 1L)))
         nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy))
     }
     nds[, 1] <- (nds[, 1] - min(nds[, 1]))/(max(nds[, 1]) - min(nds[, 
-        1])) + (K/n)
+        1])) + (K/(n - 1L))
     ifelse(isTRUE(rat > 0) == TRUE, nds[, 2] <- ((nds[, 2] - 
         min(nds[, 2]))/(max(nds[, 2]) - min(nds[, 2]))) * (1L/rat), 
         nds[, 2] <- ((nds[, 2] - min(nds[, 2]))/(max(nds[, 2]) - 
-            min(nds[, 2]))) * (rat) + (K/n))
+            min(nds[, 2]))) * (rat) + (K/(n - 1L)))
     nds[, 2] <- nds[, 2] * -1
+    if (missing(scl) == FALSE) {
+        nds[, 1] <- nds[, 1] * scl[1]
+        nds[, 2] <- nds[, 2] * scl[2]
+    }
+    if (missing(mov) == FALSE) {
+        nds[, 1] <- nds[, 1] + mov[1]
+        nds[, 2] <- nds[, 2] + mov[2]
+    }
     as.data.frame(nds)
 }

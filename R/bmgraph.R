@@ -5,22 +5,51 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     main = NULL, cex.main, bg, mar, directed, weighted, collRecip, 
     cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
     maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, 
-    col, hds, vedist, jitter, add, ...) 
+    col, hds, vedist, jitter, sort, add, adc, ...) 
 {
     ifelse(is.data.frame(net) == TRUE, net <- as.matrix(net), 
         NA)
-    if (isTRUE(is.list(net) == TRUE) == TRUE) {
-        net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
-    }
-    else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
-        ifelse(missing(add) == FALSE && isTRUE(is.list(add) == 
-            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
-            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
-                add))))), net <- multiplex::trnf(net, tolist = FALSE, 
-            lb2lb = TRUE))
+    if (is.null(dim(net)) == FALSE) {
+        if (isTRUE(is.list(net) == TRUE) == TRUE) {
+            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
+        }
+        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+            net <- multiplex::trnf(net, tolist = FALSE, lb2lb = TRUE)
+        }
+        else {
+            NA
+        }
     }
     else {
-        NA
+        stop("'net' must be data frame or array.")
+    }
+    if (is.na(dim(net)[3]) == TRUE) {
+        tmp <- net
+        if (missing(add) == FALSE && isTRUE(is.vector(add) == 
+            TRUE) == TRUE) {
+            for (k in seq_len(length(add))) {
+                tmp <- rbind(tmp, rep(0, ncol(tmp)))
+            }
+            rm(k)
+            rownames(tmp) <- c(rownames(net), add)
+        }
+        if (missing(adc) == FALSE && isTRUE(is.vector(adc) == 
+            TRUE) == TRUE) {
+            for (k in seq_len(length(adc))) {
+                tmp <- cbind(tmp, rep(0, nrow(tmp)))
+            }
+            rm(k)
+            colnames(tmp) <- c(colnames(net), adc)
+        }
+        if (missing(sort) == FALSE && isTRUE(sort == TRUE) == 
+            TRUE) {
+            tmp <- tmp[order(rownames(tmp)), ]
+            tmp <- tmp[, order(colnames(tmp))]
+        }
+        else {
+            NA
+        }
+        net <- tmp
     }
     ifelse(missing(weighted) == FALSE && isTRUE(weighted == TRUE) == 
         TRUE, weighted <- TRUE, weighted <- FALSE)
@@ -530,13 +559,19 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 1/sqrt(Wn)) * 1/sqrt(Wm))
             outWW[which(is.nan(outWW))] <- mean(outWW, na.rm = TRUE)
             M <- svd(outWW)
-            crd <- rbind(M$u[, 1L:2L] * 1/sqrt(Wn), M$v[, 1L:2L] * 
-                1/sqrt(Wm))
-            crd[which(crd[, 1] == -Inf), 1] <- min(crd[, 1])
-            crd[which(crd[, 2] == -Inf), 2] <- min(crd[, 2])
-            crd[which(crd[, 1] == Inf), 1] <- max(crd[, 1])
-            crd[which(crd[, 2] == Inf), 2] <- max(crd[, 2])
+            ifelse(isTRUE(ncol(outWW) > 1) == FALSE, crd <- cbind(rbind(M$u * 
+                1/sqrt(Wn), M$v * 1/sqrt(Wm)), rbind(M$u * 1/sqrt(Wn), 
+                M$v * 1/sqrt(Wm))), crd <- rbind(M$u[, 1L:2L] * 
+                1/sqrt(Wn), M$v[, 1L:2L] * 1/sqrt(Wm)))
             crd[which(is.nan(crd))] <- 0L
+            crd[which(crd[, 1] == -Inf), 1] <- min(crd[which(is.finite(crd[, 
+                2])), 1]) - 1L
+            crd[which(crd[, 2] == -Inf), 2] <- min(crd[which(is.finite(crd[, 
+                2])), 2]) - 1L
+            crd[which(crd[, 1] == Inf), 1] <- max(crd[which(is.finite(crd[, 
+                2])), 1]) + 1L
+            crd[which(crd[, 2] == Inf), 2] <- max(crd[which(is.finite(crd[, 
+                2])), 2]) + 1L
             ifelse(missing(jitter) == FALSE, crd <- jitter(crd, 
                 amount = jitter), NA)
         }, circ2 = {
@@ -1102,6 +1137,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     graphics::par(mar = opm)
     graphics::par(bg = obg)
     graphics::par(lend = 0)
+    graphics::par(mai = rep(0, 4))
     x <- NULL
     rm(x)
 }
