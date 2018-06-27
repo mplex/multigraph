@@ -8,6 +8,13 @@ function (net, layout = c("circ", "force", "stress", "conc",
     col, lbat, drp, swp, loops, swp2, signed, scl, add, mirrorD, 
     mirrorL, lbs, mirrorV, mirrorH, ...) 
 {
+    if (is.null(dim(net)) == TRUE || (isTRUE(dim(net)[1] != dim(net)[2]) == 
+        TRUE)) {
+        stop("'net' must be matrix, array, or a list of a \"Signed\" or \"Multilevel\" class.")
+    }
+    else {
+        NA
+    }
     if (isTRUE(attr(net, "class") == "Multilevel") == TRUE) {
         mlvl <- net
         net <- mlvl$bmat
@@ -26,31 +33,25 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         ifelse(missing(pch) == TRUE, pch <- 21, NA)
     }
-    if (is.null(dim(net)) == TRUE || (isTRUE(dim(net)[1] != dim(net)[2]) == 
-        TRUE)) {
-        stop("'net' must be matrix, array, or a list of a \"Signed\" or \"Multilevel\" class.")
+    if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
+        "class") == "Signed") == FALSE) {
+        net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
+            lbs = sort(unique(multiplex::dhc(unlist(net)))))
+    }
+    else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+        ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
+            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
+            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
+                add))))), net <- multiplex::trnf(net, tolist = FALSE, 
+            lb2lb = TRUE))
+    }
+    else if (isTRUE(is.null(net) == TRUE) == TRUE && (missing(add) == 
+        FALSE && isTRUE(is.vector(add) == TRUE) == TRUE)) {
+        net <- matrix(0L, nrow = length(add), ncol = length(add), 
+            dimnames = list(add, add))
     }
     else {
-        if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
-            "class") == "Signed") == FALSE) {
-            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
-                lbs = sort(unique(multiplex::dhc(unlist(net)))))
-        }
-        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
-            ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
-                TRUE) == TRUE, net <- multiplex::transf(net, 
-                type = "toarray", lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
-                  add))))), net <- multiplex::trnf(net, tolist = FALSE, 
-                lb2lb = TRUE))
-        }
-        else if (isTRUE(is.null(net) == TRUE) == TRUE && (missing(add) == 
-            FALSE && isTRUE(is.vector(add) == TRUE) == TRUE)) {
-            net <- matrix(0L, nrow = length(add), ncol = length(add), 
-                dimnames = list(add, add))
-        }
-        else {
-            NA
-        }
+        NA
     }
     ifelse(missing(signed) == FALSE && isTRUE(signed == TRUE) == 
         TRUE, signed <- TRUE, signed <- FALSE)
@@ -62,6 +63,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE, weights <- TRUE, weights <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == TRUE) == 
         TRUE, loops <- TRUE, loops <- FALSE)
+    ifelse(missing(mirrorH) == FALSE && isTRUE(mirrorH == TRUE) == 
+        TRUE, mirrorY <- TRUE, NA)
+    ifelse(missing(mirrorV) == FALSE && isTRUE(mirrorV == TRUE) == 
+        TRUE, mirrorX <- TRUE, NA)
     if (missing(scope) == FALSE && isTRUE(any(attr(scope, "names") == 
         "directed") == TRUE) == TRUE) {
         if (isTRUE(scope[[which(attr(scope, "names") == "directed")]] == 
