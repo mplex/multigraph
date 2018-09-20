@@ -1,57 +1,56 @@
 multigraph <-
 function (net, layout = c("circ", "force", "stress", "conc", 
-    "rand"), scope, directed = TRUE, main = NULL, opt, seed = NULL, 
+    "rand"), scope, directed = TRUE, main = NULL, lbs, seed = NULL, 
     maxiter = 100, alpha = c(1, 1, 1), collRecip, showLbs, showAtts, 
-    cex.main, weighted, weights, cex2, coord, clu, cex, lwd, 
-    pch, lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, 
-    vcol, vcol0, tcex2, tcol2, hds, vedist, rot, mirrorX, mirrorY, 
-    col, lbat, drp, swp, loops, swp2, signed, scl, add, mirrorD, 
-    mirrorL, lbs, mirrorV, mirrorH, ...) 
+    cex.main, weighted, weights, coord, clu, cex, lwd, pch, lty, 
+    bwd, fcol, att, bg, mar, pos, asp, ecol, vcol, vcol0, cex2, 
+    fsize2, fcol2, hds, vedist, rot, mirrorX, mirrorY, col, lbat, 
+    drp, loops, swp, swp2, signed, scl, add, mirrorD, mirrorL, 
+    opt, mirrorV, mirrorH, ffamily, fstyle, fsize, ...) 
 {
-    if (is.null(dim(net)) == TRUE || (isTRUE(dim(net)[1] != dim(net)[2]) == 
-        TRUE)) {
-        stop("'net' must be matrix, array, or a list of a \"Signed\" or \"Multilevel\" class.")
+    flgmlvl <- FALSE
+    if (isTRUE(attr(net, "class") == "Multilevel") == TRUE) {
+        flgmlvl <- TRUE
+        mlvl <- net
+        net <- mlvl$bmat
+        ifelse(missing(pch) == TRUE, pch <- c(rep(1, length(mlvl$lbs$dm)), 
+            rep(0, length(mlvl$lbs$cdm))), NA)
+    }
+    else if (isTRUE("pathfinder" %in% attr(net, "class")) == 
+        TRUE) {
+        net <- net$Q
+    }
+    else if (isTRUE(attr(net, "class") == "DataSet") == TRUE) {
+        att <- net$net[, , which(net$atnet[[1]] == 1)]
+        net <- net$net[, , which(net$atnet[[1]] == 0)]
     }
     else {
         NA
     }
-    if (isTRUE(attr(net, "class") == "Multilevel") == TRUE) {
-        mlvl <- net
-        net <- mlvl$bmat
-        if (missing(pch) == TRUE) {
-            pch <- c(rep(1, length(mlvl$lbs$dm)), rep(0, length(mlvl$lbs$cdm)))
+    if (isTRUE(is.data.frame(net) == TRUE) == FALSE) {
+        if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
+            "class") == "Signed") == FALSE) {
+            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
+                lbs = sort(unique(multiplex::dhc(unlist(net)))))
+        }
+        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+            ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
+                TRUE) == TRUE, net <- multiplex::transf(net, 
+                type = "toarray", lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
+                  add))))), net <- multiplex::trnf(net, tolist = FALSE, 
+                lb2lb = TRUE))
+        }
+        else if (isTRUE(is.null(net) == TRUE) == TRUE && (missing(add) == 
+            FALSE && isTRUE(is.vector(add) == TRUE) == TRUE)) {
+            net <- matrix(0L, nrow = length(add), ncol = length(add), 
+                dimnames = list(add, add))
         }
         else {
             NA
         }
     }
-    else if (isTRUE(attr(net, "class") == "Data Set") == TRUE) {
-        att <- net$net[, , which(net$at == 1)]
-        net <- net$net[, , which(net$at == 0)]
-        ifelse(missing(pch) == TRUE, pch <- 21, NA)
-    }
     else {
-        ifelse(missing(pch) == TRUE, pch <- 21, NA)
-    }
-    if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
-        "class") == "Signed") == FALSE) {
-        net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
-            lbs = sort(unique(multiplex::dhc(unlist(net)))))
-    }
-    else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
-        ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
-            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
-            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
-                add))))), net <- multiplex::trnf(net, tolist = FALSE, 
-            lb2lb = TRUE))
-    }
-    else if (isTRUE(is.null(net) == TRUE) == TRUE && (missing(add) == 
-        FALSE && isTRUE(is.vector(add) == TRUE) == TRUE)) {
-        net <- matrix(0L, nrow = length(add), ncol = length(add), 
-            dimnames = list(add, add))
-    }
-    else {
-        NA
+        net <- as.matrix(net)
     }
     ifelse(missing(signed) == FALSE && isTRUE(signed == TRUE) == 
         TRUE, signed <- TRUE, signed <- FALSE)
@@ -185,19 +184,30 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     ifelse(missing(asp) == TRUE, asp <- 1, NA)
     ifelse(missing(lwd) == TRUE, lwd <- 1, NA)
-    ifelse(missing(tcol) == TRUE, tcol <- 1, NA)
+    if (isTRUE(flgmlvl == TRUE) == TRUE) {
+        ifelse(missing(pch) == FALSE && isTRUE(length(pch) == 
+            2) == TRUE, pch <- c(rep(pch[1], length(mlvl$lbs$dm)), 
+            rep(pch[2], length(mlvl$lbs$cdm))), NA)
+        ifelse(missing(ecol) == FALSE && isTRUE(length(ecol) == 
+            2) == TRUE, ecol <- c(rep(ecol[1], length(which(mlvl$modes == 
+            "1M"))), rep(ecol[2], length(which(mlvl$modes == 
+            "2M")))), NA)
+    }
+    else {
+        NA
+    }
+    ifelse(missing(pch) == TRUE, pch <- 21, NA)
+    ifelse(missing(fcol) == TRUE, fcol <- 1, NA)
     ifelse(missing(bwd) == TRUE, bwd <- 1, NA)
     ifelse(isTRUE(bwd < 0L) == TRUE, bwd <- 0L, NA)
     if (missing(bg) == TRUE) {
         bg <- graphics::par()$bg
-        flgbg <- 0L
+        flgbg <- FALSE
     }
     else {
         obg <- graphics::par()$bg
-        flgbg <- 1L
+        flgbg <- TRUE
     }
-    ifelse(isTRUE(weights == TRUE) == TRUE && isTRUE(max(net) > 
-        99L) == TRUE, flgbg <- 3L, NA)
     ifelse(missing(cex.main) == TRUE, cex.main <- graphics::par()$cex.main, 
         NA)
     ifelse(missing(rot) == TRUE, NA, rot <- rot[1] * -1)
@@ -220,15 +230,13 @@ function (net, layout = c("circ", "force", "stress", "conc",
         else if (isTRUE(hds == 0L) == TRUE) {
             hds <- 0.01
         }
-        else {
-            NA
-        }
     }
     else {
         ifelse(missing(scl) == TRUE, hds <- 1L, hds <- 1L * scl)
     }
-    ifelse(isTRUE(dim(net)[1] > 8) == TRUE, hds <- hds * 0.75, 
-        NA)
+    ifelse(isTRUE(dim(net)[1] > 8) == TRUE || isTRUE(weighted == 
+        TRUE) == TRUE || isTRUE(flgmlvl == TRUE) == TRUE, hds <- hds * 
+        0.75, NA)
     ifelse(missing(scl) == TRUE, scl <- rep(1, 2), NA)
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
@@ -245,16 +253,16 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 nets <- multiplex::zbnd(net$s, net$s)
                 net <- array(NA, dim = c(dim(nets)[1], dim(nets)[2], 
                   2), dimnames = list(dimnames(net$s)[[1]], dimnames(net$s)[[1]]))
-                net <- replace(net, nets == "o", 0)
-                net <- replace(net, nets == "a", 1)
+                net <- replace(net, nets == "o", 0L)
+                net <- replace(net, nets == "a", 1L)
                 net[, , 1] <- replace(net[, , 1], nets[, , 1] == 
-                  "p", 1)
+                  "p", 1L)
                 net[, , 1] <- replace(net[, , 1], nets[, , 1] == 
-                  "n", 0)
+                  "n", 0L)
                 net[, , 2] <- replace(net[, , 2], nets[, , 2] == 
-                  "n", 1)
+                  "n", 1L)
                 net[, , 2] <- replace(net[, , 2], nets[, , 2] == 
-                  "p", 0)
+                  "p", 0L)
                 rm(nets)
             }
         }
@@ -264,6 +272,9 @@ function (net, layout = c("circ", "force", "stress", "conc",
         }
         ifelse(is.null(dimnames(net)[[1]]) == TRUE | isTRUE(showLbs == 
             FALSE) == TRUE, showLbs <- FALSE, showLbs <- TRUE)
+    }
+    else {
+        net <- replace(net, net == Inf, 0L)
     }
     if (isTRUE(attr(net, "class") == "Signed") == FALSE) {
         if (missing(lbs) == FALSE) {
@@ -473,12 +484,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         NA
     }
-    if (missing(tcex) == TRUE) {
-        ifelse(isTRUE(max(cex) < 2) == TRUE, tcex <- cex * 0.66, 
-            tcex <- cex * 0.25)
+    if (missing(fsize) == TRUE) {
+        ifelse(isTRUE(max(cex) < 2) == TRUE, fsize <- cex * 0.66, 
+            fsize <- cex * 0.25)
     }
     else {
-        NA
+        fsize <- fsize/10
     }
     ifelse(isTRUE(weighted == FALSE) == TRUE && isTRUE(bwd > 
         1L) == TRUE, bwd <- 1L, NA)
@@ -527,7 +538,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         vcol[which(vcol == 0)] <- graphics::par()$bg
     }
     if (isTRUE(any(pch %in% 21:25)) == TRUE) {
-        if (missing(vcol0) == TRUE) {
+        if (missing(vcol0) == TRUE || isTRUE(vcol0 == 0) == TRUE) {
             vcol0 <- vcol
         }
         else {
@@ -555,10 +566,19 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         vcol0 <- vcol
     }
-    ifelse(isTRUE(n > 20) == TRUE, ffds <- 0.2, ffds <- 0)
-    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 125L - (n * 
+    if (isTRUE(n > 20) == TRUE) {
+        ffds <- 0.2
+    }
+    else if (isTRUE(n == 2) == TRUE) {
+        ffds <- -5
+    }
+    else {
+        ffds <- 0
+    }
+    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 120L - (n * 
         ffds), fds <- 145L - (n * ffds))
-    if (isTRUE(flgcx == TRUE) == TRUE) {
+    if (isTRUE(flgcx == TRUE) == TRUE || (isTRUE(flgcx == FALSE) == 
+        TRUE && isTRUE(cex > 5) == TRUE)) {
         fds <- fds - 10L
     }
     else if (isTRUE(flgcx == FALSE) == TRUE) {
@@ -734,7 +754,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     nds <- ((2L/max(nds * (0.75))) * (nds * 0.75)) * (0.5)
     mscl <- mean(scl)
     cex <- cex * mscl
-    tcex <- tcex * mscl
+    fsize <- fsize * mscl
     omr <- graphics::par()$mar
     omi <- graphics::par()$mai
     if (missing(mar) == TRUE) {
@@ -1019,23 +1039,32 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 }
                 if (isTRUE(weights == TRUE) == TRUE) {
                   if (isTRUE(z == 1L) == TRUE) {
+                    ifelse(isTRUE(isSymmetric(net) == TRUE) == 
+                      TRUE, fsym <- 2L, fsym <- 1L)
                     ifelse(isTRUE(directed == FALSE) == TRUE, 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
-                        2])/2L, netdrp[as.numeric(multiplex::dhc(bds[[k]])[1]), 
-                        as.numeric(multiplex::dhc(bds[[k]])[2])]/2L), 
+                        2])/2L, as.numeric(net[as.numeric(multiplex::dhc(bds[[k]])[1]), 
+                        as.numeric(multiplex::dhc(bds[[k]])[2])]/fsym + 
+                        net[as.numeric(multiplex::dhc(bds[[k]])[2]), 
+                          as.numeric(multiplex::dhc(bds[[k]])[1])]/fsym)), 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
-                        2])/2L, netdrp[as.numeric(multiplex::dhc(bds[[k]])[1]), 
-                        as.numeric(multiplex::dhc(bds[[k]])[2])]))
+                        2])/2L, as.numeric(net[as.numeric(multiplex::dhc(bds[[k]])[1]), 
+                        as.numeric(multiplex::dhc(bds[[k]])[2])]) + 
+                        net[as.numeric(multiplex::dhc(bds[[k]])[2]), 
+                          as.numeric(multiplex::dhc(bds[[k]])[1])]))
                   }
                   else {
+                    mpnet <- multiplex::mnplx(net, dichot = FALSE, 
+                      directed = TRUE)
                     ifelse(isTRUE(directed == FALSE) == TRUE, 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
-                        2])/2L, multiplex::mnplx(netdrp, dichot = FALSE, 
-                        directed = TRUE)[as.numeric(multiplex::dhc(bds[[k]])[1]), 
-                        as.numeric(multiplex::dhc(bds[[k]])[2])]), 
+                        2])/2L, as.numeric(mpnet[as.numeric(multiplex::dhc(bds[[k]])[1]), 
+                        as.numeric(multiplex::dhc(bds[[k]])[2])] + 
+                        mpnet[as.numeric(multiplex::dhc(bds[[k]])[2]), 
+                          as.numeric(multiplex::dhc(bds[[k]])[1])])), 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
                         2])/2L, multiplex::mnplx(netdrp, dichot = FALSE, 
@@ -1139,25 +1168,34 @@ function (net, layout = c("circ", "force", "stress", "conc",
         mdps <- mdp[, 1:2]
         mdps[, 1] <- mdps[, 1] * scl[1]
         mdps[, 2] <- mdps[, 2] * scl[2]
-        ifelse(missing(tcex2) == TRUE, tcex2 <- tcex, NA)
-        ifelse(missing(cex2) == TRUE, cex2 <- tcex2, NA)
-        ifelse(missing(tcol2) == TRUE, tcol2 <- "#000000", NA)
-        if (isTRUE(flgbg == 1) == TRUE) {
-            graphics::points(mdps[, 1], mdps[, 2], pch = 15, 
-                cex = tcex2 * 2, col = bg, bg = bg)
+        ifelse(missing(fsize2) == TRUE, fsize2 <- fsize, fsize2 <- fsize2/10L)
+        ifelse(missing(cex2) == TRUE, cex2 <- fsize2, NA)
+        ifelse(missing(fcol2) == TRUE, fcol2 <- "#000000", NA)
+        if (isTRUE(flgbg == TRUE) == TRUE) {
+            graphics::points(mdps[, 1], mdps[, 2], pch = 16, 
+                cex = fsize2 * 2, col = bg, bg = bg)
         }
-        else if (isTRUE(flgbg == 0) == TRUE) {
-            graphics::points(mdps[, 1], mdps[, 2], pch = 15, 
-                cex = tcex2 * 2, col = "#FFFFFF", bg = obg)
+        else if (isTRUE(flgbg == FALSE) == TRUE) {
+            graphics::points(mdps[, 1], mdps[, 2], pch = 16, 
+                cex = fsize2 * 2, col = "#FFFFFF", bg = obg)
         }
         else {
             NA
         }
-        for (k in seq_along(tlbs)) {
-            graphics::text(mdps[k, ], labels = mdp[k, 3], cex = tcex2, 
-                col = tcol2)
+        if (isTRUE(directed == FALSE) == TRUE) {
+            for (k in seq_along(tlbs)) {
+                graphics::text(mdps[k, ], labels = mdp[k, 3], 
+                  cex = fsize2, col = fcol2)
+            }
+            rm(k)
         }
-        rm(k)
+        else {
+            for (k in seq_along(tlbs)) {
+                graphics::text(mdps[k, ], labels = mdp[k, 3], 
+                  cex = fsize2, col = fcol2)
+            }
+            rm(k)
+        }
     }
     if (all(pch %in% 21:25) == TRUE) {
         graphics::points(nds[, 1] * scl[1], nds[, 2] * scl[2], 
@@ -1175,31 +1213,152 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ndss <- nds
         ndss[, 1] <- ndss[, 1] * scl[1]
         ndss[, 2] <- ndss[, 2] * scl[2]
+        ifelse(missing(ffamily) == FALSE && isTRUE(ffamily %in% 
+            names(grDevices::postscriptFonts())) == TRUE, par(family = ffamily), 
+            NA)
         if (isTRUE(length(pos) == 1) == TRUE) {
             if (isTRUE(pos == 0) == TRUE) {
-                graphics::text(ndss, labels = lbs, cex = tcex, 
-                  adj = 0.5, col = tcol)
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss, labels = lbs, cex = fsize, 
+                    adj = 0.5, col = fcol)
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol)
+                  }
+                }
             }
             else {
-                graphics::text(ndss, lbs, cex = tcex, pos = pos, 
-                  col = tcol, offset = (cex/4L), adj = c(0.5, 
-                    1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss, lbs, cex = fsize, pos = pos, 
+                    col = fcol, offset = (cex/4L), adj = c(0.5, 
+                      1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      pos = pos, col = fcol, offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      pos = pos, col = fcol, offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos, col = fcol, offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                }
             }
         }
         else if (isTRUE(length(pos) == n) == TRUE) {
-            graphics::text(ndss, lbs, cex = tcex, pos = pos, 
-                col = tcol[1], offset = (cex/4L), adj = c(0.5, 
-                  1))
+            if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                "bolditalic") == FALSE))) {
+                graphics::text(ndss, lbs, cex = fsize, pos = pos, 
+                  col = fcol[1], offset = (cex/4L), adj = c(0.5, 
+                    1))
+            }
+            else if (missing(fstyle) == FALSE) {
+                if (isTRUE(fstyle == "italic") == TRUE) {
+                  graphics::text(ndss, as.expression(lapply(lbs, 
+                    function(x) bquote(italic(.(x))))), cex = fsize, 
+                    pos = pos, col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (isTRUE(fstyle == "bold") == TRUE) {
+                  graphics::text(ndss, as.expression(lapply(lbs, 
+                    function(x) bquote(bold(.(x))))), cex = fsize, 
+                    pos = pos, col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (isTRUE(fstyle == "bolditalic") == TRUE) {
+                  graphics::text(ndss, as.expression(lapply(lbs, 
+                    function(x) bquote(bolditalic(.(x))))), cex = fsize, 
+                    pos = pos, col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+            }
         }
         else {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(ndss, labels = lbs, cex = tcex, 
-                  adj = 0.5, col = tcol)
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss, labels = lbs, cex = fsize, 
+                    adj = 0.5, col = fcol)
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol)
+                  }
+                }
             }
             else {
-                graphics::text(ndss, lbs, cex = tcex, pos = pos[1], 
-                  col = tcol, offset = (cex/4L), adj = c(0.5, 
-                    1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss, lbs, cex = fsize, pos = pos[1], 
+                    col = fcol, offset = (cex/4L), adj = c(0.5, 
+                      1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      pos = pos[1], col = fcol, offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      pos = pos[1], col = fcol, offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss, as.expression(lapply(lbs, 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[1], col = fcol, 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
         }
     }
@@ -1255,18 +1414,18 @@ function (net, layout = c("circ", "force", "stress", "conc",
             }
         }
         if (isTRUE(flgcx == FALSE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = tcex, pos = pos%%4 + 
-                1L, col = tcol, offset = (cex/4L), adj = c(0.5, 
-                1))
+            graphics::text(ndss, labels = atts, cex = fsize, 
+                pos = pos%%4 + 1L, col = fcol, offset = (cex/4L), 
+                adj = c(0.5, 1))
         }
         else if (isTRUE(flgcx == TRUE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = tcex, pos = pos%%4 + 
-                1L, col = tcol, offset = (min(cex)/4L), adj = c(0.5, 
-                1))
+            graphics::text(ndss, labels = atts, cex = fsize, 
+                pos = pos%%4 + 1L, col = fcol, offset = (min(cex)/4L), 
+                adj = c(0.5, 1))
         }
     }
     graphics::par(mar = omr)
     graphics::par(bg = obg)
     graphics::par(lend = 0)
-    graphics::par(mai = rep(0, 4))
+    graphics::par(mai = omi)
 }
