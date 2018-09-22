@@ -152,7 +152,7 @@ multigraph(floflies, scope = scp, lty = 2:1, pch = 13)
 
 <br />
 
-Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `tcex` for the size of the node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `fsize` for the size of the font used in node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
 
 
 <br /> 
@@ -232,7 +232,7 @@ The following code serves to depict this network in a way that the size of the v
 
 ```r
 # redefine scope of node / edge / graph characteristics 
-scp <- list(directed = FALSE, layout = "force", seed = 1, tcex = .8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
+scp <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 
 # plot graph with costumized format and actor attributes
 multigraph(floflies, scope = scp, cex = flofliesatt[,1])
@@ -248,7 +248,7 @@ And with the `clu` argument we establish the clustering of the network with thre
 
 ```r
 # define scope of node / edge / graph characteristics 
-scp2 <- list(directed = FALSE, layout = "force", seed = 1, tcex = .8, pos = 0, lwd = 2, ecol = "white", 
+scp2 <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = "white", 
 +  vcol = c("orange","blue","white"), clu = c(1,1,1,2,2,1,2,2,1,1,2,3,1,1,2,1), alpha = c(.5, 1, .2))
 
 # plot graph with costumized format and actor attributes
@@ -329,7 +329,7 @@ Similarly to `multigraph` the color and shape of edges and vertices can be modif
 
 ```r
 # define scope of node / edge / graph characteristics as list object
-scp3 <- list(cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, fsize = 7)
+scp3 <- list(cex = 3, fsize = 8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, fsize = 7)
 
 # Plot bipartite graph with costumized format and horizontal reflection
 bmgraph(swomen, scope = scp3, mirrorX = TRUE)
@@ -352,7 +352,7 @@ bmgraph(swomen, layout = "bip3", scope = scp3)
 
 <br />
 
-Bipartite graph of with permutation of actor and events, and a clustering information for the Southern Women network for a graph as in Batagelj et al, 2014 (pp. 29).
+Bipartite graph of with clustering information of Southern Women network as in Batagelj et al (2014) pp. 29.
 
 ```r
 # clustering of women and events for the permutation 
@@ -396,3 +396,8 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 
+
+Batagelj, V., Doreian, P., Ferligoj, A. & Kejzar, N. (2014), Understanding Large Temporal
+Networks and Spatial Networks: Exploration, Pattern Searching, Visualization
+and Network Evolution, Wiley Series in Computational and Quantitative Social Science,
+John Wiley & Sons.
