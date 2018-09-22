@@ -352,7 +352,7 @@ bmgraph(swomen, layout = "bip3", scope = scp3)
 
 <br />
 
-Bipartite graph of with clustering information of Southern Women network as in Batagelj et al (2014) pp. 29.
+Bipartite graph of with clustering information of Southern Women network as in Batagelj et al, 2014 (pp. 29).
 
 ```r
 # clustering of women and events for the permutation 
@@ -396,8 +396,3 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 
-#### Reference
-Batagelj, V., Doreian, P., Ferligoj, A. & Kejzar, N. (2014), Understanding Large Temporal
-Networks and Spatial Networks: Exploration, Pattern Searching, Visualization
-and Network Evolution, Wiley Series in Computational and Quantitative Social Science,
-John Wiley & Sons.
