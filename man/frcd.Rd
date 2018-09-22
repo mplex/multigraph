@@ -7,7 +7,7 @@ Force directed layout
 A function to compute the graph coordinated system with a force directed layout algortihm
 }
 \usage{
-frcd(net, seed = seed, maxiter, drp, ...)
+frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,12 @@ frcd(net, seed = seed, maxiter, drp, ...)
 }
   \item{\dots}{
 	Additional argument items 
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+}
+  \item{mov}{
+	(optional and experimental)  numerical scalar (x and y) or vector (x, y) to move the graph
 }
 }
 \details{

@@ -4,15 +4,15 @@
 Bipartite multigraph
 }
 \description{
-A function to create and manipulate bipartite multigraphs with different layouts
+A function to create and manipulate bipartite multigraphs
 }
 \usage{
-bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ", 
-        "stress", "CA", "circ2"), scope, coord, tcex, alpha = c(1, 1, 1), showLbs, 
-        showAtts, att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, 
-        weighted, collRecip, cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
-        maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, col, hds, vedist, 
-        jitter, add, ...)
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
+       "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
+       att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
+       collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
+       maxiter = 100, bwd, clu, pch, fcol, rot, mirrorX, mirrorY, mirrorV, mirrorH, 
+       hds, vedist, jitter, sort, add, adc, cluc, perm, ffamily, fstyle, fsize, ...)
 }
 \arguments{
   \item{net}{
@@ -27,7 +27,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 
        \code{bip3e} bipartite graph with three columns for events   
 
-       \code{bip4} ``square'' bipartite graph   
+       \code{bipc} ``clustered'' bipartite graph   
 
        \code{force} force-directed algorithm    
 
@@ -47,9 +47,6 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
-  \item{tcex}{
-	size of the vertex labels. If \code{NULL}, it depends on the value of \code{cex}
-}
   \item{alpha}{
 	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
@@ -60,10 +57,10 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
 	(optional and logical) whether or not show the vertex attribute labels
 }
   \item{att}{
-	(optional) a vector or an array representing the vertices' attributes
+	(optional) a vector or an array representing the vertex attributes
 }
   \item{lbat}{
-	(optional) the labels for the vertices' attributes
+	(optional) the labels for the vertex attributes
 }
   \item{main}{
 	(optional) title of the plot
@@ -98,6 +95,9 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
   \item{lty}{
 	(optional) the shape of the edges
 }
+  \item{col}{
+	(optional) alias for \code{vcol}
+}
   \item{ecol}{
 	(optional) the color of the edges
 }
@@ -125,8 +125,8 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
   \item{pch}{
 	(optional) the symbol representing the vertices
 }
-  \item{tcol}{
-	(optional) the color of the vertices' labels
+  \item{fcol}{
+	the font color
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -137,8 +137,11 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
   \item{mirrorY}{
 	(optional) mirror of the Y axis
 }
-  \item{col}{
-	(optional) alias for \code{vcol}
+  \item{mirrorV}{
+	same as \code{mirrorX}
+}
+  \item{mirrorH}{
+	same as \code{mirrorY}
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
@@ -149,8 +152,29 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bip4", "force", "rand", "circ",
   \item{jitter}{
 	(optional) the jitter in \code{stress} or \code{CA}
 }
+  \item{sort}{
+	(optional and logical) sort the vertex labels
+}
   \item{add}{
-	(optional) nodes to add to the graph
+	add nodes to the graph's domain
+}
+  \item{adc}{
+	add nodes to the graph's codomain
+}
+  \item{cluc}{
+	a list of vectors the clustering information in both the domain and the codomain
+}
+  \item{perm}{
+	(optional) a list of vectors for the permutation of network members in both the domain and codomain
+}
+  \item{ffamily}{
+	the font family
+}
+  \item{fstyle}{
+	the font style
+}
+  \item{fsize}{
+	the font size
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
@@ -182,16 +206,13 @@ Antonio Rivero Ostoic
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 3 ) )
 
-## Plot this network as bipartite (multi)graph
+## Plot this network as Bipartite graph
 bmgraph(arr)
 
-## As weighted bipartite graph
-bmgraph(arr, weighted = TRUE)
+## Now with a Force Directed algorithm
+bmgraph(arr, layout = "force")
 
-## Now with a stress majorization algorithm
-bmgraph(arr, layout = "stress")
-
-## With a correspondence analysis method
+## And with a Correspondence Analysis method
 bmgraph(arr, layout = "CA", asp = NA)
 
 }

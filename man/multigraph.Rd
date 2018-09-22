@@ -8,13 +8,13 @@ A function to create and manipulate multigraphs and weighted multigraphs with di
 }
 \usage{
 multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
-    directed = TRUE, main = NULL, seed = NULL, maxiter = 100, alpha = c(1, 1, 1), 
-    collRecip, showLbs, showAtts, weighted, cex.main, coord, clu, cex, lwd, pch, 
-    lty, bwd, tcol, tcex, att, bg, mar, pos, asp, ecol, vcol, vcol0, hds, vedist, 
-    rot, mirrorX, mirrorY, col, lbat, drp, swp, loops, swp2, signed, scl, add, 
-    mirrorD, mirrorL, ...)
+           directed = TRUE, main = NULL, lbs, seed = NULL, maxiter = 100, 
+           alpha = c(1, 1, 1), collRecip, showLbs, showAtts, cex.main, 
+           weighted, weights, coord, clu, cex, lwd, pch, lty, bwd, fcol, att, 
+           bg, mar, pos, asp, ecol, vcol, vcol0, cex2, fsize2, fcol2, hds, vedist, 
+           rot, mirrorX, mirrorY, col, lbat, drp, loops, swp, swp2, signed, scl, 
+           add, mirrorD, mirrorL, opt, mirrorV, mirrorH, ffamily, fstyle, fsize, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
 	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
@@ -41,11 +41,14 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{main}{
 	(optional) title of the plot
 }
+  \item{lbs}{
+	(optional) the vertex labels
+}
   \item{seed}{
 	(optional) the random seed number for the vertices' initial coordinates. Ignored for \code{circ} and \code{conc}
 }
   \item{maxiter}{
-	(optional) the maximum number of iterations in layout algorithms. Ignored for \code{circ} and \code{conc}
+	(optional) the maximum number of iterations in layout algorithms. Only for \code{force}, \code{stress}, and \code{rand}
 }
   \item{alpha}{
 	vector (vertex, edge, \code{bg}) with the alpha color transparecy
@@ -59,11 +62,14 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{showAtts}{
 	(optional and logical) whether or not show the vertex attribute labels
 }
+  \item{cex.main}{
+	(optional) the size of the plot's title
+}
   \item{weighted}{
 	(optional and logical) whether or not the graph is weighted or dichotomous
 }
-  \item{cex.main}{
-	(optional) the size of the plot's title
+  \item{weights}{
+	(optional and logical) whether or not print the weights of the bonds
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
@@ -86,14 +92,11 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{bwd}{
 	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
 }
-  \item{tcol}{
-	(optional) the color of the vertices' labels
-}
-  \item{tcex}{
-	size of the vertex labels. If \code{NULL}, it depends on the value of \code{cex}
+  \item{fcol}{
+	the font color
 }
   \item{att}{
-	(optional) a vector or an array representing the vertices' attributes
+	(optional) a vector or an array representing the vertex attributes
 }
   \item{bg}{
 	(optional) the background color of the plot
@@ -115,6 +118,15 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 }
   \item{vcol0}{
 	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
+}
+  \item{cex2}{
+	the size of the background for the weights
+}
+  \item{fsize2}{
+	the font size of the weights
+}
+  \item{fcol2}{
+	the font color of the weights
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
@@ -140,14 +152,11 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{drp}{
 	(optional) for \code{weighted} networks, drop values less than specified
 }
-  \item{\dots}{
-	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
+  \item{loops}{
+	(optional, logical, and experimental) plot graph loops?
 }
   \item{swp}{
 	(optional and logical) whether or not swap the bundle patterns
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
 }
   \item{swp2}{
 	(optional and logical) whether or not swap reciprocals
@@ -166,6 +175,27 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 }
   \item{mirrorL}{
 	(optional) mirror reflection across diagonal Y=-X
+}
+  \item{opt}{
+	(optional and experimental) optimize the plot margins
+}
+  \item{mirrorV}{
+	same as \code{mirrorX}
+}
+  \item{mirrorH}{
+	same as \code{mirrorY}
+}
+  \item{ffamily}{
+	the font family
+}
+  \item{fstyle}{
+	the font style
+}
+  \item{fsize}{
+	the font size
+}
+  \item{\dots}{
+	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
@@ -189,7 +219,7 @@ Antonio Rivero Ostoic
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
+\code{\link{bmgraph}}, \code{\link{ccgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
 \examples{
 ## Create the data: two binary relations among three elements

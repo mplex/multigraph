@@ -7,7 +7,7 @@ Concentric layout
 A function to compute the graph coordinated system with a concentric layout
 }
 \usage{
-conc(net, nr, irot, inv, flip, ...)
+conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,18 @@ conc(net, nr, irot, inv, flip, ...)
 }
   \item{flip}{
 	(optional and logical) should the alternating circles be flipped ?
+}
+  \item{mirror}{
+	mirror transformation
+       \code{N} identity (default)
+
+       \code{X} reflection through the vertical center line
+
+       \code{Y} reflection through the horizontal center line
+
+       \code{D} reflection across diagonal Y=X
+
+       \code{L} reflection across diagonal Y=-X
 }
   \item{\dots}{
 	Additional argument items 
