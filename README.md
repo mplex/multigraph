@@ -115,7 +115,7 @@ multigraph(floflies)
 
 The network is symmetric and the default layout of the function is circular. 
 
-Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that the rendering of vector images may vary according to the device used.*
+Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that with vectorial graphics the rendering may vary according to the device used.*
 
 <br /> 
 
@@ -130,7 +130,7 @@ Besides the circular layout, another possibility is to apply a *force-directed* 
 
 ```r
 # define scope of node / edge / graph characteristics as list object
-scp <- list(directed = FALSE, layout = "force", seed = 2, cex = 6, tcex = .7, pos = 0, vcol = 8, ecol = 1,
+scp <- list(directed = FALSE, layout = "force", seed = 2, cex = 6, fsize = 7, pos = 0, vcol = 8, ecol = 1,
 +  lwd = 2, bwd = .5)
 
 # plot graph with costumized format
@@ -329,7 +329,7 @@ Similarly to `multigraph` the color and shape of edges and vertices can be modif
 
 ```r
 # define scope of node / edge / graph characteristics as list object
-scp3 <- list(cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3)
+scp3 <- list(cex = 3, tcex = .8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, fsize = 7)
 
 # Plot bipartite graph with costumized format and horizontal reflection
 bmgraph(swomen, scope = scp3, mirrorX = TRUE)
@@ -348,6 +348,25 @@ bmgraph(swomen, layout = "bip3", scope = scp3)
 ```
 ![Mirror X of `bmgraph`](figs/swomen3.png)
 [vector image](figs/swomen3.pdf)
+
+
+<br />
+
+Bipartite graph of with permutation of actor and events, and a clustering information for the Southern Women network for a graph as in Batagelj et al, 2014 (pp. 29).
+
+```r
+# clustering of women and events for the permutation 
+clup <- list(c(8,9,7,6,1,4,2,3,5,17,18,13,16,11,10,15,14,12),
+        c(5,1,4,2,3,9,8,7,6,11,12,10,13,14))
+
+# clustering of women and events for the bipartite graph 
+clu <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
+
+bmgraph(swomen, layout = "bipc", perm = clup, cluc = clu , scope = scp3)
+```
+![clustering `bmgraph`](figs/swomenc.png)
+[vector image](figs/swomenc.pdf)
+
 
 
 <br />
@@ -375,4 +394,5 @@ bmgraph(floflies, ecol = 1)
 
 
 <br />
+
 
