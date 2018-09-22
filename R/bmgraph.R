@@ -1,26 +1,63 @@
 bmgraph <-
-function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force", 
-    "rand", "circ", "stress", "CA", "circ2"), scope, coord, tcex, 
-    alpha = c(1, 1, 1), showLbs, showAtts, att = NULL, lbat = "1", 
-    main = NULL, cex.main, bg, mar, directed, weighted, collRecip, 
-    cex, pos, lwd, lty, ecol, vcol, vcol0, asp, seed = NULL, 
-    maxiter = 100, bwd, clu, pch, tcol, rot, mirrorX, mirrorY, 
-    col, hds, vedist, jitter, add, ...) 
+function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force", 
+    "rand", "circ", "stress", "CA", "circ2"), scope, coord, alpha = c(1, 
+    1, 1), showLbs, showAtts, att = NULL, lbat = "1", main = NULL, 
+    cex.main, bg, mar, directed, weighted, collRecip, cex, pos, 
+    lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, maxiter = 100, 
+    bwd, clu, pch, fcol, rot, mirrorX, mirrorY, mirrorV, mirrorH, 
+    hds, vedist, jitter, sort, add, adc, cluc, perm, ffamily, 
+    fstyle, fsize, ...) 
 {
     ifelse(is.data.frame(net) == TRUE, net <- as.matrix(net), 
         NA)
-    if (isTRUE(is.list(net) == TRUE) == TRUE) {
-        net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
-    }
-    else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
-        ifelse(missing(add) == FALSE && isTRUE(is.list(add) == 
-            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
-            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
-                add))))), net <- multiplex::trnf(net, tolist = FALSE, 
-            lb2lb = TRUE))
+    if (missing(perm) == FALSE) {
+        ifelse(is.list(perm) == TRUE, net <- net[perm[[1]], perm[[2]]], 
+            NA)
     }
     else {
         NA
+    }
+    if (is.null(dim(net)) == FALSE) {
+        if (isTRUE(is.list(net) == TRUE) == TRUE) {
+            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
+        }
+        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+            net <- multiplex::trnf(net, tolist = FALSE, lb2lb = TRUE)
+        }
+        else {
+            NA
+        }
+    }
+    else {
+        stop("'net' must be data frame or array.")
+    }
+    if (is.na(dim(net)[3]) == TRUE) {
+        tmp <- net
+        if (missing(add) == FALSE && isTRUE(is.vector(add) == 
+            TRUE) == TRUE) {
+            for (k in seq_len(length(add))) {
+                tmp <- rbind(tmp, rep(0, ncol(tmp)))
+            }
+            rm(k)
+            rownames(tmp) <- c(rownames(net), add)
+        }
+        if (missing(adc) == FALSE && isTRUE(is.vector(adc) == 
+            TRUE) == TRUE) {
+            for (k in seq_len(length(adc))) {
+                tmp <- cbind(tmp, rep(0, nrow(tmp)))
+            }
+            rm(k)
+            colnames(tmp) <- c(colnames(net), adc)
+        }
+        if (missing(sort) == FALSE && isTRUE(sort == TRUE) == 
+            TRUE) {
+            tmp <- tmp[order(rownames(tmp)), ]
+            tmp <- tmp[, order(colnames(tmp))]
+        }
+        else {
+            NA
+        }
+        net <- tmp
     }
     ifelse(missing(weighted) == FALSE && isTRUE(weighted == TRUE) == 
         TRUE, weighted <- TRUE, weighted <- FALSE)
@@ -105,6 +142,69 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     else {
         NA
     }
+    if (match.arg(layout) == "bipc" && (missing(cluc) == FALSE && 
+        is.list(cluc) == TRUE)) {
+        if (isTRUE(nrow(net) != length(cluc[[1]])) == TRUE || 
+            isTRUE(ncol(net) != length(cluc[[2]])) == TRUE) 
+            stop("'cluc' length differs from 'net'")
+        uact <- unique(cluc[[1]])
+        uevt <- unique(cluc[[2]])
+        if (is.character(uact) == TRUE || is.factor(uact) == 
+            TRUE) {
+            tmp <- as.vector(uact)
+            for (i in seq_len(nlevels(factor(uact)))) {
+                tmp[which(levels(factor(uact))[i] == tmp)] <- i
+            }
+            rm(i)
+            uact <- as.numeric(tmp)
+            rm(tmp)
+            ifelse(is.character(cluc[[1]]) == TRUE, cluc[[1]] <- factor(cluc[[1]]), 
+                NA)
+            if (is.factor(cluc[[1]]) == TRUE) {
+                for (i in seq_len(nlevels(factor(cluc[[1]])))) {
+                  levels(cluc[[1]])[levels(cluc[[1]]) == levels(factor(cluc[[1]]))[i]] <- uact[i]
+                }
+                rm(i)
+                cluc[[1]] <- as.numeric(as.vector(cluc[[1]]))
+            }
+        }
+        if (is.character(uevt) == TRUE || is.factor(uevt) == 
+            TRUE) {
+            tmp <- as.vector(uevt)
+            for (i in seq_len(nlevels(factor(uevt)))) {
+                tmp[which(levels(factor(uevt))[i] == tmp)] <- i
+            }
+            rm(i)
+            uevt <- as.numeric(tmp)
+            if (is.factor(cluc[[2]]) == TRUE) {
+                for (i in seq_len(nlevels(factor(cluc[[2]])))) {
+                  levels(cluc[[2]])[levels(cluc[[2]]) == levels(factor(cluc[[2]]))[i]] <- uevt[i]
+                }
+                rm(i)
+                cluc[[2]] <- as.numeric(as.vector(cluc[[2]]))
+            }
+        }
+        cls1 <- vector()
+        length(cls1) <- length(cluc[[1]])
+        for (i in seq_len(nlevels(factor(cluc[[1]])))) {
+            cls1[length(which(!(is.na(cls1)))) + 1L:length(which(cluc[[1]] == 
+                levels(factor(cluc[[1]]))[i]))] <- which(cluc[[1]] == 
+                levels(factor(cluc[[1]]))[i])
+        }
+        rm(i)
+        cls2 <- vector()
+        length(cls2) <- length(cluc[[2]])
+        for (i in seq_len(nlevels(factor(cluc[[2]])))) {
+            cls2[length(which(!(is.na(cls2)))) + 1L:length(which(cluc[[2]] == 
+                levels(factor(cluc[[2]]))[i]))] <- which(cluc[[2]] == 
+                levels(factor(cluc[[2]]))[i])
+        }
+        rm(i)
+        net <- net[cls1, cls2]
+    }
+    else {
+        NA
+    }
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
     nn <- dim(net)[1]
@@ -113,20 +213,27 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         z <- dim(net)[3])
     ifelse(isTRUE(weighted == FALSE) == TRUE, net <- multiplex::dichot(net, 
         c = 1L), NA)
-    ifelse(missing(tcol) == TRUE, tcol <- c(1, 1), NA)
+    ifelse(missing(fcol) == TRUE, fcol <- c(1, 1), NA)
     ifelse(missing(bwd) == TRUE, bwd <- 1, NA)
     ifelse(isTRUE(bwd < 0L) == TRUE, bwd <- 0L, NA)
-    ifelse(missing(pch) == TRUE, pch <- 1:0, NA)
+    if (missing(pch) == TRUE) {
+        pch <- c(21:22)
+        ifelse(missing(vcol) == TRUE, vcol <- c("#FFFFFF", "#FFFFFF"), 
+            NA)
+        ifelse(missing(vcol0) == TRUE, vcol0 <- c("#000000", 
+            "#000000"), NA)
+    }
+    else {
+        NA
+    }
     if (missing(clu)) {
         ifelse(isTRUE(length(pch) > 1L) == TRUE, pch <- pch[1:2], 
             pch <- rep(pch, 2))
     }
-    ifelse(isTRUE(dim(net)[1] == 1L) == TRUE && ((match.arg(layout) == 
-        "bip3") | (match.arg(layout) == "bip4")), layout <- "bip", 
-        NA)
-    ifelse(isTRUE(dim(net)[2] == 1L) == TRUE && ((match.arg(layout) == 
-        "bip3e") | (match.arg(layout) == "bip4")), layout <- "bip", 
-        NA)
+    ifelse(isTRUE(dim(net)[1] == 1L) == TRUE && match.arg(layout) == 
+        "bip3", layout <- "bip", NA)
+    ifelse(isTRUE(dim(net)[2] == 1L) == TRUE && match.arg(layout) == 
+        "bip3e", layout <- "bip", NA)
     if (isTRUE(z == 1) == TRUE) {
         if (isTRUE(directed == TRUE) == FALSE) {
             tnet <- t(net)
@@ -196,9 +303,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     if (isTRUE(length(alpha) < 3) == TRUE) 
         alpha <- append(alpha, 0.1)
     ifelse(missing(lwd) == TRUE, lwd <- 1, NA)
-    ifelse(missing(bg) == TRUE, bg <- graphics::par()$bg, NA)
-    ifelse(missing(mar) == TRUE, mar <- graphics::par()$mar, 
-        NA)
     ifelse(missing(cex.main) == TRUE, cex.main <- graphics::par()$cex.main, 
         NA)
     if (!(missing(hds))) {
@@ -306,7 +410,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         ifelse(isTRUE(bwd > 1L) == TRUE, bwd <- 1L, NA)
     }
     if (!(missing(clu))) {
-        flgclu <- TRUE
         if (is.vector(clu) == FALSE) 
             stop("'clu' must be a vector")
         if (is.character(clu) == TRUE) {
@@ -322,7 +425,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         nclu <- nlevels(factor(clu))
     }
     else {
-        flgclu <- FALSE
         clu <- c(rep(1, nn), rep(2, mm))
         nclu <- 2L
     }
@@ -369,12 +471,13 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         cex <- rep(cex[1], n)
         ifelse(isTRUE(max(cex) >= 21L) == TRUE, cex <- 20L, NA)
     }
-    if (missing(tcex) == TRUE) {
-        ifelse(isTRUE(max(cex) < 2) == TRUE, tcex <- cex * 0.66, 
-            tcex <- cex * 0.33)
+    if (missing(fsize) == TRUE) {
+        ifelse(isTRUE(match.arg(layout) == "force") == TRUE | 
+            isTRUE(match.arg(layout) == "rand") == TRUE, fsize <- cex * 
+            0.5, fsize <- cex * 0.25)
     }
     else {
-        NA
+        fsize <- fsize/10L
     }
     if (isTRUE(length(pch) == 1L) == TRUE) {
         pch <- rep(pch, n)
@@ -394,9 +497,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         pch <- rep(pch[1], n)
     }
     if (missing(vcol) == TRUE) {
-        ifelse(isTRUE(flgclu == TRUE) == TRUE, vcol <- grDevices::gray.colors(nclu), 
-            vcol <- rep(1, 2))
-        ifelse(missing(col) == TRUE, NA, vcol <- col)
+        ifelse(missing(col) == TRUE, vcol <- rep(1, 2), vcol <- col)
     }
     else if (isTRUE(length(vcol) == 1L) == TRUE) {
         ifelse(isTRUE(vcol == 0) == TRUE, vcol <- "transparent", 
@@ -448,7 +549,9 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         vcol0 <- vcol
     }
     m <- n
-    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 90L, fds <- 100L)
+    ifelse(isTRUE(n > 20) == TRUE, ffds <- 0.2, ffds <- 0)
+    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 120L - (n * 
+        ffds), fds <- 140L - (n * ffds))
     if (missing(coord) == FALSE) {
         if (isTRUE(nrow(coord) == n) == FALSE) 
             stop("Length of 'coord' does not match network order.")
@@ -457,6 +560,17 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
     }
     else if (missing(coord) == TRUE) {
         flgcrd <- FALSE
+        if (match.arg(layout) == "bipc" && missing(cluc) == TRUE) {
+            layout <- "bip"
+        }
+        else if (match.arg(layout) == "bipc" && is.list(cluc) == 
+            FALSE) {
+            layout <- "bip"
+            warning("'cluc' must be a list and it is ignored")
+        }
+        else {
+            NA
+        }
         switch(match.arg(layout), force = {
             crd <- frcd(as.matrix(multiplex::mnplx(bmnet)), seed = seed, 
                 maxiter = maxiter)
@@ -493,22 +607,84 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             crd[which(is.nan(crd))] <- 0.5
             crd[, 2] <- crd[, 2] * cos(pi) - crd[, 1] * sin(pi)
             rownames(crd) <- lbs
-        }, bip4 = {
-            qdn <- nn/(nn + 3)
-            qdm <- mm/(mm + 3)
-            act1 <- nrm(rng(ceiling(nn/2)))
-            act2 <- nrm(rng(floor(nn/2)))
-            evt1 <- nrm(rng(ceiling(mm/2)))
-            evt2 <- nrm(rng(floor(mm/2)))
-            Act2 <- cbind((act2 * qdn) + (0.1/qdn), rep(0, floor(nn/2)))
-            Evt2 <- cbind((evt2 * qdm) + (0.1/qdm), rep(1, floor(mm/2)))
-            Act1 <- cbind(rep(0, ceiling(nn/2)), (act1 * qdn) + 
-                (0.1/qdn))
-            Evt1 <- cbind(rep(1, ceiling(mm/2)), (evt1 * qdm) + 
-                (0.1/qdm))
-            crd <- as.data.frame(rbind(Act1, Act2, Evt1, Evt2))
-            crd[which(is.na(crd))] <- 0.5
+        }, bipc = {
+            if (isTRUE(length(uact) == 1L) == TRUE) {
+                Yact <- nrm(rng(nn))
+            } else {
+                Yact <- list()
+                length(Yact) <- length(uact)
+                for (i in seq_len(length(uact))) {
+                  lclu1 <- length(which(cluc[[1]] == i))
+                  if (isTRUE(lclu1 == 1) == TRUE) {
+                    Yact[[i]] <- 0.5
+                  } else {
+                    Yact[[i]] <- nrm(rng(lclu1))
+                  }
+                }
+                rm(i)
+                act1 <- Yact[[1]]
+                act2 <- Yact[[2]]
+            }
+            if (isTRUE(length(uevt) == 1L) == TRUE) {
+                Yevt <- nrm(rng(mm))
+            } else {
+                Yevt <- list()
+                length(Yevt) <- length(uevt)
+                for (i in seq_len(length(uevt))) {
+                  lclu2 <- length(which(cluc[[2]] == i))
+                  if (isTRUE(lclu2 == 1) == TRUE) {
+                    Yevt[[i]] <- 0.5
+                  } else {
+                    Yevt[[i]] <- nrm(rng(lclu2))
+                  }
+                }
+                rm(i)
+                evt <- Yevt[[1]]
+            }
+            if (isTRUE(max(uact, uevt) %in% uact) == TRUE) {
+                ifelse(isTRUE(length(uact) == 1L) == TRUE, Xact <- rep(0, 
+                  nrow(net)), Xact <- sort.int(uact))
+                if (isTRUE(length(uevt) == 1L) == TRUE) {
+                  Xevt <- rep(1, ncol(net))
+                  Xact[1] <- 0
+                } else {
+                  Xevt <- vector()
+                  for (i in seq_len(length(uact))) {
+                    Xevt <- append(Xevt, uevt[i] + (uevt[i + 
+                      1L] - uevt[i])/2L)
+                  }
+                  rm(i)
+                }
+            } else if (isTRUE(max(uact, uevt) %in% uact) == FALSE) {
+                ifelse(isTRUE(length(uevt) == 1L) == TRUE, Xevt <- rep(1, 
+                  ncol(net)), Xevt <- sort.int(uevt))
+                if (isTRUE(length(uact) == 1L) == TRUE) {
+                  Xact <- rep(1, nrow(net))
+                  Xevt[1] <- 0
+                } else {
+                  Xact <- vector()
+                  for (i in seq_len(length(uact))) {
+                    Xact <- append(Xact, uevt[i] + (uevt[i + 
+                      1L] - uevt[i])/2L)
+                  }
+                  rm(i)
+                }
+            }
+            crd <- data.frame(matrix(ncol = 2, nrow = 0))
+            for (i in seq_len(length(Yact))) {
+                crd <- rbind(crd, cbind(rep(Xact[i], length(Yact[[i]])), 
+                  Yact[[i]]))
+            }
+            rm(i)
+            for (i in seq_len(length(Yevt))) {
+                crd <- rbind(crd, cbind(rep(Xevt[i], length(Yevt[[i]])), 
+                  Yevt[[i]]))
+            }
+            rm(i)
             crd[, 2] <- crd[, 2] * cos(pi) - crd[, 1] * sin(pi)
+            rownames(crd) <- lbs
+            ifelse(isTRUE(length(uact) == 1L) == TRUE && isTRUE(length(uevt) == 
+                1L) == TRUE, fds <- fds - 30L, fds <- fds + 20L)
         }, rand = {
             set.seed(seed)
             crd <- data.frame(X = round(stats::runif(n) * 1L, 
@@ -530,13 +706,19 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 1/sqrt(Wn)) * 1/sqrt(Wm))
             outWW[which(is.nan(outWW))] <- mean(outWW, na.rm = TRUE)
             M <- svd(outWW)
-            crd <- rbind(M$u[, 1L:2L] * 1/sqrt(Wn), M$v[, 1L:2L] * 
-                1/sqrt(Wm))
-            crd[which(crd[, 1] == -Inf), 1] <- min(crd[, 1])
-            crd[which(crd[, 2] == -Inf), 2] <- min(crd[, 2])
-            crd[which(crd[, 1] == Inf), 1] <- max(crd[, 1])
-            crd[which(crd[, 2] == Inf), 2] <- max(crd[, 2])
+            ifelse(isTRUE(ncol(outWW) > 1) == FALSE, crd <- cbind(rbind(M$u * 
+                1/sqrt(Wn), M$v * 1/sqrt(Wm)), rbind(M$u * 1/sqrt(Wn), 
+                M$v * 1/sqrt(Wm))), crd <- rbind(M$u[, 1L:2L] * 
+                1/sqrt(Wn), M$v[, 1L:2L] * 1/sqrt(Wm)))
             crd[which(is.nan(crd))] <- 0L
+            crd[which(crd[, 1] == -Inf), 1] <- min(crd[which(is.finite(crd[, 
+                2])), 1]) - 1L
+            crd[which(crd[, 2] == -Inf), 2] <- min(crd[which(is.finite(crd[, 
+                2])), 2]) - 1L
+            crd[which(crd[, 1] == Inf), 1] <- max(crd[which(is.finite(crd[, 
+                2])), 1]) + 1L
+            crd[which(crd[, 2] == Inf), 2] <- max(crd[which(is.finite(crd[, 
+                2])), 2]) + 1L
             ifelse(missing(jitter) == FALSE, crd <- jitter(crd, 
                 amount = jitter), NA)
         }, circ2 = {
@@ -555,7 +737,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 1] * sin(rt * (pi/180L)))/1
             crd[, 1:2] <- crd[, 1:2] - min(crd[, 1:2])
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
-                50L, NA)
+                10L, NA)
         })
     }
     if (missing(rot) == FALSE) {
@@ -569,10 +751,15 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         flgpos <- TRUE
         ifelse(match.arg(layout) == "bip3" | match.arg(layout) == 
             "bip3e", pos <- c(2, 1, 4), pos <- c(2, 4))
-        ifelse(match.arg(layout) == "bip4", pos <- c(2, 4, 3, 
-            1), NA)
         ifelse(match.arg(layout) == "circ" | match.arg(layout) == 
             "stress", pos <- c(4, 2), NA)
+        if (match.arg(layout) == "bipc") {
+            ifelse(isTRUE(length(c(uact, uevt)) == 3) == TRUE, 
+                pos <- c(2, 1, 4), pos <- c(0, 0))
+        }
+        else {
+            NA
+        }
     }
     else {
         flgpos <- FALSE
@@ -591,14 +778,19 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             NA
         }
     }
-    rat <- (max(crd[, 1]) - min(crd[, 1]))/(max(crd[, 2]) - min(crd[, 
-        2]))
-    crd[, 1] <- (crd[, 1] - min(crd[, 1]))/(max(crd[, 1]) - min(crd[, 
-        1]))
-    ifelse(isTRUE(rat > 0) == TRUE, crd[, 2] <- ((crd[, 2] - 
-        min(crd[, 2]))/(max(crd[, 2]) - min(crd[, 2]))) * (1L/rat), 
-        crd[, 2] <- ((crd[, 2] - min(crd[, 2]))/(max(crd[, 2]) - 
-            min(crd[, 2]))) * (rat))
+    if (isTRUE(n > 1) == TRUE) {
+        rat <- (max(crd[, 1]) - min(crd[, 1]))/(max(crd[, 2]) - 
+            min(crd[, 2]))
+        crd[, 1] <- (crd[, 1] - min(crd[, 1]))/(max(crd[, 1]) - 
+            min(crd[, 1]))
+        ifelse(isTRUE(rat > 0) == TRUE, crd[, 2] <- ((crd[, 2] - 
+            min(crd[, 2]))/(max(crd[, 2]) - min(crd[, 2]))) * 
+            (1L/rat), crd[, 2] <- ((crd[, 2] - min(crd[, 2]))/(max(crd[, 
+            2]) - min(crd[, 2]))) * (rat))
+    }
+    else {
+        NA
+    }
     fds <- fds + (vedist * -10)
     if (isTRUE(flgcrd == TRUE) == TRUE && isTRUE(ncol(crd) > 
         2) == TRUE) {
@@ -621,34 +813,21 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         nds <- data.frame(X = as.numeric(as.vector(crd[, 1])), 
             Y = as.numeric(as.vector(crd[, 2])))
     }
-    nds <- (2L/max(nds)) * nds
-    ifelse(match.arg(layout) == "stress", nds[, 1] <- nds[, 1] * 
-        1L, NA)
-    if (isTRUE(flgcx == TRUE) == TRUE && isTRUE(sqrt(((max(nds[, 
-        1]) - min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 2])))/nrow(nds)) < 
-        (1/3)) == TRUE) {
-        nds <- nds * (2.223 - (4.45 * (sqrt(((max(nds[, 1]) - 
-            min(nds[, 1])) * (max(nds[, 2]) - min(nds[, 2])))/n))))
-    }
-    else {
-        nds <- nds * (0.5)
-    }
+    nds <- ((2L/max(nds * (0.75))) * (nds * 0.75)) * (0.5)
     if (missing(mirrorX) == FALSE && isTRUE(mirrorX == TRUE) == 
-        TRUE) {
+        TRUE || missing(mirrorV) == FALSE && isTRUE(mirrorV == 
+        TRUE) == TRUE) {
         nds[, 1] <- nds[, 1] * cos(pi) - nds[, 2] * sin(pi)
-        ifelse(isTRUE(flgpos == TRUE) == TRUE && match.arg(layout) != 
-            "bip4", pos <- pos[length(pos):1], NA)
-        ifelse(isTRUE(flgpos == TRUE) == TRUE && match.arg(layout) == 
-            "bip4", pos <- pos[c(2:1, 3:4)], NA)
+        ifelse(isTRUE(flgpos == TRUE) == TRUE, pos <- pos[length(pos):1], 
+            NA)
     }
     else {
         NA
     }
     if (missing(mirrorY) == FALSE && isTRUE(mirrorY == TRUE) == 
-        TRUE) {
+        TRUE || missing(mirrorH) == FALSE && isTRUE(mirrorH == 
+        TRUE) == TRUE) {
         nds[, 2] <- nds[, 2] * cos(pi) - nds[, 1] * sin(pi)
-        ifelse(isTRUE(flgpos == TRUE) == TRUE && match.arg(layout) == 
-            "bip4", pos <- pos[c(1:2, 4:3)], NA)
     }
     else {
         NA
@@ -662,13 +841,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         ifelse(missing(asp) == TRUE, asp <- 1, NA)
         fds <- fds + 20L
     }
-    else if (match.arg(layout) == "bip4") {
-        xlim <- c(min(nds[, 1]) - (max(cex)/100L) - (0), max(nds[, 
-            1]) + (max(cex)/100L) + (0))
-        ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
-            2]) + (max(cex)/100L))
-        ifelse(missing(asp) == TRUE, asp <- 1.2, NA)
-    }
     else {
         mx <- ceiling(length(multiplex::dhc(lbs[seq_len(nn)], 
             ""))/nn) * 0.02
@@ -679,6 +851,10 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
         if (match.arg(layout) == "bip") {
             ifelse(missing(asp) == TRUE, asp <- 2L, asp <- asp[1] * 
                 2L)
+        }
+        else if (match.arg(layout) == "bipc") {
+            ifelse(missing(asp) == TRUE, asp <- NA, NA)
+            fds <- fds + 90L
         }
         else {
             ifelse(missing(asp) == TRUE, asp <- 2.5, asp <- asp[1] * 
@@ -725,12 +901,23 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
             NA
         }
     }
-    opm <- graphics::par()$mar
-    ifelse(all(mar == c(5.1, 4.1, 4.1, 2.1)) == TRUE, mar <- rep(0, 
-        4L), NA)
+    omr <- graphics::par()$mar
+    omi <- graphics::par()$mai
+    if (missing(mar) == TRUE) {
+        mar <- c(0, 0, 0, 0)
+    }
+    else {
+        mar <- omr
+    }
     ifelse(is.null(main) == TRUE, graphics::par(mar = mar), graphics::par(mar = mar + 
         c(0, 0, 2L, 0)))
     obg <- graphics::par()$bg
+    if (missing(bg) == TRUE) {
+        bg <- graphics::par()$bg
+    }
+    else {
+        obg <- graphics::par()$bg
+    }
     graphics::par(bg = grDevices::adjustcolor(bg, alpha = alpha[3]))
     graphics::plot(nds, type = "n", axes = FALSE, xlab = "", 
         ylab = "", ylim = ylim, xlim = xlim, asp = asp, main = main, 
@@ -866,10 +1053,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                   ifelse(isTRUE(vedist < 0) == TRUE, fds <- fds + 
                     (vedist * 0.2), fds <- fds + (vedist * -0.2))
                 }
-                else if (match.arg(layout) == "bip4") {
-                  ifelse(isTRUE(vedist < 0) == TRUE, fds <- fds - 
-                    (vedist * 0.2), fds <- fds - (vedist * -0.2))
-                }
                 else {
                   NA
                 }
@@ -939,169 +1122,544 @@ function (net, layout = c("bip", "bip3", "bip3e", "bip4", "force",
                 alpha = alpha[1]), bg = grDevices::adjustcolor(vcol, 
                 alpha = alpha[1])))
     }
-    if (isTRUE(length(tcol) > 2) == TRUE | isTRUE(length(tcol) == 
+    if (isTRUE(length(fcol) > 2) == TRUE | isTRUE(length(fcol) == 
         1) == TRUE) {
-        tcol <- rep(tcol[1], 2)
+        fcol <- rep(fcol[1], 2)
     }
     else {
         NA
     }
     if (isTRUE(showLbs == TRUE) == TRUE) {
-        if (is.null(tcex) == TRUE) {
-            ifelse(isTRUE(max(cex) < 2) == TRUE, tcex <- cex * 
-                0.66, tcex <- cex * 0.33)
+        if (is.null(fsize) == TRUE) {
+            ifelse(isTRUE(max(cex) < 2) == TRUE, fsize <- cex * 
+                0.66, fsize <- cex * 0.33)
         }
         ndss <- nds
-        if (match.arg(layout) == "bip3") {
+        ifelse(missing(ffamily) == FALSE && isTRUE(ffamily %in% 
+            names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = ffamily), 
+            NA)
+        if (match.arg(layout) == "bip3" || (match.arg(layout) == 
+            "bipc" && isTRUE(length(c(uact, uevt)) == 3) == TRUE && 
+            isTRUE(flgpos == TRUE) == TRUE)) {
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(ndss[seq_len(length(act1)), ], 
-                  labels = lbs[seq_len(length(act1))], cex = tcex, 
-                  adj = 0.5, col = tcol[1])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[seq_len(length(act1)), 
+                    ], labels = lbs[seq_len(length(act1))], cex = fsize, 
+                    adj = 0.5, col = fcol[1])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[seq_len(length(act1)), ], 
-                  lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
-                  col = tcol[1], offset = (cex/4L), adj = c(0.5, 
-                    1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[seq_len(length(act1)), 
+                    ], lbs[seq_len(length(act1))], cex = fsize, 
+                    pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[seq_len(length(act1)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act1))], 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
-                  ], labels = lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
-                  adj = 0.5, col = tcol[2])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                    ], labels = lbs[(nn + 1L):dim(bmnet)[1]], 
+                    cex = fsize, adj = 0.5, col = fcol[2])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(bmnet)[1]], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(bmnet)[1]], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(bmnet)[1]], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
-                  ], lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
-                  pos = pos[2], col = tcol[2], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                    ], lbs[(nn + 1L):dim(bmnet)[1]], cex = fsize, 
+                    pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[2], col = fcol[2], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
             if (isTRUE(pos[3] == 0) == TRUE) {
-                graphics::text(ndss[(length(act1) + 1):nn, ], 
-                  labels = lbs[(length(act1) + 1):nn], cex = tcex, 
-                  adj = 0.5, col = tcol[1])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(length(act1) + 1L):nn, 
+                    ], labels = lbs[(length(act1) + 1L):nn], 
+                    cex = fsize, adj = 0.5, col = fcol[1])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], labels = as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], labels = as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], labels = as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[(length(act1) + 1):nn, ], 
-                  lbs[(length(act1) + 1):nn], cex = tcex, pos = pos[3], 
-                  col = tcol[1], offset = (cex/4L), adj = c(0.5, 
-                    1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(length(act1) + 1L):nn, 
+                    ], lbs[(length(act1) + 1L):nn], cex = fsize, 
+                    pos = pos[3], col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(length(act1) + 1L):nn, 
+                      ], as.expression(lapply(lbs[(length(act1) + 
+                      1L):nn], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
         }
         else if (match.arg(layout) == "bip3e") {
             if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(ndss[seq_len(length(act)), ], 
-                  labels = lbs[seq_len(length(act))], cex = tcex, 
-                  adj = 0.5, col = tcol[2])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[seq_len(length(act)), ], 
+                    labels = lbs[seq_len(length(act))], cex = fsize, 
+                    adj = 0.5, col = fcol[2])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], labels = as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[seq_len(length(act)), ], 
-                  lbs[seq_len(length(act))], cex = tcex, pos = pos[2], 
-                  col = tcol[2], offset = (cex/4L), adj = c(0.5, 
-                    1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[seq_len(length(act)), ], 
+                    lbs[seq_len(length(act))], cex = fsize, pos = pos[2], 
+                    col = fcol[2], offset = (cex/4L), adj = c(0.5, 
+                      1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(italic(.(x))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(bold(.(x))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[seq_len(length(act)), 
+                      ], as.expression(lapply(lbs[seq_len(length(act))], 
+                      function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[2], col = fcol[2], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
             if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
-                  ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
-                  cex = tcex, adj = 0.5, col = tcol[1])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                    ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
+                    cex = fsize, adj = 0.5, col = fcol[1])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):(nn + length(evt1))], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):(nn + length(evt1))], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):(nn + length(evt1))], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
-                  ], lbs[(nn + 1L):(nn + length(evt1))], cex = tcex, 
-                  pos = pos[1], col = tcol[1], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                    ], lbs[(nn + 1L):(nn + length(evt1))], cex = fsize, 
+                    pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], as.expression(lapply(lbs[(nn + 1L):(nn + 
+                      length(evt1))], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], as.expression(lapply(lbs[(nn + 1L):(nn + 
+                      length(evt1))], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
+                      ], as.expression(lapply(lbs[(nn + 1L):(nn + 
+                      length(evt1))], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
             if (isTRUE(pos[3] == 0) == TRUE) {
-                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
-                  ], labels = lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
-                  cex = tcex, adj = 0.5, col = tcol[1])
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                    ], labels = lbs[(nn + 1L + length(evt1)):dim(bmnet)[1]], 
+                    cex = fsize, adj = 0.5, col = fcol[1])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L + length(evt1)):dim(bmnet)[1]], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L + length(evt1)):dim(bmnet)[1]], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L + length(evt1)):dim(bmnet)[1]], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                }
             }
             else {
-                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
-                  ], lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
-                  cex = tcex, pos = pos[3], col = tcol[1], offset = (cex/4L), 
-                  adj = c(0.5, 1))
-            }
-        }
-        else if (match.arg(layout) == "bip4") {
-            if (isTRUE(pos[1] == 0) == TRUE) {
-                graphics::text(ndss[seq_len(length(act1)), ], 
-                  labels = lbs[seq_len(length(act1))], cex = tcex, 
-                  adj = 0.5, col = tcol[1])
-                graphics::text(ndss[(length(act1) + 1):nn, ], 
-                  labels = lbs[(length(act1) + 1):nn], cex = tcex, 
-                  adj = 0.5, col = tcol[1])
-            }
-            else {
-                graphics::text(ndss[seq_len(length(act1)), ], 
-                  lbs[seq_len(length(act1))], cex = tcex, pos = pos[1], 
-                  col = tcol[1], offset = (cex/4L), adj = c(0.5, 
-                    1))
-                graphics::text(ndss[(length(act1) + 1):nn, ], 
-                  labels = lbs[(length(act1) + 1):nn], cex = tcex, 
-                  pos = pos[3], col = tcol[1], offset = (cex/4L), 
-                  adj = c(0.5, 1))
-            }
-            if (isTRUE(pos[2] == 0) == TRUE) {
-                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
-                  ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
-                  cex = tcex, adj = 0.5, col = tcol[2])
-                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
-                  ], labels = lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
-                  cex = tcex, adj = 0.5, col = tcol[2])
-            }
-            else {
-                graphics::text(ndss[(nn + 1L):(nn + length(evt1)), 
-                  ], labels = lbs[(nn + 1L):(nn + length(evt1))], 
-                  cex = tcex, pos = pos[2], col = tcol[2], offset = (cex/4L), 
-                  adj = c(0.5, 1))
-                graphics::text(ndss[(nn + 1 + length(evt1)):dim(bmnet)[1], 
-                  ], lbs[(nn + 1 + length(evt1)):dim(bmnet)[1]], 
-                  cex = tcex, pos = pos[4], col = tcol[2], offset = (cex/4L), 
-                  adj = c(0.5, 1))
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                    ], lbs[(nn + 1L + length(evt1)):dim(bmnet)[1]], 
+                    cex = fsize, pos = pos[3], col = fcol[1], 
+                    offset = (cex/4L), adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L + 
+                      length(evt1)):dim(bmnet)[1]], function(x) bquote(italic(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L + 
+                      length(evt1)):dim(bmnet)[1]], function(x) bquote(bold(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L + length(evt1)):dim(bmnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L + 
+                      length(evt1)):dim(bmnet)[1]], function(x) bquote(bolditalic(.(x))))), 
+                      cex = fsize, pos = pos[3], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
             }
         }
         else {
             if (isTRUE(length(pos) == 2) == TRUE) {
                 if (isTRUE(pos[1] == 0) == TRUE) {
-                  graphics::text(ndss[seq_len(nn), ], labels = lbs[seq_len(nn)], 
-                    cex = tcex, adj = 0.5, col = tcol[1])
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss[seq_len(nn), ], labels = lbs[seq_len(nn)], 
+                      cex = fsize, adj = 0.5, col = fcol[1])
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(italic(.(x))))), cex = fsize, 
+                        adj = 0.5, col = fcol[1])
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(bold(.(x))))), cex = fsize, 
+                        adj = 0.5, col = fcol[1])
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(bolditalic(.(x))))), 
+                        cex = fsize, adj = 0.5, col = fcol[1])
+                    }
+                  }
                 }
                 else {
-                  graphics::text(ndss[seq_len(nn), ], lbs[seq_len(nn)], 
-                    cex = tcex, pos = pos[1], col = tcol[1], 
-                    offset = (cex/4L), adj = c(0.5, 1))
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss[seq_len(nn), ], lbs[seq_len(nn)], 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(italic(.(x))))), cex = fsize, 
+                        pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(bold(.(x))))), cex = fsize, 
+                        pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                        function(x) bquote(bolditalic(.(x))))), 
+                        cex = fsize, pos = pos[1], col = fcol[1], 
+                        offset = (cex/4L), adj = c(0.5, 1))
+                    }
+                  }
                 }
                 if (isTRUE(pos[2] == 0) == TRUE) {
-                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
-                    ], labels = lbs[(nn + 1L):dim(bmnet)[1]], 
-                    cex = tcex, adj = 0.5, col = tcol[2])
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], labels = lbs[(nn + 1L):dim(bmnet)[1]], 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], labels = as.expression(lapply(lbs[(nn + 
+                        1L):dim(bmnet)[1]], function(x) bquote(italic(.(x))))), 
+                        cex = fsize, adj = 0.5, col = fcol[2])
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], labels = as.expression(lapply(lbs[(nn + 
+                        1L):dim(bmnet)[1]], function(x) bquote(bold(.(x))))), 
+                        cex = fsize, adj = 0.5, col = fcol[2])
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], labels = as.expression(lapply(lbs[(nn + 
+                        1L):dim(bmnet)[1]], function(x) bquote(bolditalic(.(x))))), 
+                        cex = fsize, adj = 0.5, col = fcol[2])
+                    }
+                  }
                 }
                 else {
-                  graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
-                    ], lbs[(nn + 1L):dim(bmnet)[1]], cex = tcex, 
-                    pos = pos[2], col = tcol[2], offset = (cex/4L), 
-                    adj = c(0.5, 1))
-                }
-            }
-            else if (isTRUE(length(pos) == 1) == TRUE) {
-                if (isTRUE(pos == 0) == TRUE) {
-                  graphics::text(ndss, labels = lbs, cex = tcex, 
-                    adj = 0.5, col = tcol[1])
-                }
-                else {
-                  graphics::text(ndss, lbs, cex = tcex, pos = pos, 
-                    col = tcol[1], offset = (cex/4L), adj = c(0.5, 
-                      1))
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                      ], lbs[(nn + 1L):dim(bmnet)[1]], cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                        function(x) bquote(italic(.(x))))), cex = fsize, 
+                        pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                        function(x) bquote(bold(.(x))))), cex = fsize, 
+                        pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss[(nn + 1L):dim(bmnet)[1], 
+                        ], as.expression(lapply(lbs[(nn + 1L):dim(bmnet)[1]], 
+                        function(x) bquote(bolditalic(.(x))))), 
+                        cex = fsize, pos = pos[2], col = fcol[2], 
+                        offset = (cex/4L), adj = c(0.5, 1))
+                    }
+                  }
                 }
             }
             else {
-                NA
+                warning("'pos' with length 1.")
             }
         }
     }
-    graphics::par(mar = opm)
+    graphics::par(mar = omr)
     graphics::par(bg = obg)
     graphics::par(lend = 0)
+    graphics::par(mai = omi)
     x <- NULL
     rm(x)
 }
