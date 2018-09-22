@@ -396,7 +396,7 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 
-
+#### Reference
 Batagelj, V., Doreian, P., Ferligoj, A. & Kejzar, N. (2014), Understanding Large Temporal
 Networks and Spatial Networks: Exploration, Pattern Searching, Visualization
 and Network Evolution, Wiley Series in Computational and Quantitative Social Science,
