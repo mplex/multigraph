@@ -352,7 +352,7 @@ bmgraph(swomen, layout = "bip3", scope = scp3)
 
 <br />
 
-Bipartite graph of with clustering information of Southern Women network as in Batagelj et al, 2014 (pp. 29).
+Bipartite graph with clustering information of Southern Women network as in Batagelj et al, 2014 (pp. 29).
 
 ```r
 # clustering of women and events for the permutation 
@@ -362,6 +362,7 @@ clup <- list(c(8,9,7,6,1,4,2,3,5,17,18,13,16,11,10,15,14,12),
 # clustering of women and events for the bipartite graph 
 clu <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
 
+# Bipartite graph with clustering (still experimental)
 bmgraph(swomen, layout = "bipc", perm = clup, cluc = clu , scope = scp3)
 ```
 ![clustering `bmgraph`](figs/swomenc.png)
