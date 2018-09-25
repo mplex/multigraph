@@ -613,6 +613,18 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
             } else {
                 Yact <- list()
                 length(Yact) <- length(uact)
+                if (any(uevt == 0) == TRUE) {
+                  cluc[[2]] <- cluc[[2]] + 1L
+                  uevt <- uevt + 1L
+                } else {
+                  NA
+                }
+                if (any(uact == 0) == TRUE) {
+                  cluc[[1]] <- cluc[[1]] + 1L
+                  uact <- uact + 1L
+                } else {
+                  NA
+                }
                 for (i in seq_len(length(uact))) {
                   lclu1 <- length(which(cluc[[1]] == i))
                   if (isTRUE(lclu1 == 1) == TRUE) {
@@ -630,6 +642,12 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
             } else {
                 Yevt <- list()
                 length(Yevt) <- length(uevt)
+                if (any(uevt == 0) == TRUE) {
+                  cluc[[2]] <- cluc[[2]] + 1L
+                  uevt <- uevt + 1L
+                } else {
+                  NA
+                }
                 for (i in seq_len(length(uevt))) {
                   lclu2 <- length(which(cluc[[2]] == i))
                   if (isTRUE(lclu2 == 1) == TRUE) {
@@ -650,8 +668,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
                 } else {
                   Xevt <- vector()
                   for (i in seq_len(length(uact))) {
-                    Xevt <- append(Xevt, uevt[i] + (uevt[i + 
-                      1L] - uevt[i])/2L)
+                    Xevt <- append(Xevt, Xact[i] + (Xact[i + 
+                      1L] - Xact[i])/2L)
                   }
                   rm(i)
                 }
@@ -664,8 +682,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
                 } else {
                   Xact <- vector()
                   for (i in seq_len(length(uact))) {
-                    Xact <- append(Xact, uevt[i] + (uevt[i + 
-                      1L] - uevt[i])/2L)
+                    Xact <- append(Xact, Xevt[i] + (Xevt[i + 
+                      1L] - Xevt[i])/2L)
                   }
                   rm(i)
                 }
