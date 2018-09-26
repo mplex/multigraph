@@ -159,7 +159,7 @@ Note that when the graph is depicted as *undirected*, then the reciprocal ties b
 <br /> 
 
 
-## Ploting with Actor Attributes
+## Multigraphs with Actor Attributes
 
 
 In a similar way, we obtain some actor attributes of the Florentine Families network with the `read.dl` function from this repository.
