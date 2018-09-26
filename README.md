@@ -101,7 +101,7 @@ Object `floflies` represents this network where `"PADGM"` are marriage relations
 <br /> 
 
 
-### Ploting the Multigraph
+### Plotting the multigraph
 
 We plot this network with the `multigraph` function:
 
@@ -120,7 +120,7 @@ Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *no
 <br /> 
 
 
-#### Force directed layout
+#### Force-directed layout
 
 Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization as below. Function `multigraph` provides with a number of arguments for the graph, edges, and nodes, which can be recorded in the `scope` argument.
 
