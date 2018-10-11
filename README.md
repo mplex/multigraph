@@ -359,11 +359,11 @@ Bipartite graph with clustering information of Southern Women network as in Bata
 clup <- list(c(8,9,7,6,1,4,2,3,5,17,18,13,16,11,10,15,14,12),
         c(5,1,4,2,3,9,8,7,6,11,12,10,13,14))
 
-# clustering of women and events for the bipartite graph 
-clu <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
+# clustering of network members for the layout 
+clunm <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
 
 # Bipartite graph with clustering (still experimental)
-bmgraph(swomen, layout = "bipc", perm = clup, cluc = clu , scope = scp3)
+bmgraph(swomen, layout = "bipc", scope = scp3, cluc = clunm, perm = clup)
 ```
 ![clustering `bmgraph`](figs/swomenc.png)
 [vector image](figs/swomenc.pdf)
