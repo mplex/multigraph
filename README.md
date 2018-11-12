@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph)
 [![CRAN version](http://www.r-pkg.org/badges/version/multigraph)](https://cran.r-project.org/package=multigraph)
+[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/multigraph)](https://cran.rstudio.com/web/packages/multigraph/index.html)
 
 
 <br />
@@ -133,7 +134,7 @@ Besides the circular layout, another possibility is to apply a *force-directed* 
 scp <- list(directed = FALSE, layout = "force", seed = 2, cex = 6, fsize = 7, pos = 0, vcol = 8, ecol = 1,
 +  lwd = 2, bwd = .5)
 
-# plot graph with costumized format
+# plot graph with customized format
 multigraph(floflies, scope = scp)
 ```
 ![Force directed layout of `multigraph`](figs/floflies-force.png)
@@ -144,7 +145,7 @@ multigraph(floflies, scope = scp)
 
 
 ```r
-# plot graph with costumized format
+# plot graph with customized format
 multigraph(floflies, scope = scp, lty = 2:1, pch = 13)
 ```
 ![Force directed layout of `multigraph` different shapes](figs/floflies-force2.png)
@@ -234,7 +235,7 @@ The following code serves to depict this network in a way that the size of the v
 # redefine scope of node / edge / graph characteristics 
 scp <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 
-# plot graph with costumized format and actor attributes
+# plot graph with customized format and actor attributes
 multigraph(floflies, scope = scp, cex = flofliesatt[,1])
 ```
 ![Force directed layout layout of `multigraph` with attributes](figs/flofliesatt-force.png)
@@ -251,7 +252,7 @@ And with the `clu` argument we establish the clustering of the network with thre
 scp2 <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = "white", 
 +  vcol = c("orange","blue","white"), clu = c(1,1,1,2,2,1,2,2,1,1,2,3,1,1,2,1), alpha = c(.5, 1, .2))
 
-# plot graph with costumized format and actor attributes
+# plot graph with customized format and actor attributes
 multigraph(floflies, scope = scp2, cex = flofliesatt[,1], bg = 1)
 ```
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
@@ -331,7 +332,7 @@ Similarly to `multigraph` the color and shape of edges and vertices can be modif
 # define scope of node / edge / graph characteristics as list object
 scp3 <- list(cex = 3, fsize = 8, pch = c(19, 15), lwd = 1.5, vcol = 2:3, fsize = 7)
 
-# Plot bipartite graph with costumized format and horizontal reflection
+# Plot bipartite graph with customized format and horizontal reflection
 bmgraph(swomen, scope = scp3, mirrorX = TRUE)
 ```
 ![Mirror X of `bmgraph`](figs/swomen2.png)
