@@ -625,9 +625,9 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         xlim <- c(min(nds[, 1]) - ((cex[1])/200L), max(nds[, 
             1]) + ((cex[1])/200L))
     }
-    graphics::plot(nds, type = "n", axes = FALSE, xlab = "", 
-        ylab = "", ylim = ylim, xlim = xlim, asp = asp, main = main, 
-        cex.main = cex.main)
+    suppressWarnings(graphics::plot(nds, type = "n", axes = FALSE, 
+        xlab = "", ylab = "", ylim = ylim, xlim = xlim, asp = asp, 
+        main = main, cex.main = cex.main, ...))
     tlbs <- vector()
     if (isTRUE(length(bds) > 0) == TRUE) {
         for (i in seq_len(length(attr(bds, "names")))) {
@@ -800,7 +800,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                     lpsz <- (cex[lp[i]] * 0.0075) - (dz)
                   }
                   hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
-                    lpsz, col = vecol, lty = lty, lwd = lwd)
+                    lpsz, col = vecol, lty = Lt, lwd = lwd)
                 }
                 rm(i)
             }
@@ -828,7 +828,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                     }
                     hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
                       lpsz, col = grDevices::adjustcolor(vecol[k], 
-                        alpha = alfa), lty = lty[k], lwd = lwd[k])
+                        alpha = alfa), lty = Lt[k], lwd = lwd[k])
                   }
                   rm(i)
                 }
@@ -843,23 +843,23 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         NA
     }
     if (all(pch %in% 21:25) == TRUE) {
-        suppressWarnings(graphics::points(nds[, 1] * scl[1], 
-            nds[, 2] * scl[2], pch = pch, cex = cex, col = grDevices::adjustcolor(vcol0, 
+        graphics::points(nds[, 1] * scl[1], nds[, 2] * scl[2], 
+            pch = pch, cex = cex, col = grDevices::adjustcolor(vcol0, 
                 alpha = alpha[1]), bg = grDevices::adjustcolor(vcol, 
-                alpha = alpha[1])))
+                alpha = alpha[1]))
     }
     else {
-        suppressWarnings(graphics::points(nds[, 1] * scl[1], 
-            nds[, 2] * scl[2], pch = pch, cex = cex, col = grDevices::adjustcolor(vcol, 
+        graphics::points(nds[, 1] * scl[1], nds[, 2] * scl[2], 
+            pch = pch, cex = cex, col = grDevices::adjustcolor(vcol, 
                 alpha = alpha[1]), bg = grDevices::adjustcolor(vcol, 
-                alpha = alpha[1])))
+                alpha = alpha[1]))
     }
     if (isTRUE(showLbs == TRUE) == TRUE) {
         ndss <- nds
         ndss[, 1] <- ndss[, 1] * scl[1]
         ndss[, 2] <- ndss[, 2] * scl[2]
         ifelse(missing(ffamily) == FALSE && isTRUE(ffamily %in% 
-            names(grDevices::postscriptFonts())) == TRUE, par(family = ffamily), 
+            names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = ffamily), 
             NA)
         if (isTRUE(length(pos) == 1) == TRUE) {
             if (isTRUE(pos == 0) == TRUE) {
