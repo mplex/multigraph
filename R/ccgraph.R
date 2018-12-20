@@ -4,7 +4,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     clu, cex, lwd, pch, lty, bwd, att, bg, mar, pos, asp, ecol, 
     vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col, lbat, 
     swp, loops, swp2, scl, mirrorD, mirrorL, conc, lbs, mirrorV, 
-    mirrorH, ffamily, fstyle, fsize, fcol, ...) 
+    mirrorH, ffamily, fstyle, fsize, fcol, undRecip, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -103,6 +103,8 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         clu = c(which(pclu == 0), which(pclu == 1))))
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
+    ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == FALSE) == 
+        TRUE, undRecip <- FALSE, undRecip <- TRUE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == FALSE) == 
         TRUE, loops <- FALSE, loops <- TRUE)
     ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
@@ -240,8 +242,8 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     else {
         ifelse(missing(scl) == TRUE, hds <- 1L, hds <- 1L * scl)
     }
-    ifelse(isTRUE(dim(net)[1] > 8) == TRUE, hds <- hds * 0.75, 
-        NA)
+    ifelse(isTRUE(dim(net)[1] > 8) == TRUE || isTRUE(lwd >= 3) == 
+        TRUE, hds <- hds * 0.75, NA)
     ifelse(missing(scl) == TRUE, scl <- rep(1, 2), NA)
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
@@ -653,23 +655,21 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     }
     if (isTRUE(collRecip == TRUE) == TRUE) {
         trcp <- multiplex::transf(rcp, type = "tolist")
-        utrcp <- unlist(trcp)
-        flgcr <- rep(0L, z)
     }
     else {
-        flgcr <- rep(0L, z)
+        NA
     }
     if (isTRUE(length(tlbs) > 0) == TRUE) {
         for (k in seq_len(length(tlbs))) {
             prs <- as.numeric(multiplex::dhc(bds[[k]]))
             pars <- as.matrix(nds[as.numeric(levels(factor(multiplex::dhc(bds[[k]])))), 
                 ])
-            rr <- length(bds[[k]])
-            if (isTRUE(rr > 0L) == TRUE) {
+            rbds <- length(bds[[k]])
+            if (isTRUE(rbds > 0L) == TRUE) {
                 q <- which(tlbs[k] == attr(bd, "names"))
                 if (isTRUE(z == 1L) == TRUE) {
-                  vlt <- rep(Lt, rr)
-                  vecol <- rep(ecol[1], rr)
+                  vlt <- rep(Lt, rbds)
+                  vecol <- rep(ecol[1], rbds)
                   tbnd <- as.vector(unlist(bd[q]))
                   if (isTRUE(length(tbnd) > 0L) == TRUE) {
                     ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
@@ -729,17 +729,32 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
                 cx <- cex
-                lwd <- rep(lwd[1], rr)
+                lw <- rep(lwd[1], rbds)
                 ifelse(isTRUE(swp2 == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
                   c("recp")) == TRUE, bds[[k]] <- multiplex::swp(bds[[k]]), 
                   NA)
-                ifelse(isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
-                  c("recp")) == TRUE, bw <- 0, bw <- bwd)
+                if (isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
+                  c("recp")) == TRUE) {
+                  bw <- 0L
+                  ifelse(isTRUE(undRecip == TRUE) == TRUE, hd <- 0L, 
+                    hd <- hds)
+                  lw <- (lw + (3L/lw)) * mscl
+                }
+                else if (isTRUE(collRecip == TRUE) == FALSE && 
+                  isTRUE(tlbs[k] %in% c("recp")) == TRUE) {
+                  ifelse(isTRUE(undRecip == TRUE) == TRUE, hd <- 0L, 
+                    hd <- hds)
+                }
+                else {
+                  bw <- bwd
+                  hd <- hds
+                  lw <- lw * mscl
+                }
                 if (isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
                   c("recp")) == FALSE) {
                   flgcr <- numeric()
                   sbds <- multiplex::swp(bds[[k]])
-                  if (any(sbds %in% utrcp) == TRUE) {
+                  if (any(sbds %in% unlist(trcp)) == TRUE) {
                     for (i in seq_len(z)) {
                       ifelse(any(sbds %in% trcp[[i]]) == TRUE, 
                         flgcr <- append(flgcr, as.numeric(i)), 
@@ -749,22 +764,21 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
                 else {
-                  NA
+                  flgcr <- rep(0L, z)
                 }
                 pars[, 1] <- pars[, 1] * scl[1]
                 pars[, 2] <- pars[, 2] * scl[2]
                 if (isTRUE(z == 1L) == TRUE) {
-                  ccbnd(pars, rr, bds[[k]], vlt, cx * mscl, lwd * 
-                    mscl, vecol, bw, alfa, fds, flgcx, flgcr, 
-                    hds, n)
+                  ccbnd(pars, rbds, bds[[k]], vlt, cx * mscl, 
+                    lw, vecol, bw, alfa, fds, flgcx, flgcr, hd, 
+                    n)
                 }
                 else {
                   ifelse(isTRUE(length(lty) == 1L) == TRUE, ccbnd(pars, 
-                    rr, bds[[k]], vlt1, cx * mscl, lwd * mscl, 
-                    vecol[vltc], bw, alfa, fds, flgcx, flgcr, 
-                    hds, n), ccbnd(pars, rr, bds[[k]], vlt, cx * 
-                    mscl, lwd * mscl, vecol[vltc], bw, alfa, 
-                    fds, flgcx, flgcr, hds, n))
+                    rbds, bds[[k]], vlt1, cx * mscl, lw, vecol[vltc], 
+                    bw, alfa, fds, flgcx, flgcr, hd, n), ccbnd(pars, 
+                    rbds, bds[[k]], vlt, cx * mscl, lw, vecol[vltc], 
+                    bw, alfa, fds, flgcx, flgcr, hd, n))
                 }
             }
             else {
