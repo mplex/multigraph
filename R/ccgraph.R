@@ -1,10 +1,10 @@
 ccgraph <-
 function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 
-    1, 1), scope, collRecip, showLbs, showAtts, cex.main, coord, 
-    clu, cex, lwd, pch, lty, bwd, att, bg, mar, pos, asp, ecol, 
-    vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col, lbat, 
+    1, 1), scope, collRecip, undRecip, showLbs, showAtts, cex.main, 
+    coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar, pos, asp, 
+    ecol, vcol, vcol0, hds, vedist, mirrorX, mirrorY, col, lbat, 
     swp, loops, swp2, scl, mirrorD, mirrorL, conc, lbs, mirrorV, 
-    mirrorH, ffamily, fstyle, fsize, fcol, undRecip, ...) 
+    mirrorH, rot, ffamily, fstyle, fsize, fcol, pht, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -103,8 +103,8 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         clu = c(which(pclu == 0), which(pclu == 1))))
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
-    ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == FALSE) == 
-        TRUE, undRecip <- FALSE, undRecip <- TRUE)
+    ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == TRUE) == 
+        TRUE, undRecip <- TRUE, undRecip <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == FALSE) == 
         TRUE, loops <- FALSE, loops <- TRUE)
     ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
@@ -830,9 +830,9 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                 if (isTRUE(length(lp) > 0) == TRUE) {
                   for (i in seq_len(length(lp))) {
                     ifelse(isTRUE(cex[lp[i]] <= 3L) == TRUE | 
-                      isTRUE(n < 3) == TRUE, dz <- dz * 0.75, 
+                      isTRUE(n < 3L) == TRUE, dz <- dz * 0.75, 
                       NA)
-                    if (isTRUE(n < 3) == TRUE) {
+                    if (isTRUE(n < 3L) == TRUE) {
                       dcx <- cex[lp[i]]/110L
                       lpsz <- abs((cex[lp[i]] * 0.007) - dz[k])
                     }
@@ -840,9 +840,13 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                       dcx <- cex[lp[i]]/100L
                       lpsz <- abs((cex[lp[i]] * 0.0075) - dz[k])
                     }
-                    hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
-                      lpsz, col = grDevices::adjustcolor(vecol[k], 
-                        alpha = alfa), lty = Lt[k], lwd = lwd[k])
+                    ifelse(isTRUE(length(lty) == 1) == TRUE, 
+                      hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                        lpsz, col = grDevices::adjustcolor(vecol[k], 
+                          alpha = alfa), lty = lty, lwd = lwd[k]), 
+                      hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                        lpsz, col = grDevices::adjustcolor(vecol[k], 
+                          alpha = alfa), lty = Lt[k], lwd = lwd[k]))
                   }
                   rm(i)
                 }
