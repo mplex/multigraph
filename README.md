@@ -364,7 +364,7 @@ clup <- list(c(8,9,7,6,1,4,2,3,5,17,18,13,16,11,10,15,14,12),
 clunm <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
 
 # Bipartite graph with clustering
-bmgraph(swomen, layout = "bipc", scope = scp3, cluc = clunm, perm = clup)
+bmgraph(swomen, layout = "bipc", scope = scp3, clu = clunm, perm = clup)
 ```
 ![clustering `bmgraph`](figs/swomenc.png)
 [vector image](figs/swomenc.pdf)
