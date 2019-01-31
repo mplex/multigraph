@@ -1,10 +1,10 @@
 ccgraph <-
 function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 
-    1, 1), scope, collRecip, undRecip, showLbs, showAtts, cex.main, 
-    coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar, pos, asp, 
-    ecol, vcol, vcol0, hds, vedist, mirrorX, mirrorY, col, lbat, 
-    swp, loops, swp2, scl, mirrorD, mirrorL, conc, lbs, mirrorV, 
-    mirrorH, rot, ffamily, fstyle, fsize, fcol, pht, ...) 
+    1, 1), scope, loops, collRecip, undRecip, showLbs, cex.main, 
+    conc, coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar, 
+    pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, scl, 
+    mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
+    hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -127,8 +127,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         ifelse(is.null(dimnames(net)[[1]]) == FALSE, showLbs <- TRUE, 
             showLbs <- FALSE)
     }
-    ifelse(missing(showAtts) == FALSE && isTRUE(showAtts == FALSE) == 
-        TRUE, showAtts <- FALSE, showAtts <- TRUE)
     ifelse(missing(swp) == FALSE && isTRUE(swp == TRUE) == TRUE, 
         swp <- TRUE, swp <- FALSE)
     ifelse(missing(swp2) == FALSE && isTRUE(swp2 == TRUE) == 
@@ -261,12 +259,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         z <- dim(net)[3])
     ifelse(isTRUE(swp == TRUE) == TRUE && isTRUE(z > 1L) == TRUE, 
         net <- net[, , rev(seq_len(z))], NA)
-    if (missing(att) == FALSE && is.array(att) == TRUE) {
-        if (isTRUE(n != dim(att)[1]) == TRUE) {
-            warning("Dimensions in \"net\" and \"att\" differ. No attributes are shown.")
-            showAtts <- FALSE
-        }
-    }
     netd <- multiplex::dichot(net, c = 1L)
     if (isTRUE(collRecip == TRUE) == TRUE) {
         if (isTRUE(z == 1L) == TRUE) {
@@ -1023,68 +1015,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
             }
-        }
-    }
-    if (isTRUE(showAtts == TRUE) == TRUE) {
-        ndss <- nds
-        ndss[, 1] <- ndss[, 1] * scl[1]
-        ndss[, 2] <- ndss[, 2] * scl[2]
-        if (isTRUE(flgcrd == TRUE) == TRUE && isTRUE(ncol(coord) > 
-            3L) == TRUE) {
-            NA
-        }
-        else {
-            atts <- rep("", nrow(nds))
-            if (missing(att) == FALSE) {
-                if (is.array(att) == TRUE) {
-                  if (is.na(dim(att)[3]) == TRUE | isTRUE(dim(att)[3] == 
-                    1) == TRUE) {
-                    ifelse(missing(lbat) == FALSE, atts[which((att) != 
-                      0)] <- lbat, atts[which((att) != 0)] <- "1")
-                  }
-                  else {
-                    if (missing(lbat) == FALSE) {
-                      atts[which(diag(multiplex::mnplx(netd, 
-                        diag.incl = TRUE)) != 0)] <- lbat
-                    }
-                    else {
-                      dimnames(netd)[[3]] <- NULL
-                      neta <- multiplex::zbind(netd, att)
-                      clss <- multiplex::expos(multiplex::rel.sys(neta, 
-                        att = (z + 1L):dim(neta)[3]), classes = TRUE)$Classes
-                      attr(clss, "names")[which(attr(clss, "names") == 
-                        "ALL")] <- multiplex::jnt(dimnames(att)[[3]], 
-                        sep = "")
-                      for (i in 2:length(clss)) {
-                        atts[which(lbs %in% clss[[i]])] <- attr(clss, 
-                          "names")[i]
-                      }
-                      rm(i)
-                    }
-                  }
-                }
-                else if (is.vector(att) == TRUE | is.factor(att) == 
-                  TRUE) {
-                  ifelse(isTRUE(length(att) == n) == TRUE, atts <- as.vector(att), 
-                    atts <- rep("", length(lbs)))
-                }
-                else {
-                  atts <- rep("", length(lbs))
-                }
-            }
-            else {
-                NA
-            }
-        }
-        if (isTRUE(flgcx == FALSE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = fsize, 
-                pos = pos%%4 + 1L, col = fcol, offset = (cex/4L), 
-                adj = c(0.5, 1))
-        }
-        else if (isTRUE(flgcx == TRUE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = fsize, 
-                pos = pos%%4 + 1L, col = fcol, offset = (min(cex)/4L), 
-                adj = c(0.5, 1))
         }
     }
     graphics::par(mar = omr)
