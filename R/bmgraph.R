@@ -6,7 +6,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, maxiter = 100, 
     bwd, clu, pch, rot, mirrorX, mirrorY, mirrorV, mirrorH, hds, 
     vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, 
-    fcol, ...) 
+    fcol, vclu, ...) 
 {
     ifelse(is.data.frame(net) == TRUE, net <- as.matrix(net), 
         NA)
@@ -307,15 +307,15 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         ifelse(missing(vcol0) == TRUE, vcol0 <- c("#000000", 
             "#000000"), NA)
     }
+    else if (isTRUE(length(pch) == 2L) == TRUE) {
+        pch <- c(rep(pch[1], nrow(net)), rep(pch[2], ncol(net)))
+    }
+    else if (isTRUE(length(pch) == 1L) == TRUE) {
+        pch <- rep(pch, n)
+    }
     else {
-        if (isTRUE(length(pch) == 1L) == TRUE) {
-            pch <- rep(pch, n)
-        }
-        else {
-            ifelse(match.arg(layout) != "bipc", pch <- unlist(clu), 
-                pch <- c(rep(pch[1], nrow(net)), rep(pch[2], 
-                  ncol(net))))
-        }
+        ifelse(match.arg(layout) != "bipc", pch <- unlist(clu), 
+            pch <- c(rep(pch[1], nrow(net)), rep(pch[2], ncol(net))))
     }
     if (missing(vcol) == TRUE) {
         ifelse(missing(col) == TRUE, vcol <- rep(1, 2), vcol <- col)
@@ -327,6 +327,31 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         ifelse(isTRUE(vcol == 0) == TRUE, vcol <- "transparent", 
             NA)
         vcol <- rep(vcol, n)
+    }
+    else {
+        if (missing(vclu) == FALSE && is.list(vclu) == TRUE) {
+            vccol <- vcol
+            for (i in seq_len(nlevels(factor(vclu[[1]])))) {
+                vccol[which(as.numeric(vclu[[1]]) == i)] <- vcol[i]
+            }
+            rm(i)
+            if (isTRUE(nlevels(factor(vclu[[2]])) == 1L) == TRUE) {
+                vccol <- append(vccol, rep(vcol[nlevels(factor(vclu[[1]])) + 
+                  1L], length(vclu[[2]])))
+                vccol[which(is.na(vccol))] <- vcol[1]
+                vcol <- c(vccol)
+            }
+            else {
+                vccol2 <- as.numeric(vclu[[2]])
+                for (i in seq_len(nlevels(factor(vclu[[2]])))) {
+                  vccol2[which(as.numeric(vclu[[2]]) == i)] <- vcol[nlevels(factor(vclu[[1]])) + 
+                    i]
+                }
+                rm(i)
+                vccol2[which(is.na(vccol2))] <- vcol[1]
+                vcol <- c(vccol, vccol2)
+            }
+        }
     }
     if (isTRUE(any(pch %in% 21:25)) == TRUE) {
         ifelse(missing(vcol0) == TRUE, vcol0 <- vcol, vcol0[which(is.na(vcol0))] <- 1)
