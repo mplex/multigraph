@@ -12,7 +12,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
        att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
        collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
        maxiter = 100, bwd, clu, pch, fcol, rot, mirrorX, mirrorY, mirrorV, mirrorH, 
-       hds, vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, ...)
+       hds, vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, vclu,...)
 }
 \arguments{
   \item{net}{
@@ -120,7 +120,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
 }
   \item{clu}{
-	(optional) the clustering of the vertices (see \emph{details})
+	(optional) the clustering the vertices (works only with \code{"bipc"} see \emph{details})
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
@@ -172,6 +172,9 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 }
   \item{fsize}{
 	the font size
+}
+  \item{vclu}{
+	(optional) the color vertex clustering 
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
