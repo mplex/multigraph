@@ -179,6 +179,8 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 }
 \details{
 Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three dimensional arrays where each level corresponds to a particular type of tie, and thus the bipartite graphs in this case will be depicted with parallel edges. Besides, it is possible to obtain a graph of the bipartite network using the binomial approach to two-mode data, and plot it with a forced directed algorithm.
+
+The \code{clu} argument serves to identify classes of actors and events that is used in the column disposition with the \code{"bipc"} layout option.
 }
 \value{
 A plot of the two-mode networks as bipartite graph or multigraph
