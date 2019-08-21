@@ -326,7 +326,7 @@ In this case actor and events have different shape by default.
 
 <br />
 
-Similarly to `multigraph` the color and shape of edges and vertices can be modified by equal arguments, and we can mirror the *x* axis of the plot.
+Similarly to `multigraph` the color and shape of edges and vertices can be modified by equal arguments, and we can mirror the *X* axis of the plot.
 
 ```r
 # define scope of node / edge / graph characteristics as list object
@@ -353,7 +353,7 @@ bmgraph(swomen, layout = "bip3", scope = scp3)
 
 <br />
 
-Bipartite graph with clustering information of Southern Women network as in Batagelj et al, 2014 (pp. 29).
+Bipartite graph with clustering information of Southern Women network as in Batagelj et al, 2014 (p. 29).
 
 ```r
 # clustering of network members for permutation 
@@ -396,5 +396,28 @@ bmgraph(floflies, ecol = 1)
 
 
 <br />
+
+<br />
+
+### Cayley graph:  TBD
+
+
+
+<br />
+
+<br />
+
+### Multilevel graph:  TBD
+
+
+
+<br />
+
+<br />
+
+
+
+
+
 
 
