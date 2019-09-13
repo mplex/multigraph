@@ -1,10 +1,10 @@
 ccgraph <-
 function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 
-    1, 1), scope, collRecip, showLbs, showAtts, cex.main, coord, 
-    clu, cex, lwd, pch, lty, bwd, att, bg, mar, pos, asp, ecol, 
-    vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col, lbat, 
-    swp, loops, swp2, scl, mirrorD, mirrorL, conc, lbs, mirrorV, 
-    mirrorH, ffamily, fstyle, fsize, fcol, ...) 
+    1, 1), scope, loops, collRecip, undRecip, showLbs, cex.main, 
+    conc, coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar, 
+    pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, scl, 
+    mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
+    hds, vedist, ffamily, fstyle, fsize, fcol, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -103,6 +103,10 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         clu = c(which(pclu == 0), which(pclu == 1))))
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
+    if (isTRUE(n == 1L) == TRUE) 
+        stop("1-element semigroup detected, and not yet supported")
+    ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == TRUE) == 
+        TRUE, undRecip <- TRUE, undRecip <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == FALSE) == 
         TRUE, loops <- FALSE, loops <- TRUE)
     ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
@@ -125,8 +129,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         ifelse(is.null(dimnames(net)[[1]]) == FALSE, showLbs <- TRUE, 
             showLbs <- FALSE)
     }
-    ifelse(missing(showAtts) == FALSE && isTRUE(showAtts == FALSE) == 
-        TRUE, showAtts <- FALSE, showAtts <- TRUE)
     ifelse(missing(swp) == FALSE && isTRUE(swp == TRUE) == TRUE, 
         swp <- TRUE, swp <- FALSE)
     ifelse(missing(swp2) == FALSE && isTRUE(swp2 == TRUE) == 
@@ -240,8 +242,8 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     else {
         ifelse(missing(scl) == TRUE, hds <- 1L, hds <- 1L * scl)
     }
-    ifelse(isTRUE(dim(net)[1] > 8) == TRUE, hds <- hds * 0.75, 
-        NA)
+    ifelse(isTRUE(dim(net)[1] > 8) == TRUE || isTRUE(lwd >= 3) == 
+        TRUE, hds <- hds * 0.75, NA)
     ifelse(missing(scl) == TRUE, scl <- rep(1, 2), NA)
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
@@ -259,12 +261,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         z <- dim(net)[3])
     ifelse(isTRUE(swp == TRUE) == TRUE && isTRUE(z > 1L) == TRUE, 
         net <- net[, , rev(seq_len(z))], NA)
-    if (missing(att) == FALSE && is.array(att) == TRUE) {
-        if (isTRUE(n != dim(att)[1]) == TRUE) {
-            warning("Dimensions in \"net\" and \"att\" differ. No attributes are shown.")
-            showAtts <- FALSE
-        }
-    }
     netd <- multiplex::dichot(net, c = 1L)
     if (isTRUE(collRecip == TRUE) == TRUE) {
         if (isTRUE(z == 1L) == TRUE) {
@@ -625,9 +621,9 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         xlim <- c(min(nds[, 1]) - ((cex[1])/200L), max(nds[, 
             1]) + ((cex[1])/200L))
     }
-    graphics::plot(nds, type = "n", axes = FALSE, xlab = "", 
-        ylab = "", ylim = ylim, xlim = xlim, asp = asp, main = main, 
-        cex.main = cex.main)
+    suppressWarnings(graphics::plot(nds, type = "n", axes = FALSE, 
+        xlab = "", ylab = "", ylim = ylim, xlim = xlim, asp = asp, 
+        main = main, cex.main = cex.main, ...))
     tlbs <- vector()
     if (isTRUE(length(bds) > 0) == TRUE) {
         for (i in seq_len(length(attr(bds, "names")))) {
@@ -653,23 +649,21 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     }
     if (isTRUE(collRecip == TRUE) == TRUE) {
         trcp <- multiplex::transf(rcp, type = "tolist")
-        utrcp <- unlist(trcp)
-        flgcr <- rep(0L, z)
     }
     else {
-        flgcr <- rep(0L, z)
+        NA
     }
     if (isTRUE(length(tlbs) > 0) == TRUE) {
         for (k in seq_len(length(tlbs))) {
             prs <- as.numeric(multiplex::dhc(bds[[k]]))
             pars <- as.matrix(nds[as.numeric(levels(factor(multiplex::dhc(bds[[k]])))), 
                 ])
-            rr <- length(bds[[k]])
-            if (isTRUE(rr > 0L) == TRUE) {
+            rbds <- length(bds[[k]])
+            if (isTRUE(rbds > 0L) == TRUE) {
                 q <- which(tlbs[k] == attr(bd, "names"))
                 if (isTRUE(z == 1L) == TRUE) {
-                  vlt <- rep(Lt, rr)
-                  vecol <- rep(ecol[1], rr)
+                  vlt <- rep(Lt, rbds)
+                  vecol <- rep(ecol[1], rbds)
                   tbnd <- as.vector(unlist(bd[q]))
                   if (isTRUE(length(tbnd) > 0L) == TRUE) {
                     ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
@@ -729,17 +723,32 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
                 cx <- cex
-                lwd <- rep(lwd[1], rr)
+                lw <- rep(lwd[1], rbds)
                 ifelse(isTRUE(swp2 == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
                   c("recp")) == TRUE, bds[[k]] <- multiplex::swp(bds[[k]]), 
                   NA)
-                ifelse(isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
-                  c("recp")) == TRUE, bw <- 0, bw <- bwd)
+                if (isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
+                  c("recp")) == TRUE) {
+                  bw <- 0L
+                  ifelse(isTRUE(undRecip == TRUE) == TRUE, hd <- 0L, 
+                    hd <- hds)
+                  lw <- (lw + (3L/lw)) * mscl
+                }
+                else if (isTRUE(collRecip == TRUE) == FALSE && 
+                  isTRUE(tlbs[k] %in% c("recp")) == TRUE) {
+                  ifelse(isTRUE(undRecip == TRUE) == TRUE, hd <- 0L, 
+                    hd <- hds)
+                }
+                else {
+                  bw <- bwd
+                  hd <- hds
+                  lw <- lw * mscl
+                }
                 if (isTRUE(collRecip == TRUE) == TRUE && isTRUE(tlbs[k] %in% 
                   c("recp")) == FALSE) {
                   flgcr <- numeric()
                   sbds <- multiplex::swp(bds[[k]])
-                  if (any(sbds %in% utrcp) == TRUE) {
+                  if (any(sbds %in% unlist(trcp)) == TRUE) {
                     for (i in seq_len(z)) {
                       ifelse(any(sbds %in% trcp[[i]]) == TRUE, 
                         flgcr <- append(flgcr, as.numeric(i)), 
@@ -749,22 +758,21 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
                 else {
-                  NA
+                  flgcr <- rep(0L, z)
                 }
                 pars[, 1] <- pars[, 1] * scl[1]
                 pars[, 2] <- pars[, 2] * scl[2]
                 if (isTRUE(z == 1L) == TRUE) {
-                  ccbnd(pars, rr, bds[[k]], vlt, cx * mscl, lwd * 
-                    mscl, vecol, bw, alfa, fds, flgcx, flgcr, 
-                    hds, n)
+                  ccbnd(pars, rbds, bds[[k]], vlt, cx * mscl, 
+                    lw, vecol, bw, alfa, fds, flgcx, flgcr, hd, 
+                    n)
                 }
                 else {
                   ifelse(isTRUE(length(lty) == 1L) == TRUE, ccbnd(pars, 
-                    rr, bds[[k]], vlt1, cx * mscl, lwd * mscl, 
-                    vecol[vltc], bw, alfa, fds, flgcx, flgcr, 
-                    hds, n), ccbnd(pars, rr, bds[[k]], vlt, cx * 
-                    mscl, lwd * mscl, vecol[vltc], bw, alfa, 
-                    fds, flgcx, flgcr, hds, n))
+                    rbds, bds[[k]], vlt1, cx * mscl, lw, vecol[vltc], 
+                    bw, alfa, fds, flgcx, flgcr, hd, n), ccbnd(pars, 
+                    rbds, bds[[k]], vlt, cx * mscl, lw, vecol[vltc], 
+                    bw, alfa, fds, flgcx, flgcr, hd, n))
                 }
             }
             else {
@@ -800,7 +808,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                     lpsz <- (cex[lp[i]] * 0.0075) - (dz)
                   }
                   hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
-                    lpsz, col = vecol, lty = lty, lwd = lwd)
+                    lpsz, col = vecol, lty = Lt, lwd = lwd)
                 }
                 rm(i)
             }
@@ -816,9 +824,9 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                 if (isTRUE(length(lp) > 0) == TRUE) {
                   for (i in seq_len(length(lp))) {
                     ifelse(isTRUE(cex[lp[i]] <= 3L) == TRUE | 
-                      isTRUE(n < 3) == TRUE, dz <- dz * 0.75, 
+                      isTRUE(n < 3L) == TRUE, dz <- dz * 0.75, 
                       NA)
-                    if (isTRUE(n < 3) == TRUE) {
+                    if (isTRUE(n < 3L) == TRUE) {
                       dcx <- cex[lp[i]]/110L
                       lpsz <- abs((cex[lp[i]] * 0.007) - dz[k])
                     }
@@ -826,9 +834,13 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                       dcx <- cex[lp[i]]/100L
                       lpsz <- abs((cex[lp[i]] * 0.0075) - dz[k])
                     }
-                    hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
-                      lpsz, col = grDevices::adjustcolor(vecol[k], 
-                        alpha = alfa), lty = lty[k], lwd = lwd[k])
+                    ifelse(isTRUE(length(lty) == 1) == TRUE, 
+                      hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                        lpsz, col = grDevices::adjustcolor(vecol[k], 
+                          alpha = alfa), lty = lty, lwd = lwd[k]), 
+                      hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                        lpsz, col = grDevices::adjustcolor(vecol[k], 
+                          alpha = alfa), lty = Lt[k], lwd = lwd[k]))
                   }
                   rm(i)
                 }
@@ -843,16 +855,16 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         NA
     }
     if (all(pch %in% 21:25) == TRUE) {
-        suppressWarnings(graphics::points(nds[, 1] * scl[1], 
-            nds[, 2] * scl[2], pch = pch, cex = cex, col = grDevices::adjustcolor(vcol0, 
+        graphics::points(nds[, 1] * scl[1], nds[, 2] * scl[2], 
+            pch = pch, cex = cex, col = grDevices::adjustcolor(vcol0, 
                 alpha = alpha[1]), bg = grDevices::adjustcolor(vcol, 
-                alpha = alpha[1])))
+                alpha = alpha[1]))
     }
     else {
-        suppressWarnings(graphics::points(nds[, 1] * scl[1], 
-            nds[, 2] * scl[2], pch = pch, cex = cex, col = grDevices::adjustcolor(vcol, 
+        graphics::points(nds[, 1] * scl[1], nds[, 2] * scl[2], 
+            pch = pch, cex = cex, col = grDevices::adjustcolor(vcol, 
                 alpha = alpha[1]), bg = grDevices::adjustcolor(vcol, 
-                alpha = alpha[1])))
+                alpha = alpha[1]))
     }
     if (isTRUE(showLbs == TRUE) == TRUE) {
         ndss <- nds
@@ -1005,68 +1017,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                   }
                 }
             }
-        }
-    }
-    if (isTRUE(showAtts == TRUE) == TRUE) {
-        ndss <- nds
-        ndss[, 1] <- ndss[, 1] * scl[1]
-        ndss[, 2] <- ndss[, 2] * scl[2]
-        if (isTRUE(flgcrd == TRUE) == TRUE && isTRUE(ncol(coord) > 
-            3L) == TRUE) {
-            NA
-        }
-        else {
-            atts <- rep("", nrow(nds))
-            if (missing(att) == FALSE) {
-                if (is.array(att) == TRUE) {
-                  if (is.na(dim(att)[3]) == TRUE | isTRUE(dim(att)[3] == 
-                    1) == TRUE) {
-                    ifelse(missing(lbat) == FALSE, atts[which((att) != 
-                      0)] <- lbat, atts[which((att) != 0)] <- "1")
-                  }
-                  else {
-                    if (missing(lbat) == FALSE) {
-                      atts[which(diag(multiplex::mnplx(netd, 
-                        diag.incl = TRUE)) != 0)] <- lbat
-                    }
-                    else {
-                      dimnames(netd)[[3]] <- NULL
-                      neta <- multiplex::zbind(netd, att)
-                      clss <- multiplex::expos(multiplex::rel.sys(neta, 
-                        att = (z + 1L):dim(neta)[3]), classes = TRUE)$Classes
-                      attr(clss, "names")[which(attr(clss, "names") == 
-                        "ALL")] <- multiplex::jnt(dimnames(att)[[3]], 
-                        sep = "")
-                      for (i in 2:length(clss)) {
-                        atts[which(lbs %in% clss[[i]])] <- attr(clss, 
-                          "names")[i]
-                      }
-                      rm(i)
-                    }
-                  }
-                }
-                else if (is.vector(att) == TRUE | is.factor(att) == 
-                  TRUE) {
-                  ifelse(isTRUE(length(att) == n) == TRUE, atts <- as.vector(att), 
-                    atts <- rep("", length(lbs)))
-                }
-                else {
-                  atts <- rep("", length(lbs))
-                }
-            }
-            else {
-                NA
-            }
-        }
-        if (isTRUE(flgcx == FALSE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = fsize, 
-                pos = pos%%4 + 1L, col = fcol, offset = (cex/4L), 
-                adj = c(0.5, 1))
-        }
-        else if (isTRUE(flgcx == TRUE) == TRUE) {
-            graphics::text(ndss, labels = atts, cex = fsize, 
-                pos = pos%%4 + 1L, col = fcol, offset = (min(cex)/4L), 
-                adj = c(0.5, 1))
         }
     }
     graphics::par(mar = omr)
