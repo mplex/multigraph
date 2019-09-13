@@ -182,13 +182,19 @@ Antonio Rivero Ostoic
 \code{\link[multiplex:semigroup]{semigroup}}, \code{\link{multigraph}}, \code{\link{frcd}}, \code{\link{conc}}
 }
 \examples{
-## Create an abstract semigroup
-arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
-       c(3,3,2))>.5, 1 ) )
-S <- semigroup(arr)
+## Create an abstract semigroup from image matrices in existing data set
+data(incubD)
 
-## plot its Cayley graph
+S <- semigroup(incubD$IM)
+
+## plot is Cayley graph
 ccgraph(S)
 }
+
+%arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+%       c(3,3,2))>.5, 1 ) )
+%S <- semigroup(arr)
+
+
 \keyword{ graphics }
 \keyword{ math }
