@@ -8,11 +8,11 @@ Cayley colour graph
 A function to create and manipulate bipartite Cayley colour graphs
 }
 \usage{
-ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), scope, collRecip,
-        showLbs, showAtts, cex.main, coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar,
-        pos, asp, ecol, vcol, vcol0, hds, vedist, rot, mirrorX, mirrorY, col, lbat, swp, 
-	loops, swp2, scl, mirrorD, mirrorL, conc, lbs, mirrorV, mirrorH, 
-	ffamily, fstyle, fsize, fcol, ...)
+ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), scope, loops, 
+        collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, pch, 
+        lty, bwd, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, 
+        swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, hds, 
+        vedist, ffamily, fstyle, fsize, fcol, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,17 +34,23 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{scope}{
    (optional) the scope of the graph (see details)
 }
+  \item{loops}{
+	(optional, logical, and experimental) plot graph loops?
+}
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
+	(optional and logical) whether or not collapse reciprocated edges (for undirected graphs)
+}
+  \item{undRecip}{
+	(optional and logical) whether or not plot reciprocated edges as undirected graph
 }
   \item{showLbs}{
 	(optional and logical) whether or not show the vertex labels when dimnames available
 }
-  \item{showAtts}{
-	(optional and logical) whether or not show the vertex attribute labels
-}
   \item{cex.main}{
 	(optional) the size of the plot's title
+}
+  \item{conc}{
+	(optional and logical) whether the layout is concentric or not
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
@@ -91,20 +97,8 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{vcol0}{
 	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
-  \item{hds}{
-	(optional and experimental) arcs' head scale
-}
-  \item{vedist}{
-	(optional and experimental) a real number with vertex - edge distance
-}
-  \item{rot}{
-	(optional) clockwise rotation of the graph in degrees 
-}
-  \item{mirrorX}{
-	(optional) mirror of the X axis
-}
-  \item{mirrorY}{
-	(optional) mirror of the Y axis
+  \item{lbs}{
+	(optional) the vertex labels
 }
   \item{col}{
 	(optional) alias for \code{vcol}
@@ -115,14 +109,17 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{swp}{
 	(optional and logical) whether or not swap the bundle patterns
 }
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
-}
   \item{swp2}{
 	(optional and logical) whether or not swap reciprocals
 }
   \item{scl}{
 	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+}
+  \item{mirrorX}{
+	(optional) mirror of the X axis
+}
+  \item{mirrorY}{
+	(optional) mirror of the Y axis
 }
   \item{mirrorD}{
 	(optional) mirror reflection across diagonal Y=X
@@ -130,17 +127,20 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{mirrorL}{
 	(optional) mirror reflection across diagonal Y=-X
 }
-  \item{conc}{
-	(optional and logical) whether the layout is concentric or not
-}
-  \item{lbs}{
-	(optional) the vertex labels
-}
   \item{mirrorV}{
 	same as \code{mirrorX}
 }
   \item{mirrorH}{
 	same as \code{mirrorY}
+}
+  \item{rot}{
+	(optional) clockwise rotation of the graph in degrees 
+}
+  \item{hds}{
+	(optional and experimental) arcs' head scale
+}
+  \item{vedist}{
+	(optional and experimental) a real number with vertex - edge distance
 }
   \item{ffamily}{
 	the font family
@@ -158,6 +158,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
+%
 \details{
 The Cayley colour graph is a graphical representation of the relationships among relations in the relational structure of a given multiplex network. Both nodes and directed edges represent string relations and each shape (and color) corresponds to a specific generator relation of the semigroup structure.
 
