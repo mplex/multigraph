@@ -1,8 +1,8 @@
 language: r
 cache: packages
 
-# Be strict when checking our package
-warnings_are_errors: true
+# Do not be strict when checking our package
+warnings_are_errors: false
 
 # r_check_args: --as-cran --run-donttest 
 
