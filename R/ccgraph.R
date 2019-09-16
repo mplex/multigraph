@@ -11,13 +11,6 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         ifelse(is.null(x$ord) == FALSE, n <- x$ord, n <- dim(x$S)[1])
         ifelse(isTRUE(x$st == dimnames(x$S)[[1]]) == TRUE, Lbs <- x$st, 
             Lbs <- dimnames(x$S)[[1]])
-        if (is.na(x$gens) == TRUE || is.null(x$gens) == TRUE) {
-            warning("Generators are not provided, and first element of 'x' is taken.")
-            x$gens <- 1
-        }
-        else {
-            NA
-        }
         if (is.array(x$gens) == TRUE) {
             cgm <- array(0, dim = c(n, n, dim(x$gens)[3]), dimnames = c(list(Lbs, 
                 Lbs), list(attr(x$gens, "dimnames")[[3]])))
