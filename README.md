@@ -123,7 +123,7 @@ Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *no
 
 #### Force-directed layout
 
-Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization as below. Function `multigraph` provides with a number of arguments for the graph, edges, and nodes, which can be recorded in the `scope` argument.
+Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization of the multiplex network. Function `multigraph` provides a number of arguments for graph, edges, and nodes levels, which can be recorded in an object named `scp` for the `scope` argument of this function.
 
 
 <br /> 
@@ -131,11 +131,10 @@ Besides the circular layout, another possibility is to apply a *force-directed* 
 
 ```r
 # define scope of node / edge / graph characteristics as list object
-scp <- list(directed = FALSE, layout = "force", seed = 2, cex = 6, fsize = 7, pos = 0, vcol = 8, ecol = 1,
-+  lwd = 2, bwd = .5)
+scp <- list(directed = FALSE, cex = 6, fsize = 7, pos = 0, vcol = 8, ecol = 1, lwd = 2, bwd = .5)
 
 # plot graph with customized format
-multigraph(floflies, scope = scp)
+multigraph(floflies, layout = "force", seed = 2, scope = scp)
 ```
 ![Force directed layout of `multigraph`](figs/floflies-force.png)
 [vector image](figs/floflies-force.pdf)
