@@ -145,7 +145,7 @@ multigraph(floflies, layout = "force", seed = 2, scope = scp)
 
 ```r
 # plot graph with customized format
-multigraph(floflies, scope = scp, lty = 2:1, pch = 13)
+multigraph(floflies, layout = "force", seed = 2, scope = scp, lty = 2:1, pch = 13)
 ```
 ![Force directed layout of `multigraph` different shapes](figs/floflies-force2.png)
 [vector image](figs/floflies-force2.pdf)
@@ -232,10 +232,10 @@ The following code serves to depict this network in a way that the size of the v
 
 ```r
 # redefine scope of node / edge / graph characteristics 
-scp <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
+scp <- list(directed = FALSE, fsize = 8, pos = 0, lwd = 2, ecol = 1, vcol = 5)
 
 # plot graph with customized format and actor attributes
-multigraph(floflies, scope = scp, cex = flofliesatt[,1])
+multigraph(floflies, layout = "force", seed = 1, scope = scp, cex = flofliesatt[,1])
 ```
 ![Force directed layout layout of `multigraph` with attributes](figs/flofliesatt-force.png)
 [vector image](figs/flofliesatt-force.pdf)
@@ -248,11 +248,11 @@ And with the `clu` argument we establish the clustering of the network with thre
 
 ```r
 # define scope of node / edge / graph characteristics 
-scp2 <- list(directed = FALSE, layout = "force", seed = 1, fsize = 8, pos = 0, lwd = 2, ecol = "white", 
+scp2 <- list(directed = FALSE, fsize = 8, pos = 0, lwd = 2, ecol = "white", 
 +  vcol = c("orange","blue","white"), clu = c(1,1,1,2,2,1,2,2,1,1,2,3,1,1,2,1), alpha = c(.5, 1, .2))
 
 # plot graph with customized format and actor attributes
-multigraph(floflies, scope = scp2, cex = flofliesatt[,1], bg = 1)
+multigraph(floflies, layout = "force", seed = 1, scope = scp2, cex = flofliesatt[,1], bg = 1)
 ```
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
 [vector image](figs/flofliesatt-force2.pdf)
