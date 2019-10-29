@@ -1,10 +1,10 @@
 ccgraph <-
 function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 
     1, 1), scope, loops, collRecip, undRecip, showLbs, cex.main, 
-    conc, coord, clu, cex, lwd, pch, lty, bwd, att, bg, mar, 
-    pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, scl, 
-    mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
-    hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...) 
+    conc, coord, clu, cex, lwd, pch, lty, bwd, bwd2, att, bg, 
+    mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, 
+    scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, 
+    rot, hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -480,7 +480,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         vcol0 <- vcol
     }
     ifelse(isTRUE(n > 20) == TRUE, ffds <- 0.2, ffds <- 0)
-    fds <- 140L - (n * ffds)
+    fds <- 130L - (n * ffds)
     if (isTRUE(flgcx == TRUE) == TRUE) {
         fds <- fds - 10L
     }
@@ -789,10 +789,10 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         else {
             bdlp <- bd$loop
         }
-        dz <- (rng(z) + abs(min(rng(z))))/(10L)
         ndss <- nds
         ndss[, 1] <- ndss[, 1] * scl[1]
         ndss[, 2] <- ndss[, 2] * scl[2]
+        dz <- (rng(z) + abs(min(rng(z))))/(10L)
         if (isTRUE(z == 1L) == TRUE) {
             lp <- as.vector(which(diag(net) > 0))
             if (isTRUE(length(lp) > 0) == TRUE) {
@@ -815,22 +815,39 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
             }
         }
         else if (isTRUE(z > 1) == TRUE) {
-            ifelse(isTRUE(bwd == 0) == TRUE, dz <- rep(0, z), 
-                NA)
+            if (missing(bwd2) == TRUE) {
+                NA
+            }
+            else {
+                ifelse(isTRUE(bwd2 < 1L) == TRUE && isTRUE(bwd2 == 
+                  0) == FALSE, bwd2 <- 1L, NA)
+                ifelse(isTRUE(bwd2 > 2L) == TRUE, bwd2 <- 2L, 
+                  NA)
+                if (isTRUE(bwd2 == 0) == TRUE || (any(duplicated(unlist(bdlp))) == 
+                  FALSE && isTRUE(bwd2 == 1L) == TRUE)) {
+                  dz <- rep(0, z)
+                }
+                else {
+                  ifelse(missing(bwd2) == TRUE, dz <- (rng(z) + 
+                    abs(min(rng(z))))/(10L), dz <- (bwd2) * (rng(z) + 
+                    abs(min(rng(z))))/(1L))
+                }
+            }
+            ifelse(isTRUE(cx > 3L) == TRUE, fcex <- 3L, fcex <- floor(cx))
             for (k in seq_len(length(bdlp))) {
                 lp <- as.numeric(unique(multiplex::dhc(bdlp)[k][[1]]))
                 if (isTRUE(length(lp) > 0) == TRUE) {
                   for (i in seq_len(length(lp))) {
-                    ifelse(isTRUE(cex[lp[i]] <= 3L) == TRUE | 
+                    ifelse(isTRUE(fcex[lp[i]] <= 3L) == TRUE | 
                       isTRUE(n < 3L) == TRUE, dz <- dz * 0.75, 
                       NA)
                     if (isTRUE(n < 3L) == TRUE) {
-                      dcx <- cex[lp[i]]/110L
-                      lpsz <- abs((cex[lp[i]] * 0.007) - dz[k])
+                      dcx <- fcex[lp[i]]/110L
+                      lpsz <- abs((fcex[lp[i]] * 0.007) - dz[k])
                     }
                     else {
-                      dcx <- cex[lp[i]]/100L
-                      lpsz <- abs((cex[lp[i]] * 0.0075) - dz[k])
+                      dcx <- fcex[lp[i]]/100L
+                      lpsz <- abs((fcex[lp[i]] * 0.0075) - dz[k])
                     }
                     ifelse(isTRUE(length(lty) == 1) == TRUE, 
                       hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
