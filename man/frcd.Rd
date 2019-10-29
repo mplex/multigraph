@@ -7,7 +7,7 @@ Force directed layout
 A function to compute the graph coordinated system with a force directed layout algortihm
 }
 \usage{
-frcd(net, seed = seed, maxiter, drp, ...)
+frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,12 @@ frcd(net, seed = seed, maxiter, drp, ...)
 }
   \item{\dots}{
 	Additional argument items 
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+}
+  \item{mov}{
+	(optional and experimental)  numerical scalar (x and y) or vector (x, y) to move the graph
 }
 }
 \details{
@@ -48,8 +54,17 @@ Antonio Rivero Ostoic
 \seealso{
 \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{stsm}}, \code{\link{conc}}
 }
-%\examples{
+\examples{
+## Create the data: two binary relations among three elements
+arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
 
-%}
+## Coordinates for the force directed layout with random start
+coord <- frcd(arr, seed = NULL)
+
+## Plot multigraph with costumized coordenates
+multigraph(arr, coord = coord)
+
+}
 \keyword{ graphics }
 \keyword{ manip }

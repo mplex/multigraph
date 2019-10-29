@@ -1,23 +1,39 @@
-\name{ccgraph}
-\alias{ccgraph}
+\name{mlgraph}
+\alias{mlgraph}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Cayley colour graph
+Multilevel graph
 }
 \description{
-A function to create and manipulate bipartite Cayley colour graphs
+A function to create and manipulate multilevel graphs
 }
 \usage{
-ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), scope, loops, 
-        collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, pch, 
-        lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, 
-        swp, swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
-        hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...)
+mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main = NULL, 
+        seed = NULL, maxiter = 100, directed = TRUE, alpha = c(1, 1, 1), scope, collRecip,
+        undRecip, showLbs, showAtts, cex.main, coord, clu, cex, lwd, pch, lty, bwd, bwd2, 
+        att, bg, mar, pos, asp, ecol, vcol, vcol0, col, lbat, swp, loops, swp2, 
+        mirrorX, mirrorY, mirrorD, mirrorL, lbs, mirrorV, mirrorH, rot, hds, scl, vedist, 
+        ffamily, fstyle, fsize, fcol, valued, modes, elv, lng, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-an algebraic structure, typically a \code{"Semigroup"} object class
+  \item{net}{
+  a \code{"Multilevel"} class object or a 3D array with clustering information
+}
+  \item{layout}{
+    the visualization layout: 
+
+       \code{circ} circular 
+
+       \code{force} force-directed   
+
+       \code{stress} stress-majorization  
+
+       \code{rand} random 
+
+       \code{conc} concentric 
+
+       \code{bip} as bipartite graph   
 }
   \item{main}{
 	(optional) title of the plot
@@ -28,14 +44,14 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{maxiter}{
 	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
+  \item{directed}{
+	(logical) whether or not the graph is directed or unidrected
+}
   \item{alpha}{
 	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{scope}{
    (optional) the scope of the graph (see details)
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
 }
   \item{collRecip}{
 	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
@@ -44,13 +60,13 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional and logical) whether or not plot reciprocated edges as undirected
 }
   \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels when dimnames available
+	(optional and logical) whether or not show the vertex labels
+}
+  \item{showAtts}{
+	(optional and logical) whether or not show the vertex attribute labels
 }
   \item{cex.main}{
 	(optional) the size of the plot's title
-}
-  \item{conc}{
-	(optional and logical) whether the layout is concentric or not
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
@@ -100,9 +116,6 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{vcol0}{
 	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
-  \item{lbs}{
-	(optional) the vertex labels
-}
   \item{col}{
 	(optional) alias for \code{vcol}
 }
@@ -112,11 +125,11 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{swp}{
 	(optional and logical) whether or not swap the bundle patterns
 }
+  \item{loops}{
+	(optional, logical, and experimental) plot graph loops?
+}
   \item{swp2}{
 	(optional and logical) whether or not swap reciprocals
-}
-  \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
 }
   \item{mirrorX}{
 	(optional) mirror of the X axis
@@ -130,6 +143,9 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{mirrorL}{
 	(optional) mirror reflection across diagonal Y=-X
 }
+  \item{lbs}{
+	(optional) the vertex labels
+}
   \item{mirrorV}{
 	same as \code{mirrorX}
 }
@@ -141,6 +157,9 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
 }
   \item{vedist}{
 	(optional and experimental) a real number with vertex - edge distance
@@ -157,19 +176,33 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{fcol}{
 	the font color
 }
-  \item{pht}{
-	(experimental) phantoms in the graph
+  \item{valued}{
+	(optional and logical) whether the graph is depicyed as valued or not
+}
+  \item{modes}{
+	(optional) a vector indicating which matrices are domains and which codomains (works only with a \code{"Multilevel"} class object)
+}
+  \item{elv}{
+	(experimental) control loops 1
+}
+  \item{lng}{
+	(experimental) control loops 2
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-The Cayley colour graph is a graphical representation of the relationships among relations in the relational structure of a given multiplex network. Both nodes and directed edges represent string relations and each shape (and color) corresponds to a specific generator relation of the semigroup structure.
+Multilevel graphs serve to represent networks with different ``levels'' such as different domains in the network structure. 
+A characteristic of multilevel networks is the existence of ties within and across domains.
+
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these are accepted.
+
+The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, a number greater than one is possible.
 
 }
 \value{
-A plot of the semigroup or group structure.
+A plot of the multilevel graph structure for the network
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -184,16 +217,12 @@ Antonio Rivero Ostoic
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[multiplex:semigroup]{semigroup}}, \code{\link{multigraph}}, \code{\link{frcd}}, \code{\link{conc}}
+\code{\link[multiplex:mlvl]{mlvl}}, \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
 \examples{
-## Create an abstract semigroup
-arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
-       c(3,3,2))>.5, 1 ) )
-S <- semigroup(arr)
+# create multilevel class object
 
-## plot its Cayley graph
-ccgraph(S)
+# plot the multilevel graph
+
 }
 \keyword{ graphics }
-\keyword{ math }
