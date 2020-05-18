@@ -1,6 +1,10 @@
 frcd <-
 function (net, seed = seed, maxiter, drp, scl, mov, ...) 
 {
+    if (isTRUE(is.data.frame(net) == TRUE) == TRUE) {
+        net <- as.matrix(net)
+    }
+    net <- replace(net, net == Inf, 0L)
     n <- dim(net)[1]
     ifelse(missing(maxiter) == TRUE, maxiter <- (60L + n), NA)
     if (missing(drp) == FALSE && is.numeric(drp) == TRUE) {
