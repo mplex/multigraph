@@ -12,7 +12,7 @@ ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), scope, loop
         collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, pch, 
         lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, 
         swp, swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
-        hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...)
+        hds, vedist, ffamily, fstyle, fsize, fcol, ...) %%, pht
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,7 +29,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
+	vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{scope}{
    (optional) the scope of the graph (see details)
@@ -38,7 +38,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional, logical, and experimental) plot graph loops?
 }
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
+	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
 }
   \item{undRecip}{
 	(optional and logical) whether or not plot reciprocated edges as undirected
@@ -62,7 +62,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) the size of the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
@@ -71,7 +71,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) the shape of the edges
 }
   \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
 }
   \item{bwd2}{
 	(optional) the width of the bundle loop edges. 
@@ -157,15 +157,16 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{fcol}{
 	the font color
 }
-  \item{pht}{
-	(experimental) phantoms in the graph
-}
+%%  \item{pht}{
+%%	(experimental) phantoms in the graph
+%%}
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-The Cayley colour graph is a graphical representation of the relationships among relations in the relational structure of a given multiplex network. Both nodes and directed edges represent string relations and each shape (and color) corresponds to a specific generator relation of the semigroup structure.
+The Cayley colour graph is a graphical representation of the relationships among relations in the relational structure of a given multiplex network. 
+Both nodes and directed edges represent string relations, and each shape (and color) corresponds to a specific generator relation of the semigroup structure.
 
 }
 \value{
@@ -186,11 +187,17 @@ Antonio Rivero Ostoic
 \seealso{
 \code{\link[multiplex:semigroup]{semigroup}}, \code{\link{multigraph}}, \code{\link{frcd}}, \code{\link{conc}}
 }
+
+%%## Create an abstract semigroup
+%%arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+%%       c(3,3,2))>.5, 1 ) )
+%%S <- semigroup(arr)
+
 \examples{
-## Create an abstract semigroup
-arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
-       c(3,3,2))>.5, 1 ) )
-S <- semigroup(arr)
+## Create an abstract semigroup from image matrices in existing data set
+data(incubD)
+
+S <- semigroup(incubD$IM)
 
 ## plot its Cayley graph
 ccgraph(S)

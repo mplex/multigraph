@@ -4,14 +4,15 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     conc, coord, clu, cex, lwd, pch, lty, bwd, bwd2, att, bg, 
     mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, 
     scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, 
-    rot, hds, vedist, ffamily, fstyle, fsize, fcol, pht, ...) 
+    rot, hds, vedist, ffamily, fstyle, fsize, fcol, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
         ifelse(is.null(x$ord) == FALSE, n <- x$ord, n <- dim(x$S)[1])
         ifelse(isTRUE(x$st == dimnames(x$S)[[1]]) == TRUE, Lbs <- x$st, 
             Lbs <- dimnames(x$S)[[1]])
-        if (is.na(x$gens) == TRUE || is.null(x$gens) == TRUE) {
+        if (any(is.na(x$gens)) == TRUE || is.null(x$gens) == 
+            TRUE) {
             warning("Generators are not provided, and first element of 'x' is taken.")
             x$gens <- 1
         }
@@ -103,6 +104,8 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         clu = c(which(pclu == 0), which(pclu == 1))))
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
+    if (isTRUE(n == 1L) == TRUE) 
+        stop("1-element semigroup detected, and not yet supported")
     ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == TRUE) == 
         TRUE, undRecip <- TRUE, undRecip <- FALSE)
     ifelse(missing(loops) == FALSE && isTRUE(loops == FALSE) == 

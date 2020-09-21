@@ -2,12 +2,12 @@ multigraph <-
 function (net, layout = c("circ", "force", "stress", "conc", 
     "rand"), scope, directed = TRUE, loops, signed, valued, values, 
     lbs, showLbs, att, lbat, showAtts, main = NULL, cex.main, 
-    coord, collRecip, undRecip, seed = NULL, maxiter = 100, clu, 
-    cex, cex2, pch, lwd, lty, vcol, vcol0, col, ecol, bwd, bwd2, 
-    pos, bg, bg2, asp, drp, add, swp, swp2, alpha = c(1, 1, 1, 
-        1), rot, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
-    mirrorH, scl, hds, vedist, mar, ffamily, fstyle, fsize, fsize2, 
-    fcol, fcol2, ...) 
+    col.main, font.main, coord, collRecip, undRecip, seed = NULL, 
+    maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, 
+    col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
+    alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, 
+    mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, fstyle, 
+    fsize, fsize2, fcol, fcol2, lclu, ...) 
 {
     flgmlvl <- FALSE
     flgcn2 <- FALSE
@@ -235,6 +235,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     ifelse(missing(cex.main) == TRUE, cex.main <- graphics::par()$cex.main, 
         NA)
+    ifelse(missing(col.main) == TRUE, col.main <- graphics::par()$col.main, 
+        NA)
+    ifelse(missing(font.main) == TRUE, font.main <- graphics::par()$font.main, 
+        NA)
     if (missing(rot) == FALSE) {
         ifelse(isTRUE(rot == -90L) == TRUE, rot <- -89.99 * -1, 
             rot <- rot[1] * -1)
@@ -403,7 +407,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             end = 0.5))
     }
     else {
-        ifelse(isTRUE(ecol == 0) == TRUE, ecol <- "#FFFFFF", 
+        ifelse(isTRUE(ecol == 0) == TRUE, ecol <- "transparent", 
             NA)
     }
     if (isTRUE(valued == TRUE) == TRUE) {
@@ -520,7 +524,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 NA
             }
         }
-        nclu <- nlevels(factor(clu))
+        if (missing(lclu) == FALSE && is.vector(lclu) == TRUE) {
+            nclu <- length(lclu)
+        }
+        else {
+            nclu <- nlevels(factor(clu))
+        }
     }
     else {
         nclu <- 1L
@@ -608,20 +617,32 @@ function (net, layout = c("circ", "force", "stress", "conc",
         if (isTRUE(length(vcol) == 1L) == TRUE) {
             vcol <- rep(vcol, n)
         }
-        else if (isTRUE(length(vcol) == nclu) == TRUE) {
-            if (identical(vcol, clu) == FALSE) {
-                tmpvcol <- rep(0, n)
+        else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
+            1) == TRUE) {
+            vcol <- rep(vcol[1], n)
+        }
+        else if (isTRUE(nclu < length(vcol)) == TRUE || identical(vcol, 
+            clu) == FALSE || missing(lclu) == FALSE) {
+            tmpvcol <- rep(0, n)
+            if (missing(lclu) == FALSE) {
+                if (isTRUE(min(lclu) == 0L) == TRUE) {
+                  lclu[which(lclu == 0L)] <- max(lclu) + 1L
+                  lclu <- sort(lclu)
+                  clu[which(clu == 0L)] <- max(lclu)
+                }
+                for (i in seq_len(nclu)) {
+                  tmpvcol[which(clu == lclu[i])] <- vcol[i]
+                }
+                rm(i)
+            }
+            else {
                 for (i in seq_len(nclu)) {
                   tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
                 }
                 rm(i)
-                vcol <- tmpvcol
-                rm(tmpvcol)
             }
-        }
-        else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
-            1) == TRUE) {
-            vcol <- rep(vcol[1], n)
+            vcol <- tmpvcol
+            rm(tmpvcol)
         }
         vcol[which(is.na(vcol))] <- graphics::par()$bg
         vcol[which(vcol == 0)] <- graphics::par()$bg
@@ -874,12 +895,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
         xlim <- c(min(nds[, 1]) - ((cex[1])/200L), max(nds[, 
             1]) + ((cex[1])/200L))
     }
-    if (isTRUE(showLbs == TRUE) == TRUE || isTRUE(values == TRUE) == 
-        TRUE) {
-        ifelse(missing(ffamily) == FALSE && isTRUE(ffamily %in% 
-            names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = ffamily), 
-            NA)
-    }
     if (isTRUE(mscl < 1) == TRUE) {
         xlim <- xlim - scl[1]/2
         ylim <- ylim - scl[2]/2
@@ -887,9 +902,19 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         NA
     }
+    ifelse(missing(font.main) == FALSE && isTRUE(font.main %in% 
+        names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = font.main), 
+        NA)
     suppressWarnings(graphics::plot(nds, type = "n", axes = FALSE, 
         xlab = "", ylab = "", ylim = ylim, xlim = xlim, asp = asp, 
-        main = main, cex.main = cex.main, ...))
+        main = main, cex.main = cex.main, col.main = col.main, 
+        ...))
+    if (isTRUE(showLbs == TRUE) == TRUE || isTRUE(values == TRUE) == 
+        TRUE) {
+        ifelse(missing(ffamily) == FALSE && isTRUE(ffamily %in% 
+            names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = ffamily), 
+            NA)
+    }
     tlbs <- vector()
     if (isTRUE(length(bds) > 0) == TRUE) {
         for (i in seq_len(length(attr(bds, "names")))) {

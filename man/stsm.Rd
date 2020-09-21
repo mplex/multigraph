@@ -4,7 +4,7 @@
 Stress majorization layout
 }
 \description{
-A function to compute the graph coordinated system with a stress majorization layout algortihm
+A function to compute the graph coordinated system with a stress majorization layout algorithm
 }
 \usage{
 stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
@@ -21,7 +21,7 @@ stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
         (optional) the maximum number of iterations 
 }
   \item{drp}{
-	(optional) for \code{weighted} networks, drop values less than specified
+	(optional) for \code{valued} networks, drop values less than specified
 }
   \item{jitter}{
 	(optional) jitter in the layout
@@ -34,10 +34,10 @@ stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
 }
 }
 \details{
-This function was meant as an internal routine for graph visaulization; however, it can be used with the \code{coord} option both in \code{multigraph} and \code{bmgraph} where a random \code{seed} is stated by \code{NULL}
+This function is meant as an internal routine for graph visualization. However, it can be used with the \code{coord} option both in \code{multigraph} and in \code{bmgraph} where \code{NULL} in \code{seed} implies a random seed based on the clock watch of the computer. 
 }
 \value{
-A data frame with the coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
+A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
 }
 \references{
 Gansner, E.R., Koren, Y., & North, S. \emph{Graph drawing by stress majorization}. In Graph Drawing: 12th International Symposium, gd 2004, New York, NY, USA, September 29 - October 2, 2004, revised selected papers. Berlin Heidelberg: Springer. pp. 239-250. 2005.

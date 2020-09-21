@@ -45,16 +45,16 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{directed}{
-	(logical) whether or not the graph is directed or unidrected
+	(logical) whether or not the graph is directed or undirected
 }
   \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
+	vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{scope}{
    (optional) the scope of the graph (see details)
 }
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
+	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
 }
   \item{undRecip}{
 	(optional and logical) whether or not plot reciprocated edges as undirected
@@ -78,7 +78,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) the size of the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
@@ -87,7 +87,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) the shape of the edges
 }
   \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
 }
   \item{bwd2}{
 	(optional) the width of the bundle loop edges. 
@@ -196,7 +196,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 Multilevel graphs serve to represent networks with different ``levels'' such as different domains in the network structure. 
 A characteristic of multilevel networks is the existence of ties within and across domains.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these are accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these are accepted.
 
 The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, a number greater than one is possible.
 
