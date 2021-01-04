@@ -8,23 +8,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, 
     fcol, vclu, ...) 
 {
-    if (isTRUE(is.data.frame(net) == TRUE) == TRUE) {
-        net <- as.matrix(net)
-    }
-    else if (isTRUE(is.data.frame(net) == TRUE) == FALSE || isTRUE(is.vector(net) == 
-        TRUE) == FALSE) {
-        if (isTRUE(is.list(net) == TRUE) == TRUE && is.vector(net) == 
-            FALSE) {
-            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
-        }
-        else if (is.vector(net) == TRUE) {
-            net <- multiplex::transf(net, type = "toarray2", 
-                lb2lb = TRUE)
-        }
-        else {
-            stop("'net' must be data frame, array, vector or list.")
-        }
-    }
+    ifelse(is.data.frame(net) == TRUE, net <- as.matrix(net), 
+        NA)
     if (missing(perm) == FALSE) {
         ifelse(is.list(perm) == TRUE, net <- net[perm[[1]], perm[[2]]], 
             NA)
@@ -32,7 +17,21 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     else {
         NA
     }
-    if (is.null(dim(net)[3]) == TRUE && is.list(net) == FALSE) {
+    if (is.null(dim(net)) == FALSE) {
+        if (isTRUE(is.list(net) == TRUE) == TRUE) {
+            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
+        }
+        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
+            net <- multiplex::trnf(net, tolist = FALSE, lb2lb = TRUE)
+        }
+        else {
+            NA
+        }
+    }
+    else {
+        stop("'net' must be data frame or array.")
+    }
+    if (is.na(dim(net)[3]) == TRUE) {
         tmp <- net
         if (missing(add) == FALSE && isTRUE(is.vector(add) == 
             TRUE) == TRUE) {
@@ -59,10 +58,6 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
             NA
         }
         net <- tmp
-        flg3D <- FALSE
-    }
-    else {
-        flg3D <- TRUE
     }
     ifelse(missing(valued) == FALSE && isTRUE(valued == TRUE) == 
         TRUE, valued <- TRUE, valued <- FALSE)
@@ -160,8 +155,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     else if (missing(clu) == TRUE) {
         ifelse(match.arg(layout) == "bipc", layout <- "bip", 
             NA)
-        ifelse(isTRUE(flg3D == TRUE) == TRUE, NA, clu <- list(rep(1, 
-            nrow(net)), rep(2, ncol(net))))
+        clu <- list(rep(1, nrow(net)), rep(2, ncol(net)))
         flgclu <- FALSE
     }
     if (match.arg(layout) == "bipc") {
@@ -404,8 +398,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         hds <- 1L
     }
     ifelse(missing(vedist) == TRUE, vedist <- 0, NA)
-    ifelse(isTRUE(vedist > 1L) == TRUE && match.arg(layout) != 
-        "circ2", vedist <- 1L, NA)
+    ifelse(isTRUE(vedist > 1L) == TRUE, vedist <- 1L, NA)
     ifelse(missing(rot) == TRUE, NA, rot <- rot * -1)
     if (isTRUE(directed == FALSE) == TRUE) {
         if (isTRUE(z == 1L) == TRUE) {
