@@ -610,43 +610,45 @@ function (net, layout = c("circ", "force", "stress", "conc",
         pch <- rep(pch[1], n)
     }
     if (missing(vcol) == TRUE) {
-        vcol <- grDevices::gray.colors(nclu)
-        ifelse(missing(col) == TRUE, NA, vcol <- col)
+        if (missing(col) == TRUE) {
+            vcol <- grDevices::gray.colors(nclu)
+        }
+        else {
+            vcol <- col
+        }
     }
-    else {
-        if (isTRUE(length(vcol) == 1L) == TRUE) {
-            vcol <- rep(vcol, n)
-        }
-        else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
-            1) == TRUE) {
-            vcol <- rep(vcol[1], n)
-        }
-        else if (isTRUE(nclu < length(vcol)) == TRUE || identical(vcol, 
-            clu) == FALSE || missing(lclu) == FALSE) {
-            tmpvcol <- rep(0, n)
-            if (missing(lclu) == FALSE) {
-                if (isTRUE(min(lclu) == 0L) == TRUE) {
-                  lclu[which(lclu == 0L)] <- max(lclu) + 1L
-                  lclu <- sort(lclu)
-                  clu[which(clu == 0L)] <- max(lclu)
-                }
-                for (i in seq_len(nclu)) {
-                  tmpvcol[which(clu == lclu[i])] <- vcol[i]
-                }
-                rm(i)
-            }
-            else {
-                for (i in seq_len(nclu)) {
-                  tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
-                }
-                rm(i)
-            }
-            vcol <- tmpvcol
-            rm(tmpvcol)
-        }
-        vcol[which(is.na(vcol))] <- graphics::par()$bg
-        vcol[which(vcol == 0)] <- graphics::par()$bg
+    if (isTRUE(length(vcol) == 1L) == TRUE) {
+        vcol <- rep(vcol, n)
     }
+    else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
+        1) == TRUE) {
+        vcol <- rep(vcol[1], n)
+    }
+    else if (isTRUE(nclu < length(vcol)) == TRUE || identical(vcol, 
+        clu) == FALSE || missing(lclu) == FALSE) {
+        tmpvcol <- rep(0, n)
+        if (missing(lclu) == FALSE) {
+            if (isTRUE(min(lclu) == 0L) == TRUE) {
+                lclu[which(lclu == 0L)] <- max(lclu) + 1L
+                lclu <- sort(lclu)
+                clu[which(clu == 0L)] <- max(lclu)
+            }
+            for (i in seq_len(nclu)) {
+                tmpvcol[which(clu == lclu[i])] <- vcol[i]
+            }
+            rm(i)
+        }
+        else {
+            for (i in seq_len(nclu)) {
+                tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
+            }
+            rm(i)
+        }
+        vcol <- tmpvcol
+        rm(tmpvcol)
+    }
+    vcol[which(is.na(vcol))] <- graphics::par()$bg
+    vcol[which(vcol == 0)] <- graphics::par()$bg
     if (isTRUE(any(pch %in% 21:25)) == TRUE) {
         if (missing(vcol0) == TRUE || isTRUE(vcol0 == 0) == TRUE) {
             vcol0 <- vcol
