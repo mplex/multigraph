@@ -14,7 +14,7 @@ Package: \tab multigraph \cr
 Type: \tab Package \cr
 Version: \tab 0.93 (devel) \cr
 Depends: \tab \CRANpkg{multiplex} (>= 2.9) \cr
-Date: \tab 28 February 2020 \cr
+Date: \tab 03 January 2021 \cr
 License: \tab GPL-3 \cr
 }
 This package contains functions to plot diverse types of graphs representing complex network structures. 
