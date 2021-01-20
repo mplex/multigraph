@@ -9,17 +9,18 @@ function (net, layout = c("circ", "force", "stress", "conc",
     mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, fstyle, 
     fsize, fsize2, fcol, fcol2, lclu, ...) 
 {
+    cnet <- attr(net, "class")
     flgmlvl <- FALSE
     flgcn2 <- FALSE
     flgpf <- FALSE
-    if (isTRUE("Multilevel" %in% attr(net, "class")) == TRUE) {
+    if (isTRUE("Multilevel" %in% cnet) == TRUE) {
         mlvl <- net
-        if (isTRUE("bpn" %in% attr(net, "class")) == TRUE) {
+        if (isTRUE("bpn" %in% cnet) == TRUE) {
             flgmlvl <- TRUE
             ifelse(missing(pch) == TRUE, pch <- c(rep(1, length(mlvl$lbs$dm)), 
                 rep(0, length(mlvl$lbs$cdm))), NA)
         }
-        else if (isTRUE("cn2" %in% attr(net, "class")) == TRUE) {
+        else if (isTRUE("cn2" %in% cnet) == TRUE) {
             flgcn2 <- TRUE
         }
         else {
@@ -27,13 +28,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
         }
         net <- mlvl$mlnet
     }
-    else if (isTRUE("pathfinder" %in% attr(net, "class")) == 
-        TRUE) {
+    else if (isTRUE("pathfinder" %in% cnet) == TRUE) {
         flgpf <- TRUE
         maxw <- net$max
         net <- net$Q
     }
-    else if (isTRUE(attr(net, "class") == "Data.Set") == TRUE) {
+    else if (isTRUE(cnet == "Data.Set") == TRUE) {
         att <- net$net[, , which(net$atnet[[1]] == 1)]
         net <- net$net[, , which(net$atnet[[1]] == 0)]
     }
@@ -41,8 +41,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
         NA
     }
     if (isTRUE(is.data.frame(net) == TRUE) == FALSE) {
-        if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(attr(net, 
-            "class") == "Signed") == FALSE) {
+        if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(cnet == 
+            "Signed") == FALSE) {
             net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
                 lbs = sort(unique(multiplex::dhc(unlist(net)))))
         }
@@ -65,7 +65,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         net <- as.matrix(net)
     }
-    if (isTRUE(attr(net, "class") == "Signed") == FALSE) {
+    if (isTRUE(cnet == "Signed") == FALSE) {
         ifelse(is.array(net) == TRUE || is.matrix(net) == TRUE, 
             NA, stop("\"net\" should be matrix or array."))
     }
@@ -277,9 +277,9 @@ function (net, layout = c("circ", "force", "stress", "conc",
         2), scl <- scl[1:2])
     ifelse(missing(vedist) == TRUE, vedist <- 0, NA)
     ifelse(isTRUE(vedist > 1L) == TRUE, vedist <- 1L, NA)
-    if (isTRUE(signed == TRUE) == TRUE || isTRUE(attr(net, "class") == 
-        "Signed") == TRUE) {
-        if (isTRUE(attr(net, "class") == "Signed") == TRUE) {
+    if (isTRUE(signed == TRUE) == TRUE || isTRUE(cnet == "Signed") == 
+        TRUE) {
+        if (isTRUE(cnet == "Signed") == TRUE) {
             if (any(net$val %in% c(-1, 0, 1)) == TRUE) {
                 net <- multiplex::zbind(multiplex::dichot(net$s, 
                   c = 1L), 1 - multiplex::dichot(net$s, c = 0))
@@ -624,8 +624,9 @@ function (net, layout = c("circ", "force", "stress", "conc",
         1) == TRUE) {
         vcol <- rep(vcol[1], n)
     }
-    else if (isTRUE(nclu < length(vcol)) == TRUE || identical(vcol, 
-        clu) == FALSE || missing(lclu) == FALSE) {
+    else if ((isTRUE(length(vcol) == nclu) == TRUE) && (isTRUE(nclu < 
+        length(vcol)) == TRUE || identical(vcol, clu) == FALSE || 
+        missing(lclu) == FALSE)) {
         tmpvcol <- rep(0, n)
         if (missing(lclu) == FALSE) {
             if (isTRUE(min(lclu) == 0L) == TRUE) {
