@@ -7,12 +7,12 @@ Bipartite multigraph
 A function to create and manipulate bipartite multigraphs
 }
 \usage{
-bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
-       "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
-       att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
-       collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
-       maxiter = 100, bwd, clu, pch, fcol, rot, mirrorX, mirrorY, mirrorV, mirrorH, 
-       hds, vedist, jitter, sort, add, adc, cluc, perm, ffamily, fstyle, fsize, ...)
+  bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
+          "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
+          att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, valued, 
+          collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
+          maxiter = 100, bwd, clu, pch, rot, mirrorX, mirrorY, mirrorV, mirrorH, hds, 
+          vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, fcol, vclu, ...)
 }
 \arguments{
   \item{net}{
@@ -48,7 +48,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
+	vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{showLbs}{
 	(optional and logical) whether or not show the vertex labels when dimnames available
@@ -75,13 +75,13 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) the margins of the plot
 }
   \item{directed}{
-	(optional and logical) whether or not the graph is directed or unidrected
+	(optional and logical) whether or not the graph is directed or undirected
 }
-  \item{weighted}{
-	(optional and logical) whether or not the graph is weighted or dichotomous
+  \item{valued}{
+	(optional and logical) whether or not the graph is valued or with dichotomous data
 }
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
+	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
 }
   \item{cex}{
 	(optional) the size of the vertices
@@ -90,7 +90,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) the position of the vertices' labels (\code{0} means ``at the center of the vertex'')
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
 }
   \item{lty}{
 	(optional) the shape of the edges
@@ -117,16 +117,13 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
 }
   \item{clu}{
 	(optional) the clustering of the vertices (see \emph{details})
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
-}
-  \item{fcol}{
-	the font color
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -138,10 +135,10 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional) mirror of the Y axis
 }
   \item{mirrorV}{
-	same as \code{mirrorX}
+	\emph{same as \code{mirrorX}}
 }
   \item{mirrorH}{
-	same as \code{mirrorY}
+	\emph{same as \code{mirrorY}}
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
@@ -156,35 +153,40 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ",
 	(optional and logical) sort the vertex labels
 }
   \item{add}{
-	add nodes to the graph's domain
+	(optional) add nodes to the graph's domain
 }
   \item{adc}{
-	add nodes to the graph's codomain
-}
-  \item{cluc}{
-	a list of vectors the clustering information in both the domain and the codomain
+	(optional) add nodes to the graph's codomain
 }
   \item{perm}{
 	(optional) a list of vectors for the permutation of network members in both the domain and codomain
 }
   \item{ffamily}{
-	the font family
+	(optional) the font family
 }
   \item{fstyle}{
-	the font style
+	(optional) the font style
 }
   \item{fsize}{
-	the font size
+	(optional) the font size
+}
+  \item{fcol}{
+	(optional) the font color
+}
+  \item{vclu}{
+	(optional) a list of vectors the clustering information in both the domain and the codomain
+%%     ~~Describe \code{vclu} here~~ \code{cluc} was 
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three dimensional arrays where each level corresponds to a particular type of tie, and thus the bipartite graphs in this case will be depicted with parallel edges. Besides, it is possible to obtain a graph of the bipartite network using the binomial approach to two-mode data, and plot it with a forced directed algorithm.
+Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three-dimensional arrays where each level corresponds to a particular type of tie. Thus the bipartite graphs, in this case, will be depicted with parallel edges. 
+Besides, it is possible to obtain a figure of the bipartite network using the binomial approach to two-mode data and plot it with a force-directed algorithm. 
 }
 \value{
-A plot of the two-mode networks as bipartite graph or multigraph
+A plot of the two-mode network as a bipartite graph or multigraph with a projection
 }
 %\references{
 %% ~put references to the literature/web site here ~

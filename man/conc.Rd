@@ -48,7 +48,7 @@ In a Euclidean plane computes the coordinated system with a concentric layout wi
 The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or a factor vector.
 }
 \value{
-A data frame with the coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
+A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -71,7 +71,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 ## Coordinates for the concentric layout with two radii
 coord <- conc(arr, nr = 2)
 
-## Plot multigraph with costumized coordenates
+## Plot multigraph with customized coordenates
 multigraph(arr, coord = coord)
 
 }

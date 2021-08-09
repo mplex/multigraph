@@ -1,20 +1,23 @@
 \name{multigraph}
 \alias{multigraph}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Multigraphs and weighted multigraphs
+Multigraphs and valued multigraphs
 }
 \description{
-A function to create and manipulate multigraphs and weighted multigraphs with different layout options
+A function to create and manipulate multigraphs and valued multigraphs with different layout options
 }
 \usage{
 multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
-           directed = TRUE, main = NULL, lbs, seed = NULL, maxiter = 100, 
-           alpha = c(1, 1, 1), collRecip, showLbs, showAtts, cex.main, 
-           weighted, weights, coord, clu, cex, lwd, pch, lty, bwd, fcol, att, 
-           bg, mar, pos, asp, ecol, vcol, vcol0, cex2, fsize2, fcol2, hds, vedist, 
-           rot, mirrorX, mirrorY, col, lbat, drp, loops, swp, swp2, signed, scl, 
-           add, mirrorD, mirrorL, opt, mirrorV, mirrorH, ffamily, fstyle, fsize, ...)
+           directed = TRUE, loops, signed, valued, values, lbs, showLbs, att, lbat, 
+	   showAtts, main = NULL, cex.main, col.main, font.main, coord, collRecip, 
+	   undRecip, seed = NULL, maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, 
+	   vcol0, col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
+	   alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
+	   mirrorH, scl, hds, vedist, mar, ffamily, fstyle, fsize, fsize2, fcol, fcol2, 
+	   lclu, ...)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
 	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
@@ -36,13 +39,55 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
    (optional) the scope of the graph (see details)
 }
   \item{directed}{
-	(logical) whether or not the graph is directed or unidrected
+	(logical) whether or not the graph is directed or undirected
+}
+  \item{loops}{
+	(optional, logical) plot loops in the graph?
+}
+  \item{signed}{
+	(optional and logical) whether or not the graph is a signed structure
+}
+  \item{valued}{
+	(optional and logical) whether the graph is depicyed as valued or not
+}
+  \item{values}{
+	(optional and logical) print the values of the bonds in edges?
+}
+  \item{lbs}{
+	(optional) the vertices labels
+}
+  \item{showLbs}{
+	(optional and logical) whether or not show the vertex labels
+}
+  \item{att}{
+	(optional) a vector or an array representing the vertex attributes
+}
+  \item{lbat}{
+	(optional) the labels for the vertices' attributes
+}
+  \item{showAtts}{
+	(optional and logical) whether or not show the vertex attribute labels
 }
   \item{main}{
 	(optional) title of the plot
 }
-  \item{lbs}{
-	(optional) the vertex labels
+  \item{cex.main}{
+	(optional) the size of the plot's title
+}
+  \item{col.main}{
+	(optional) the color of the plot's title
+}
+  \item{font.main}{
+	(optional) the font family of the plot's title
+}
+  \item{coord}{
+	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
+}
+  \item{collRecip}{
+	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
+}
+  \item{undRecip}{
+	(optional and logical) whether or not plot reciprocated edges as undirected
 }
   \item{seed}{
 	(optional) the random seed number for the vertices' initial coordinates. Ignored for \code{circ} and \code{conc}
@@ -50,68 +95,23 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{maxiter}{
 	(optional) the maximum number of iterations in layout algorithms. Only for \code{force}, \code{stress}, and \code{rand}
 }
-  \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
-}
-  \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
-}
-  \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels
-}
-  \item{showAtts}{
-	(optional and logical) whether or not show the vertex attribute labels
-}
-  \item{cex.main}{
-	(optional) the size of the plot's title
-}
-  \item{weighted}{
-	(optional and logical) whether or not the graph is weighted or dichotomous
-}
-  \item{weights}{
-	(optional and logical) whether or not print the weights of the bonds
-}
-  \item{coord}{
-	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
-}
   \item{clu}{
 	(optional) the clustering of the vertices (see \emph{details})
 }
   \item{cex}{
 	(optional) the size of the vertices
 }
-  \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+  \item{cex2}{
+	(optional) the size of the background for the values with the \code{valued} option
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
 }
+  \item{lwd}{
+	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+}
   \item{lty}{
 	(optional) the shape of the edges
-}
-  \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
-}
-  \item{fcol}{
-	the font color
-}
-  \item{att}{
-	(optional) a vector or an array representing the vertex attributes
-}
-  \item{bg}{
-	(optional) the background color of the plot
-}
-  \item{mar}{
-	(optional) the margins of the plot
-}
-  \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``in the middle of the vertex'')
-}
-  \item{asp}{
-	(optional) the aspect ratio of the plot
-}
-  \item{ecol}{
-	(optional) the color of the edges
 }
   \item{vcol}{
 	(optional) the color of the vertices
@@ -119,20 +119,44 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{vcol0}{
 	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
-  \item{cex2}{
-	the size of the background for the weights
+  \item{col}{
+	(optional) alias for \code{vcol}
 }
-  \item{fsize2}{
-	the font size of the weights
+  \item{ecol}{
+	(optional) the color of the edges
 }
-  \item{fcol2}{
-	the font color of the weights
+  \item{bwd}{
+	(optional) the width of the bundle edges. 
 }
-  \item{hds}{
-	(optional and experimental) arcs' head scale
+  \item{bwd2}{
+	(optional and experimental) the width of the bundle loop edges. 
 }
-  \item{vedist}{
-	(optional and experimental) a real number with vertex - edge distance
+  \item{pos}{
+	(optional) the position of the vertices' labels (\code{0} means ``at the middle of the vertex'')
+}
+  \item{bg}{
+	(optional) the background color of the plot
+}
+  \item{bg2}{
+	(optional) the background color for \code{values}
+}
+  \item{asp}{
+	(optional) the aspect ratio of the plot
+}
+  \item{drp}{
+	(optional) for \code{valued} networks, drop values less than the specified
+}
+  \item{add}{
+	(optional) nodes to add to the graph
+}
+  \item{swp}{
+	(optional and logical) whether or not swap the bundle patterns
+}
+  \item{swp2}{
+	(optional and logical) whether or not swap reciprocals
+}
+  \item{alpha}{
+	(optional) vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -143,68 +167,67 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{mirrorY}{
 	(optional) mirror of the Y axis
 }
-  \item{col}{
-	(optional) alias for \code{vcol}
-}
-  \item{lbat}{
-	(optional) the labels for the vertices' attributes
-}
-  \item{drp}{
-	(optional) for \code{weighted} networks, drop values less than specified
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
-}
-  \item{swp}{
-	(optional and logical) whether or not swap the bundle patterns
-}
-  \item{swp2}{
-	(optional and logical) whether or not swap reciprocals
-}
-  \item{signed}{
-	(optional and logical) whether or not the graph is a signed structure
-}
-  \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
-}
-  \item{add}{
-	(optional) nodes to add to the graph
-}
   \item{mirrorD}{
 	(optional) mirror reflection across diagonal Y=X
 }
   \item{mirrorL}{
 	(optional) mirror reflection across diagonal Y=-X
 }
-  \item{opt}{
-	(optional and experimental) optimize the plot margins
-}
   \item{mirrorV}{
-	same as \code{mirrorX}
+	(optional) same as \code{mirrorX}
 }
   \item{mirrorH}{
-	same as \code{mirrorY}
+	(optional) same as \code{mirrorY}
+}
+  \item{scl}{
+	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+}
+  \item{hds}{
+	(optional and experimental) arcs' head scale
+}
+  \item{vedist}{
+	(optional and experimental) a real number with vertex - edge distance
+}
+  \item{mar}{
+	(optional) the margins of the plot
 }
   \item{ffamily}{
-	the font family
+	(optional) the font family
 }
   \item{fstyle}{
-	the font style
+	(optional) the font style
 }
   \item{fsize}{
-	the font size
+	(optional) the font size
+}
+  \item{fsize2}{
+	(optional) the font size for \code{values}
+}
+  \item{fcol}{
+	(optional) the font color
+}
+  \item{fcol2}{
+	(optional) the font color for \code{values}
+}
+  \item{lclu}{
+	(optional, vector) the ``levels'' in \code{clu} (see Details)
 }
   \item{\dots}{
-	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
+	(optional) Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-Multigraph are graph having parallel edges depicting different types of relations in a network. By default a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For a better visualization, undirected multigraphs automatically collapse the reciprocal ties, and there as an argument to prevent this to happen. It is possible to combine the symbols and color of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
+Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there as an argument to prevent this from happening. It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these are accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these is accepted.
+
+The bundle width specified by \code{bwd} (and \code{bwd2} for loops) ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, numbers higher than one are possible. 
+Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
+
+In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the ``levels'' of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
 }
 \value{
-A plot of the network as a multigraph or a weighted multigraph.
+A plot of the network as a multigraph that is valued or signed.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -213,7 +236,7 @@ A plot of the network as a multigraph or a weighted multigraph.
 Antonio Rivero Ostoic
 }
 %\note{
-%%  ~~further notes~~
+%
 %}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -232,13 +255,13 @@ multigraph(arr)
 ## Now with a force directed algorithm
 multigraph(arr, layout = "force")
 
-## As weighted graph
-multigraph(arr, weighted = TRUE)
+## As valued graph
+multigraph(arr, valued = TRUE)
 
 ## As signed graph
 multigraph(arr, signed = TRUE)
 
-## With loops and a costumized vertex size
+## With loops and a customized vertex size
 multigraph(arr, cex = 3, loops = TRUE)
 
 }
