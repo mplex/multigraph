@@ -118,7 +118,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
         showLbs <- FALSE
     }
     else {
-        NA
+        ifelse(is.null(dimnames(net)[[1]]) == FALSE, showLbs <- TRUE, 
+            showLbs <- FALSE)
     }
     ifelse(missing(showAtts) == FALSE && isTRUE(showAtts == FALSE) == 
         TRUE, showAtts <- FALSE, showAtts <- TRUE)
@@ -320,8 +321,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         NA
     }
-    ifelse(is.null(dimnames(net)[[1]]) == FALSE, showLbs <- TRUE, 
-        showLbs <- FALSE)
     n <- dim(net)[1]
     ifelse(isTRUE(is.na(dim(net)[3]) == TRUE) == TRUE, z <- 1L, 
         z <- dim(net)[3])
@@ -680,7 +679,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         vcol0 <- vcol
     }
     if (isTRUE(n > 20) == TRUE) {
-        ffds <- 0.2
+        ffds <- n/100
     }
     else if (isTRUE(n == 2) == TRUE) {
         ffds <- -5
