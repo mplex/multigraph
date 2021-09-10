@@ -3,7 +3,7 @@
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/multigraph)](https://cran.rstudio.com/web/packages/multigraph/index.html)
 
 
-##### **NOTICE**: Use **`multiplex`** version 2.9.6 or higher for **R** (<4.0.0)
+##### **NOTICE**: Use **`multiplex`** version 2.9.6 or higher for **R** (>4.0.0)
 
 <br />
 <br />
