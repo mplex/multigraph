@@ -33,9 +33,18 @@ function (net, layout = c("circ", "force", "stress", "conc",
         maxw <- net$max
         net <- net$Q
     }
-    else if (isTRUE(cnet == "Data.Set") == TRUE) {
-        att <- net$net[, , which(net$atnet[[1]] == 1)]
-        net <- net$net[, , which(net$atnet[[1]] == 0)]
+    else if (isTRUE(tolower(cnet) == "dataset") == TRUE || isTRUE(tolower(cnet) == 
+        "data.set") == TRUE) {
+        if (is.array(net$net) == TRUE) {
+            att <- net$net[, , which(net$atnet[[1]] == 1)]
+            net <- net$net[, , which(net$atnet[[1]] == 0)]
+        }
+        else if (is.data.frame(net$net) == TRUE) {
+            net <- multiplex::read.srt(net$net, header = TRUE, sep = ",")
+        }
+        else {
+            NA
+        }
     }
     else {
         NA
@@ -277,7 +286,12 @@ function (net, layout = c("circ", "force", "stress", "conc",
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
     ifelse(missing(vedist) == TRUE, vedist <- 0, NA)
-    ifelse(isTRUE(vedist > 1L) == TRUE, vedist <- 1L, NA)
+    if (isTRUE(vedist > 2L) == TRUE) {
+        vedist <- 2L
+    }
+    else if (isTRUE(vedist < (-10L)) == TRUE) {
+        vedist <- -10L
+    }
     if (isTRUE(signed == TRUE) == TRUE || isTRUE(cnet == "Signed") == 
         TRUE) {
         if (isTRUE(cnet == "Signed") == TRUE) {
@@ -337,9 +351,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         netd <- multiplex::dichot(netdrp, c = 1L)
     }
     else {
-        ifelse(isTRUE(valued == TRUE) == TRUE, netd <- multiplex::dichot(net, 
-            c = min(net[net > 0])), netd <- multiplex::dichot(net, 
-            c = 1L))
+        netd <- multiplex::dichot(net, c = min(net[net > 0]))
         netdrp <- net
     }
     if (isTRUE(directed == FALSE) == TRUE && isTRUE(collRecip == 
@@ -1387,6 +1399,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ndss <- nds
         ndss[, 1] <- ndss[, 1] * scl[1]
         ndss[, 2] <- ndss[, 2] * scl[2]
+        options(warn = -1)
+        lbs[which(is.na(lbs))] <- ""
         if (isTRUE(length(pos) == 1) == TRUE) {
             if (isTRUE(pos == 0) == TRUE) {
                 if (missing(fstyle) == TRUE || (missing(fstyle) == 
@@ -1597,6 +1611,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 adj = c(0.5, 1))
         }
     }
+    options(warn = 0)
     graphics::par(mar = omr)
     graphics::par(bg = obg)
     graphics::par(lend = 0)
