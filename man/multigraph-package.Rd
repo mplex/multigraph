@@ -12,9 +12,9 @@ Functions to create and manipulate multigraphs, bipartite graphs, and valued mul
 \tabular{ll}{
 Package: \tab multigraph \cr
 Type: \tab Package \cr
-Version: \tab 0.96 (devel) \cr
+Version: \tab 0.96-2 (devel) \cr
 Depends: \tab \CRANpkg{multiplex} (>= 2.9.6) \cr
-Date: \tab 10 September 2021 \cr
+Date: \tab 6 October 2021 \cr
 License: \tab GPL-3 \cr
 }
 This package contains functions to plot diverse types of graphs representing complex network structures. 
@@ -22,7 +22,7 @@ For one-mode data, it is possible to depict signed and valued multigraphs, and b
 Moreover, multilevel graphs that \emph{combine} one- and two-mode network data are represented with the latest function. 
 Finally, Cayley graphs serve to depict relations among the ties in multiplex networks. 
 
-Please note that this package still under current development.
+Note that this package still under current development.
 }
 \author{
 J. Antonio Rivero Ostoic

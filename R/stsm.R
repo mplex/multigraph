@@ -43,9 +43,10 @@ function (net, seed = seed, maxiter = 40, drp, jitter, method,
     X0 <- cbind(vec[seq_len(n)], vec[(n + 1):length(vec)])
     Xs <- as.matrix(X0)
     newstss <- sts(X0, delta = delta, mwd = mwd)
-    for (iter in 1:maxiter) {
-        if (any(is.nan(lz(X0, delta, mwd))) == FALSE) {
-            X <- pilpmwd %*% (lz(X0, delta, mwd) %*% X0)
+    for (iter in seq_len(maxiter)) {
+        lzx0 <- lz(X0, delta, mwd)
+        if (any(is.nan(lzx0)) == FALSE) {
+            X <- pilpmwd %*% (lzx0 %*% X0)
             X[which(X == Inf)] <- 0
             oldstss <- newstss
             newstss <- sts(X, delta = delta, mwd = mwd)
@@ -63,6 +64,7 @@ function (net, seed = seed, maxiter = 40, drp, jitter, method,
     rm(iter)
     cmps <- multiplex::comps(netd)
     nds <- Xs
+    rownames(nds) <- lbs
     ifelse(isTRUE(sum(nds) == 0) == TRUE, rat <- 1, rat <- (max(nds[, 
         1]) - min(nds[, 1]))/(max(nds[, 2]) - min(nds[, 2])))
     if (isTRUE(length(cmps$isol) > 1) == TRUE) {

@@ -1,0 +1,12 @@
+bibentry(bibtype = "book",
+  title        = "Algebraic Analysis of Social Networks: Models, Methods and Applications Using R",
+  author       = person(given = c("J.A.R."),
+                        family = "Ostoic",
+                        email = "multiplex@post.com"),
+  publisher    = "Wiley",
+  year         = "2021",
+  series       = "Wiley Series in Computational and Quantitative Social Science",
+  isbn         = "9781119250326",
+  lccn         = "2020025444",
+  header       = "To cite multigraph in publications use:"
+)

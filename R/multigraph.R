@@ -286,8 +286,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
     ifelse(missing(vedist) == TRUE, vedist <- 0, NA)
-    if (isTRUE(vedist > 2L) == TRUE) {
-        vedist <- 2L
+    if (isTRUE(vedist > 10L) == TRUE) {
+        vedist <- 10L
     }
     else if (isTRUE(vedist < (-10L)) == TRUE) {
         vedist <- -10L
@@ -328,9 +328,14 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ifelse(is.null(dimnames(net)[[1]]) == TRUE, lbs <- as.character(seq_len(dim(net)[1])), 
             lbs <- dimnames(net)[[1]])
     }
-    else if (missing(lbs) == FALSE && is.null(dimnames(net)[[1]]) == 
-        TRUE) {
-        dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
+    else if (missing(lbs) == FALSE) {
+        if (isTRUE(length(lbs) == dim(net)[1]) == TRUE || is.null(dimnames(net)[[1]]) == 
+            TRUE) {
+            dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
+        }
+        else {
+            stop("length of 'lbs' not equal to array extent for 'net'")
+        }
     }
     else {
         NA
@@ -351,7 +356,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
         netd <- multiplex::dichot(netdrp, c = 1L)
     }
     else {
-        netd <- multiplex::dichot(net, c = min(net[net > 0]))
+        ifelse(isTRUE(sum(net) == 0) == TRUE, netd <- net, netd <- multiplex::dichot(net, 
+            c = min(net[net > 0])))
         netdrp <- net
     }
     if (isTRUE(directed == FALSE) == TRUE && isTRUE(collRecip == 
@@ -690,7 +696,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         vcol0 <- vcol
     }
-    if (isTRUE(n > 20) == TRUE) {
+    if (isTRUE(n > 100) == TRUE) {
+        ffds <- n/10
+    }
+    else if (isTRUE(n > 20) == TRUE) {
         ffds <- n/100
     }
     else if (isTRUE(n == 2) == TRUE) {
