@@ -1,11 +1,10 @@
+
 [![Build Status](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph)
 [![CRAN version](http://www.r-pkg.org/badges/version/multigraph)](https://cran.r-project.org/package=multigraph)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/multigraph)](https://cran.rstudio.com/web/packages/multigraph/index.html)
 
 
-##### **NOTICE**: Use **`multiplex`** version 2.9.6 or higher for **R** (>4.0.0)
 
-<br />
 <br />
 
 ### **`multigraph`**: Plot and Manipulate Multigraphs in R
@@ -19,14 +18,14 @@
 Install **`multigraph`** 
 
 ```r
-### from CRAN
+# from CRAN
 install.packages("multigraph")
 ```
 
 or
 
 ```r
-### from Github
+# from Github
 devtools::install_github("mplex/multigraph")
 ```
 
@@ -44,19 +43,22 @@ library("multigraph")
 
 ### Multigraph: Florentine Families data set
 
-We work with Padgett's Florentine Families data set, which is publicly available as a Ucinet DL file format. We use function `read.dl` of the **`multiplex`** package to retrieve this data with the **R** console.
+Padgett's Florentine Families data set is publicly available as a Ucinet DL file format. 
+Use function `read.dl` of the **`multiplex`** package to retrieve this data with the **R** console.
 
 <br />
 
 
 ```r
-### Read the Padgett Florentine Families data set as a Ucinet DL file
-### from a public repository and storage it as an object
+# read the Padgett Florentine Families data set as a Ucinet DL file
+# from a public repository and storage it as an object
 
-floflies <- read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
+floflies <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
+# or mirror
+floflies <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgett.dat")
 
 
-### take a look at this data
+# look at the data
 floflies
 
 , , PADGM
@@ -102,15 +104,14 @@ TORNABUON         0       0         0        0         0      0        0        
 
 <br /> 
 
-Object `floflies` represents this network where `"PADGM"` are marriage relations, and `"PADGB"` correspond to business ties among 16 Florentine families.
-
+Object `floflies` represents the Florentine families’ network where `"PADGM"` are marriage relations and `"PADGB"` correspond to business ties among the 16 actors.
 
 <br /> 
 
 
 ### Plotting the multigraph
 
-We plot this network with the `multigraph` function:
+Plot the Florentine families' network with the `multigraph` function:
 
 ```r
 multigraph(floflies)
@@ -122,7 +123,7 @@ multigraph(floflies)
 
 The network is symmetric and the default layout of the function is circular. 
 
-Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that with vectorial graphics the rendering may vary according to the device used.*
+Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that with vector graphics the rendering may vary according to the device used.*
 
 <br /> 
 
@@ -158,7 +159,7 @@ multigraph(floflies, layout = "force", seed = 2, scope = scp, lty = 2:1, pch = 1
 
 <br />
 
-Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges, whereas other arguments like `bwd` to specify the width of the bundle type, `fsize` for the size of the font used in node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges. Other arguments like `bwd` to specify the width of the bundle type, `fsize` for the size of the font used in node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
 
 
 <br /> 
@@ -168,14 +169,16 @@ Note that when the graph is depicted as *undirected*, then the reciprocal ties b
 ## Multigraphs with Actor Attributes
 
 
-In a similar way, we obtain some actor attributes of the Florentine Families network with the `read.dl` function from this repository.
-
+Some actor attributes of the Florentine Families network.
 
 ```r
-flofliesatt <- read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
+flofliesatt <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
+# or mirror
+flofliesatt <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgw.dat")
+
 ```
 
-and we take a look at the ` flofliesatt` that storages this type of information
+Look at `flofliesatt` that storages attribute information
 
 
 ```r
@@ -201,7 +204,8 @@ PUCCI          3       0     1
 ```
 
 
-However, in order to depict the multigraph of `floflies` with the information contained in `flofliesatt`, we need to be sure that the order of the actors matches in both objects.
+However, in order to depict the multigraph of `floflies` with the information contained in `flofliesatt`, be sure that the order of the actors matches in both objects.
+
 
 ```r
 flofliesatt <- flofliesatt[order(rownames(flofliesatt)), ]
@@ -227,14 +231,13 @@ STROZZI      146      74    29
 TORNABUON     48       0     7
 ```
 
-That's much better now.
+Now ` flofliesatt` matches ` floflies` for the plotting.
 
 
 <br /> 
 <br /> 
 
-The following code serves to depict this network in a way that the size of the vertices reflects the wealth of the actors.
-
+Redefine the scope to depict this network in a way that the size of the vertices reflects the wealth of the actors.
 
 ```r
 # redefine scope of node / edge / graph characteristics 
@@ -249,7 +252,7 @@ multigraph(floflies, layout = "force", seed = 1, scope = scp, cex = flofliesatt[
 
 <br /> 
 
-And with the `clu` argument we establish the clustering of the network with three classes of actors differentiated by the colors of the vertices.
+The `clu` argument serves to establish the clustering of the network with three classes of actors differentiated by the colors of the vertices.
 
 
 ```r
@@ -263,8 +266,7 @@ multigraph(floflies, layout = "force", seed = 1, scope = scp2, cex = flofliesatt
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
 [vector image](figs/flofliesatt-force2.pdf)
 
-Hence, colors can be established in different ways, and the `alpha` vector argument serves to set the transparency of vertices, edges, and background colors respectively.
-
+As a result, there are different ways to set the colors, and the `alpha` vector argument serves to set the transparency of colors in vertices, edges, and the graph background.
 
 
 
@@ -277,15 +279,18 @@ ___
 
 ### Bipartite Graph: Southern Women data set
 
-Support for the visualization of two-mode networks is also given by **`multigraph`** and we work with the Southern Women classic data set to illustrate some of the layout options with this package.
+Support for the visualization of two-mode networks is also given by **`multigraph`**, and for the Southern Women classic dataset to illustrate some of the layout options with this package.
 
 ```r
-### Read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
-### data set from a public repository and storage it as an object
+# read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
+# data set from a public repository and storage it as an object
 
-swomen <- read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
+swomen <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
+# or mirror
+swomen <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/davis.dat")
 
-### take a look...
+
+### take a look
 swomen
 
           E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14
@@ -326,7 +331,7 @@ bmgraph(swomen)
 [vector image](figs/swomen.pdf)
 
 
-In this case actor and events have different shape by default.
+In this case, actor and events have different shape by default.
 
 
 <br />
@@ -368,7 +373,7 @@ clup <- list(c(8,9,7,6,1,4,2,3,5,17,18,13,16,11,10,15,14,12),
 # clustering of network members for layout 
 clunm <- list(c(rep(1,9),rep(2,9)),c(rep(1,5),rep(2,4),rep(3,5)))
 
-# Bipartite graph with clustering
+# bipartite graph with clustering
 bmgraph(swomen, layout = "bipc", scope = scp3, clu = clunm, perm = clup)
 ```
 ![clustering `bmgraph`](figs/swomenc.png)
@@ -390,8 +395,7 @@ bmgraph(swomen, layout = "force", seed = 1, scope = scp3, rot = 65)
 <br />
 <br />
 
-Finally, function `bmgraph` stands for a bipartite *multigraph*, and this is because the actors can be affiliated at different levels.
-
+Function `bmgraph` stands for a bipartite *multigraph* because the actors can be affiliated by different means.
 
 ```r
 bmgraph(floflies, ecol = 1)
@@ -404,7 +408,11 @@ bmgraph(floflies, ecol = 1)
 
 <br />
 
-### Cayley graph:  TBD
+### Cayley graph
+
+```r
+?ccgraph
+```
 
 
 
@@ -412,8 +420,11 @@ bmgraph(floflies, ecol = 1)
 
 <br />
 
-### Multilevel graph:  TBD
+### Multilevel graph
 
+```r
+?mlgraph
+```
 
 
 <br />
@@ -423,6 +434,9 @@ bmgraph(floflies, ecol = 1)
 
 
 
+##### **NOTICE**: For **R** (>4.0.0), use **`multiplex`** version 2.9.6 or higher.
+
+<br />
 
 
 
