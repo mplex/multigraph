@@ -6,7 +6,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
     bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, col, 
     lbat, swp, loops, swp2, mirrorX, mirrorY, mirrorD, mirrorL, 
     lbs, mirrorV, mirrorH, rot, hds, scl, vedist, ffamily, fstyle, 
-    fsize, fcol, valued, modes, elv, lng, ...) 
+    fsize, fcol, valued, modes, elv, lng, nr, ...) 
 {
     mlv <- net
     if (isTRUE("Multilevel" %in% attr(net, "class")) == TRUE) {
@@ -248,6 +248,21 @@ function (net, layout = c("circ", "force", "stress", "rand",
         }
     }
     netd <- multiplex::dichot(net, c = 1L)
+    if (isTRUE(directed == FALSE) == TRUE && isTRUE(collRecip == 
+        TRUE) == TRUE && isTRUE(valued == TRUE) == TRUE) {
+        if (isTRUE(z == 1L) == TRUE) {
+            net <- net + t(net)
+        }
+        else {
+            for (i in seq_len(z)) {
+                net[, , i] <- net[, , i] + t(net[, , i])
+            }
+            rm(i)
+        }
+    }
+    else {
+        NA
+    }
     if (isTRUE(collRecip == TRUE) == TRUE && isTRUE(valued == 
         TRUE) == FALSE) {
         if (isTRUE(z == 1L) == TRUE) {
@@ -269,22 +284,30 @@ function (net, layout = c("circ", "force", "stress", "rand",
             }
             rm(i)
         }
+        ucnet <- netd - rcp
     }
     else {
-        NA
+        ucnet <- netd
     }
-    bd <- multiplex::bundles(netd, loops = loops, lb2lb = FALSE, 
-        collapse = FALSE)
+    if (isTRUE(collRecip == TRUE) == TRUE) {
+        bd <- multiplex::bundles(ucnet, loops = loops, lb2lb = FALSE, 
+            collapse = FALSE)
+        ifelse(isTRUE(directed == TRUE) == FALSE, NA, bd$recp <- multiplex::bundles(netd, 
+            loops = loops, lb2lb = FALSE, collapse = FALSE)$recp)
+    }
+    else {
+        bd <- multiplex::bundles(netd, loops = loops, lb2lb = FALSE, 
+            collapse = FALSE)
+    }
     ifelse(isTRUE(z == 1L) == TRUE, r <- 1L, r <- length(bd[[1]]))
     ifelse(isTRUE(sum(net) == 0) == TRUE && isTRUE(loops == TRUE) == 
         TRUE, bd$loop <- character(0), NA)
     bds <- multiplex::summaryBundles(bd, byties = TRUE)
     m <- dim(met)[1]
-    ifelse(isTRUE(is.na(dim(met)[3]) == TRUE) == TRUE, zz <- 1L, 
-        zz <- dim(met)[3])
+    ifelse(is.na(dim(met)[3]) == TRUE, zz <- 1L, zz <- dim(met)[3])
     if (isTRUE(zz == 1L) == TRUE) {
         mt <- met + t(met)
-        rcpm <- multiplex::dichot(mt, c = 2L)
+        rcpm <- multiplex::dichot(mt, c = 1L)
         rcpm[lower.tri(rcpm, diag = TRUE)] <- 0L
     }
     else {
@@ -326,8 +349,8 @@ function (net, layout = c("circ", "force", "stress", "rand",
     else {
         ifelse(isTRUE(length(ecol) == 1L) == TRUE, vecol <- rep(ecol, 
             z + zz), vecol <- rep(ecol, z + zz)[seq_len(z + zz)])
-        ifelse(isTRUE(length(lty) == 1L) == TRUE, Lt <- seq_len(r + 
-            rr), Lt <- rep(lty, r + rr)[seq_len(r + rr)])
+        ifelse(isTRUE(length(lty) == 1L) == TRUE, Lt <- rep(lty, 
+            r + rr), Lt <- rep(lty, r + rr)[seq_len(r + rr)])
         if (isTRUE(length(lty) == length(Lt)) == FALSE) {
             Ltc <- seq_along(vecol)
         }
@@ -575,7 +598,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
             crd <- data.frame(X = round(stats::runif(n) * 1L, 
                 5), Y = round(stats::runif(n) * 1L, 5))
         }, conc = {
-            crd <- conc(netd, ...)
+            crd <- conc(netd, nr, ...)
         }, bip = {
             act <- nrm(rng(length(mlv$lbs$dm)))
             evt <- nrm(rng(length(mlv$lbs$cdm)))
@@ -836,7 +859,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
             if (isTRUE(rbdsm > 0L) == TRUE) {
                 qn <- which(tlbsm[k] == attr(bdm, "names"))
                 if (isTRUE(zz == 1L) == TRUE) {
-                  ifelse(isTRUE(length(lty) == 1) == TRUE, vlt <- rep(lty, 
+                  ifelse(isTRUE(length(lty) == 1) == TRUE, vlt <- rep(Lt, 
                     rbdsm), vlt <- rep(Lt[zz + 1], rbdsm))
                   ifelse(isTRUE(length(ecol) == 1L) == TRUE, 
                     vecolm <- rep(ecol[1], rbdsm), vecolm <- rep(ecol[z + 
@@ -893,7 +916,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
                       else {
                         for (i in seq_along(lty)) {
                           vltc <- append(vltc, replace(vlt[which(vlt == 
-                            lty[i])], vlt[which(vlt == lty[i])] != 
+                            Lt[i])], vlt[which(vlt == Lt[i])] != 
                             i, i))
                         }
                         rm(i)
@@ -1022,7 +1045,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
                   }
                   rm(i)
                   if (isTRUE(length(lty) == 1L) == TRUE) {
-                    vlt1 <- rep(lty, length(vlt))
+                    vlt1 <- rep(Lt, length(vlt))
                     vltc <- vlt
                   }
                   else {
@@ -1046,7 +1069,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
                       else {
                         for (i in seq_along(lty)) {
                           vltc <- append(vltc, replace(vlt[which(vlt == 
-                            lty[i])], vlt[which(vlt == lty[i])] != 
+                            Lt[i])], vlt[which(vlt == Lt[i])] != 
                             i, i))
                         }
                         rm(i)
@@ -1208,22 +1231,25 @@ function (net, layout = c("circ", "force", "stress", "rand",
             }
         }
         else if (isTRUE(z > 1) == TRUE) {
-            ifelse(missing(bwd2) == TRUE, bwd2 <- 1L, NA)
-            ifelse(missing(bwd2) == FALSE && (isTRUE(bwd2 < 1L) == 
-                TRUE && isTRUE(bwd2 == 0) == FALSE), bwd2 <- 1L, 
-                NA)
-            ifelse(missing(bwd2) == FALSE && isTRUE(bwd2 > 2L) == 
-                TRUE, bwd2 <- 2L, NA)
-            if (missing(bwd2) == FALSE && isTRUE(bwd2 == 0) == 
-                TRUE) {
-                dz <- rep(0, z)
+            if (missing(bwd2) == TRUE) {
+                bwd2 <- 1L
             }
-            else {
-                if (isTRUE(valued == TRUE) == TRUE) {
-                  dz <- (bwd2 * 1L) * (rng(z) + abs(min(rng(z))))/(5L)
+            else if (missing(bwd2) == FALSE) {
+                if (isTRUE(bwd2 < 1L) == TRUE && isTRUE(bwd2 == 
+                  0) == FALSE) {
+                  bwd2 <- 1L
+                }
+                else if (isTRUE(bwd2 > 10L) == TRUE) {
+                  bwd2 <- 10L
+                }
+                if (isTRUE(bwd2 == 0) == TRUE) {
+                  dz <- rep(0, z)
                 }
                 else {
-                  dz <- (bwd2 * 1L) * (rng(z) + abs(min(rng(z))))/(10L)
+                  ifelse(isTRUE(valued == TRUE) == TRUE && isTRUE(max(net) > 
+                    1L) == TRUE, dz <- (bwd2 * 1L) * (rng(z) + 
+                    abs(min(rng(z))))/(5L), dz <- (bwd2 * 1L) * 
+                    (rng(z) + abs(min(rng(z))))/(10L))
                 }
             }
             ifelse(isTRUE(length(lwd) == 1) == TRUE, lwd <- rep(lwd, 

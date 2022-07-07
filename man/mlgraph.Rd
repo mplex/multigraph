@@ -9,11 +9,11 @@ A function to create and manipulate multilevel graphs
 }
 \usage{
 mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main = NULL, 
-        seed = NULL, maxiter = 100, directed = TRUE, alpha = c(1, 1, 1), scope, collRecip,
+        seed = NULL, maxiter = 100, directed = TRUE, alpha = c(1, 1, 1), scope, collRecip, 
         undRecip, showLbs, showAtts, cex.main, coord, clu, cex, lwd, pch, lty, bwd, bwd2, 
-        att, bg, mar, pos, asp, ecol, vcol, vcol0, col, lbat, swp, loops, swp2, 
-        mirrorX, mirrorY, mirrorD, mirrorL, lbs, mirrorV, mirrorH, rot, hds, scl, vedist, 
-        ffamily, fstyle, fsize, fcol, valued, modes, elv, lng, ...)
+        att, bg, mar, pos, asp, ecol, vcol, vcol0, col, lbat, swp, loops, swp2, mirrorX, 
+        mirrorY, mirrorD, mirrorL, lbs, mirrorV, mirrorH, rot, hds, scl, vedist, ffamily, 
+        fstyle, fsize, fcol, valued, modes, elv, lng, nr, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,10 +39,10 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) title of the plot
 }
   \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{maxiter}{
-	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{directed}{
 	(logical) whether or not the graph is directed or undirected
@@ -51,7 +51,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{scope}{
-   (optional) the scope of the graph (see details)
+   (optional) scope of the graph (see details)
 }
   \item{collRecip}{
 	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
@@ -60,76 +60,76 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional and logical) whether or not plot reciprocated edges as undirected
 }
   \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels
+	(optional and logical) whether or not to show the vertex labels
 }
   \item{showAtts}{
-	(optional and logical) whether or not show the vertex attribute labels
+	(optional and logical) whether or not to show the vertex attribute labels
 }
   \item{cex.main}{
-	(optional) the size of the plot's title
+	(optional) size of the plot's title
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{clu}{
-	(optional) the clustering of the vertices (see \emph{details})
+	(optional) clustering of the vertices (see \emph{details})
 }
   \item{cex}{
-	(optional) the size of the vertices
+	(optional) size of the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) width of the edges. Ignored if \code{valued} is set to \code{TRUE}
 }
   \item{pch}{
-	(optional) the symbol representing the vertices
+	(optional) symbol representing the vertices
 }
   \item{lty}{
-	(optional) the shape of the edges
+	(optional) shape of the edges
 }
   \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
+	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
 }
   \item{bwd2}{
-	(optional) the width of the bundle loop edges. 
+	(optional) width of the bundle loop edges. 
 }
   \item{att}{
 	(optional) a vector or an array representing the vertex attributes
 }
   \item{bg}{
-	(optional) the background color of the plot
+	(optional) background color of the plot
 }
   \item{mar}{
-	(optional) the margins of the plot
+	(optional) margins of the plot
 }
   \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``at the center of the vertex'')
+	(optional) position of the vertices' labels (\code{0} means ``at the center of the vertex'')
 }
   \item{asp}{
-	(optional) the aspect ratio of the plot
+	(optional) aspect ratio of the plot
 }
   \item{ecol}{
-	(optional) the color of the edges
+	(optional) color of the edges
 }
   \item{vcol}{
-	(optional) the color of the vertices
+	(optional) color of the vertices
 }
   \item{vcol0}{
-	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
+	(optional) color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{col}{
 	(optional) alias for \code{vcol}
 }
   \item{lbat}{
-	(optional) the labels for the vertex attributes
+	(optional) labels for the vertex attributes
 }
   \item{swp}{
-	(optional and logical) whether or not swap the bundle patterns
+	(optional and logical) whether or not to swap the bundle patterns
 }
   \item{loops}{
 	(optional, logical, and experimental) plot graph loops?
 }
   \item{swp2}{
-	(optional and logical) whether or not swap reciprocals
+	(optional and logical) whether or not to swap reciprocals
 }
   \item{mirrorX}{
 	(optional) mirror of the X axis
@@ -144,7 +144,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) mirror reflection across diagonal Y=-X
 }
   \item{lbs}{
-	(optional) the vertex labels
+	(optional) vertex labels
 }
   \item{mirrorV}{
 	same as \code{mirrorX}
@@ -188,6 +188,9 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
   \item{lng}{
 	(experimental) control loops 2
 }
+  \item{nr}{
+	for \code{conc} layout, number of radii
+}
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
@@ -196,9 +199,11 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 Multilevel graphs serve to represent networks with different ``levels'' such as different domains in the network structure. 
 A characteristic of multilevel networks is the existence of ties within and across domains.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these are accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. 
+In this case, a vector made of lists and scalars or combinations of these is accepted.
 
-The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, a number greater than one is possible.
+The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). 
+For the \code{valued} option, a number greater than one is possible.
 
 }
 \value{

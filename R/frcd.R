@@ -26,8 +26,11 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         if (is.null(cmps$com[[k]]) == FALSE) {
             com <- which(lbs %in% cmps$com[[k]])
             if (isTRUE(length(cmps$com[[k]]) == 2L) == TRUE) {
-                tmp <- popl(2L, seed = seed)/3L
-                locx <- tmp[, 1] + 0.1
+                tmp <- rbind(stats::rcauchy(2L, location = -20, 
+                  scale = 2), stats::rcauchy(2L, location = 20, 
+                  scale = 2))/(n * (length(cmps$com[[k]])^4))
+                locx <- tmp[, 1] + (stats::rcauchy(1L, location = 1, 
+                  scale = 2) * 1L)
                 locy <- tmp[, 2]
                 K <- 1
             }
@@ -134,7 +137,7 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         tmpi <- popl(length(cmps$isol), seed = seed) * (length(cmps$isol) * 
             2L/n)
         if (is.null(cmps$com) == FALSE) {
-            fct <- 4L
+            fct <- jitter(sample(4)[2])
             locx <- ((tmpi[, 1]/fct) - (min(ndst[, 1])) - 0)
             ifelse(isTRUE(rat > 0) == TRUE, locy <- ((min(ndst[, 
                 2])) - (tmpi[, 2]/fct) - 0), locy <- ((max(ndst[, 
@@ -161,7 +164,8 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         locx <- max(ndst[, 1]) + (K/(n - 1L))
         ifelse(isTRUE(rat < 0) == TRUE, locy <- max(ndst[, 2]) + 
             (K/(n - 1L)), locy <- min(ndst[, 2]) - (K/(n - 1L)))
-        nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy))
+        nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy)) * 
+            stats::rcauchy(1L)/n
     }
     nds[, 1] <- (nds[, 1] - min(nds[, 1]))/(max(nds[, 1]) - min(nds[, 
         1])) + (K/(n - 1L))

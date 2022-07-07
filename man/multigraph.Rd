@@ -10,12 +10,12 @@ A function to create and manipulate multigraphs and valued multigraphs with diff
 \usage{
 multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
            directed = TRUE, loops, signed, valued, values, lbs, showLbs, att, lbat, 
-	   showAtts, main = NULL, cex.main, col.main, font.main, coord, collRecip, 
-	   undRecip, seed = NULL, maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, 
-	   vcol0, col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
-	   alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
-	   mirrorH, scl, hds, vedist, mar, ffamily, fstyle, fsize, fsize2, fcol, fcol2, 
-	   lclu, ...)
+           showAtts, main = NULL, cex.main, col.main, font.main, coord, collRecip, 
+           undRecip, seed = NULL, maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, 
+           vcol0, col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
+           alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
+           mirrorH, scl, hds, vedist, mar, ffamily, fstyle, fsize, fsize2, fcol, fcol2, 
+           lclu, sel, new, mai, lscl, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,7 +48,7 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional and logical) whether or not the graph is a signed structure
 }
   \item{valued}{
-	(optional and logical) whether the graph is depicyed as valued or not
+	(optional and logical) whether or not the network is depicted as a valued graph
 }
   \item{values}{
 	(optional and logical) print the values of the bonds in edges?
@@ -189,42 +189,57 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional and experimental) a real number with vertex - edge distance
 }
   \item{mar}{
-	(optional) the margins of the plot
+	(optional, vector) plot's margins
 }
   \item{ffamily}{
-	(optional) the font family
+	(optional) labels' font family
 }
   \item{fstyle}{
-	(optional) the font style
+	(optional) labels' font style
 }
   \item{fsize}{
-	(optional) the font size
+	(optional) labels' font size
 }
   \item{fsize2}{
-	(optional) the font size for \code{values}
+	(optional) labels' font size for \code{values}
 }
   \item{fcol}{
-	(optional) the font color
+	(optional) labels' font color
 }
   \item{fcol2}{
-	(optional) the font color for \code{values}
+	(optional) labels' font color for \code{values}
 }
   \item{lclu}{
-	(optional, vector) the ``levels'' in \code{clu} (see Details)
+	(optional, vector) ``levels'' in \code{clu} (see Details)
+}
+  \item{sel}{
+	(optional, vector) selection of node's labels to plot
+}
+  \item{new}{
+	(optional, logical) new graph on an existing plot?
+}
+  \item{mai}{
+	(optional, vector) plot inner margins
+}
+  \item{lscl}{
+	(optional) for valued graphs, a real number of the loops' scale 
 }
   \item{\dots}{
-	(optional) Additional argument items (see e.g. \code{\link[graphics:par]{par}})
+	(optional) additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there as an argument to prevent this from happening. It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
+Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. 
+For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there is an argument to prevent this from happening. It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case a vector made of lists and scalars or combinations of these is accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these is accepted.
 
 The bundle width specified by \code{bwd} (and \code{bwd2} for loops) ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, numbers higher than one are possible. 
 Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
 
 In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the ``levels'' of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
+
+When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require having an equivalent command to \code{graphics::plot.new()} (cf. e.g. \code{sdam::plot.map()} function).
 }
 \value{
 A plot of the network as a multigraph that is valued or signed.
@@ -263,6 +278,10 @@ multigraph(arr, signed = TRUE)
 
 ## With loops and a customized vertex size
 multigraph(arr, cex = 3, loops = TRUE)
+
+## plot with background
+multigraph(arr, cex = 3, loops = TRUE)
+multigraph("1, 2", new = TRUE)
 
 }
 

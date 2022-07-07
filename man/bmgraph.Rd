@@ -42,7 +42,7 @@ A function to create and manipulate bipartite multigraphs
        \code{circ2} two semi-circles  
 }
   \item{scope}{
-   (optional) the scope of the graph (see details)
+   (optional) scope of the graph (see details)
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
@@ -51,28 +51,28 @@ A function to create and manipulate bipartite multigraphs
 	vector (vertex, edge, \code{bg}) with the alpha color transparency
 }
   \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels when dimnames available
+	(optional and logical) whether or not to show the vertex labels when dimnames available
 }
   \item{showAtts}{
-	(optional and logical) whether or not show the vertex attribute labels
+	(optional and logical) whether or not to show the vertex attribute labels
 }
   \item{att}{
 	(optional) a vector or an array representing the vertex attributes
 }
   \item{lbat}{
-	(optional) the labels for the vertex attributes
+	(optional) labels for the vertex attributes
 }
   \item{main}{
 	(optional) title of the plot
 }
   \item{cex.main}{
-	(optional) the size of the plot's title
+	(optional) size of the plot's title
 }
   \item{bg}{
-	(optional) the background color of the plot
+	(optional) background color of the plot
 }
   \item{mar}{
-	(optional) the margins of the plot
+	(optional) margins of the plot
 }
   \item{directed}{
 	(optional and logical) whether or not the graph is directed or undirected
@@ -84,46 +84,46 @@ A function to create and manipulate bipartite multigraphs
 	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
 }
   \item{cex}{
-	(optional) the size of the vertices
+	(optional) size of the vertices
 }
   \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``at the center of the vertex'')
+	(optional) position of the vertices' labels (\code{0} means ``at the center of the vertex'')
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) width of the edges. Ignored if \code{valued} is set to \code{TRUE}
 }
   \item{lty}{
-	(optional) the shape of the edges
+	(optional) shape of the edges
 }
   \item{col}{
 	(optional) alias for \code{vcol}
 }
   \item{ecol}{
-	(optional) the color of the edges
+	(optional) color of the edges
 }
   \item{vcol}{
-	(optional) the color of the vertices
+	(optional) color of the vertices
 }
   \item{vcol0}{
-	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
+	(optional) color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{asp}{
-	(optional) the aspect ratio of the plot
+	(optional) aspect ratio of the plot
 }
   \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{maxiter}{
-	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{bwd}{
-	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
+	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
 }
   \item{clu}{
-	(optional) the clustering of the vertices (see \emph{details})
+	(optional) clustering of the vertices (see \emph{details})
 }
   \item{pch}{
-	(optional) the symbol representing the vertices
+	(optional) symbol representing the vertices
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -147,7 +147,7 @@ A function to create and manipulate bipartite multigraphs
 	(optional and experimental) a real number with vertex - edge distance
 }
   \item{jitter}{
-	(optional) the jitter in \code{stress} or \code{CA}
+	(optional) jitter in \code{stress} or \code{CA}
 }
   \item{sort}{
 	(optional and logical) sort the vertex labels
@@ -162,16 +162,16 @@ A function to create and manipulate bipartite multigraphs
 	(optional) a list of vectors for the permutation of network members in both the domain and codomain
 }
   \item{ffamily}{
-	(optional) the font family
+	(optional) font family
 }
   \item{fstyle}{
-	(optional) the font style
+	(optional) font style
 }
   \item{fsize}{
-	(optional) the font size
+	(optional) font size
 }
   \item{fcol}{
-	(optional) the font color
+	(optional) font color
 }
   \item{vclu}{
 	(optional) a list of vectors the clustering information in both the domain and the codomain

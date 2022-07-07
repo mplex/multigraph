@@ -4,7 +4,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     conc, coord, clu, cex, lwd, pch, lty, bwd, bwd2, att, bg, 
     mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, 
     scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, 
-    rot, hds, vedist, ffamily, fstyle, fsize, fcol, ...) 
+    rot, hds, vedist, ffamily, fstyle, fsize, fcol, nr, ...) 
 {
     pclu <- NULL
     if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
@@ -15,7 +15,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         else {
             if (isTRUE(unique(unlist(x$S)) %in% dimnames(x$S)[[1]]) == 
                 FALSE) 
-                stop("Semigroup labels do not match table elements.")
+                warning("Semigroup labels do not match table elements.")
             Lbs <- dimnames(x$S)[[1]]
         }
         if (any(is.na(x$gens)) == TRUE || is.null(x$gens) == 
@@ -521,7 +521,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         flgcrd <- FALSE
         ifelse(isTRUE(conc == TRUE) == FALSE, crd <- frcd(netd, 
             seed = seed, maxiter = maxiter), crd <- conc(netd, 
-            ...))
+            nr, ...))
     }
     if (missing(rot) == FALSE) {
         crd[, 1:2] <- xyrt(crd[, 1:2], as.numeric(rot))
@@ -842,7 +842,7 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
                 else {
                   ifelse(missing(bwd2) == TRUE, dz <- (rng(z) + 
                     abs(min(rng(z))))/(10L), dz <- (bwd2) * (rng(z) + 
-                    abs(min(rng(z))))/(1L))
+                    abs(min(rng(z))))/(4))
                 }
             }
             ifelse(isTRUE(cx > 3L) == TRUE, fcex <- 3L, fcex <- floor(cx))

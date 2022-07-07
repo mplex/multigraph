@@ -24,7 +24,7 @@ conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 	(optional and logical) should the circles be with an inverted ordering?
 }
   \item{flip}{
-	(optional and logical) should the alternating circles be flipped ?
+	(optional and logical) should the alternating circles be flipped?
 }
   \item{mirror}{
 	mirror transformation
@@ -45,7 +45,7 @@ conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 \details{
 In a Euclidean plane computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). In case \code{nr} is not specified, approx. half of the vertices are located at one radius and half in another one.
 
-The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or a factor vector.
+The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or factor vector.
 }
 \value{
 A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
