@@ -174,7 +174,7 @@ Some actor attributes of the Florentine Families network.
 ```r
 flofliesatt <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
 # or mirror
-flofliesatt <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgw.dat")
+flofliesatt <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgw.dat")
 
 ```
 
@@ -287,7 +287,7 @@ Support for the visualization of two-mode networks is also given by **`multigrap
 
 swomen <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
 # or mirror
-swomen <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/davis.dat")
+swomen <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/davis.dat")
 
 
 ### take a look
