@@ -8,14 +8,14 @@
 <br />
 
 ### **`multigraph`**: Plot and Manipulate Multigraphs in R
-#### Author: Antonio Rivero Ostoic (@mplex)
+#### Antonio Rivero Ostoic (@mplex)
 
 <br />
 
 
 <br />
 
-Install **`multigraph`** 
+To install **`multigraph`** 
 
 ```r
 # from CRAN
@@ -41,21 +41,21 @@ library("multigraph")
 
 <br />
 
-### Multigraph: Florentine Families data set
+### Multigraph: Florentine Families dataset
 
-Padgett's Florentine Families data set is publicly available as a Ucinet DL file format. 
+Padgett's Florentine Families dataset is publicly available as a Ucinet DL file format. 
 Use function `read.dl` of the **`multiplex`** package to retrieve this data with the **R** console.
 
 <br />
 
 
 ```r
-# read the Padgett Florentine Families data set as a Ucinet DL file
+# read the Padgett Florentine Families dataset as a Ucinet DL file
 # from a public repository and storage it as an object
 
 floflies <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
 # or mirror
-floflies <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgett.dat")
+floflies <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgett.dat")
 
 
 # look at the data
@@ -109,7 +109,7 @@ Object `floflies` represents the Florentine families’ network where `"PADGM"` 
 <br /> 
 
 
-### Plotting the multigraph
+### Plotting multigraphs
 
 Plot the Florentine families' network with the `multigraph` function:
 
@@ -130,7 +130,10 @@ Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *no
 
 #### Force-directed layout
 
-Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization of the multiplex network. Function `multigraph` provides a number of arguments for graph, edges, and nodes levels, which can be recorded in an object named `scp` for the `scope` argument of this function.
+Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization of the multiplex network. 
+Function `multigraph` provides a number of arguments for graph, edges, and nodes levels, which can be recorded in an object list 
+named `scp` to be used in the `scope` argument of the function.
+
 
 
 <br /> 
@@ -159,7 +162,13 @@ multigraph(floflies, layout = "force", seed = 2, scope = scp, lty = 2:1, pch = 1
 
 <br />
 
-Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package to set the shape of both the vertices and the edges. Other arguments like `bwd` to specify the width of the bundle type, `fsize` for the size of the font used in node labels, or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
+Note that when the graph is depicted as *undirected*, then the reciprocal ties by default are collapsed. 
+You can prevent this to happen by setting the argument `collRecip`  to  `FALSE`. 
+Some arguments such as `cex`, `lwd`, `lty`, `pch` are graphical parameters of the **`graphics`** package 
+to set the shape of both the vertices and the edges. 
+Other arguments like `bwd` to specify the width of the bundle type, `fsize` for the size of the font used in node labels, 
+or `ecol` and `vcol` for the color of respectively edges and vertices are complementary in **`multigraph`**. 
+Moreover, by setting the `pos` argument to `0`, the actor labels are placed in the middle of the nodes.
 
 
 <br /> 
@@ -174,7 +183,7 @@ Some actor attributes of the Florentine Families network.
 ```r
 flofliesatt <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgw.dat")
 # or mirror
-flofliesatt <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgw.dat")
+flofliesatt <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgw.dat")
 
 ```
 
@@ -237,7 +246,7 @@ Now ` flofliesatt` matches ` floflies` for the plotting.
 <br /> 
 <br /> 
 
-Redefine the scope to depict this network in a way that the size of the vertices reflects the wealth of the actors.
+Redefine the scope in `scp` to depict this network in a way that the size of the vertices reflects the wealth of the actors.
 
 ```r
 # redefine scope of node / edge / graph characteristics 
@@ -266,7 +275,8 @@ multigraph(floflies, layout = "force", seed = 1, scope = scp2, cex = flofliesatt
 ![Force directed layout of `multigraph` with clustering](figs/flofliesatt-force2.png)
 [vector image](figs/flofliesatt-force2.pdf)
 
-As a result, there are different ways to set the colors, and the `alpha` vector argument serves to set the transparency of colors in vertices, edges, and the graph background.
+As a result, there are different ways to set the colors, and the `alpha` vector argument serves to set the transparency of colors in vertices, 
+edges, and the graph background.
 
 
 
@@ -277,17 +287,18 @@ ___
 <br /> 
 
 
-### Bipartite Graph: Southern Women data set
+### Bipartite Graph: Southern Women dataset
 
-Support for the visualization of two-mode networks is also given by **`multigraph`**, and for the Southern Women classic dataset to illustrate some of the layout options with this package.
+Support for the visualization of two-mode networks is also given by **`multigraph`**, and for the Southern Women classic dataset 
+to illustrate some of the layout options with this package.
 
 ```r
 # read the Ucinet DL file of Davis, Gardner, Gardner Southern Women
-# data set from a public repository and storage it as an object
+# dataset from a public repository and storage it as an object
 
 swomen <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/davis.dat")
 # or mirror
-swomen <- multiplex::read.dl("http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/davis.dat")
+swomen <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/davis.dat")
 
 
 ### take a look
@@ -314,7 +325,7 @@ OLIVIA     0  0  0  0  0  0  0  0  1   0   1   0   0   0
 FLORA      0  0  0  0  0  0  0  0  1   0   1   0   0   0
 ```
 
-In this case the information can be contained in a data frame or an array as before.
+In this case, the information can be contained in a data frame or an array as before.
 
 
 <br/>
@@ -383,7 +394,7 @@ bmgraph(swomen, layout = "bipc", scope = scp3, clu = clunm, perm = clup)
 
 <br />
 
-The binomial projection of a two-mode data set allows obtaining a force directed layout that in this case the image is clockwise rotated 65 degrees.
+The binomial projection of a two-mode dataset allows obtaining a force directed layout that in this case the image is clockwise rotated 65 degrees.
 
 ```r
 bmgraph(swomen, layout = "force", seed = 1, scope = scp3, rot = 65)
