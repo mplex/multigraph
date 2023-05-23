@@ -4,23 +4,28 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
     conc, coord, clu, cex, lwd, pch, lty, bwd, bwd2, att, bg, 
     mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, 
     scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, 
-    rot, hds, vedist, ffamily, fstyle, fsize, fcol, nr, ...) 
+    rot, hds, vedist, ffamily, fstyle, fsize, fcol, nr, gens, 
+    ...) 
 {
     pclu <- NULL
-    if (isTRUE("Semigroup" %in% attr(x, "class")) == TRUE) {
+    if (is.matrix(x) == TRUE && missing(gens) == TRUE) 
+        stop("If matrix \"x\" is a semigroup, generators are not provided.")
+    ifelse(is.matrix(x) == TRUE && missing(gens) == FALSE, x <- multiplex::as.semigroup(x, 
+        gens = gens), NA)
+    if (isTRUE(tolower(class(x)[1]) == "semigroup") == TRUE) {
         ifelse(is.null(x$ord) == FALSE, n <- x$ord, n <- dim(x$S)[1])
         if (all(x$st %in% dimnames(x$S)[[1]]) == TRUE) {
             Lbs <- x$st
         }
         else {
-            if (isTRUE(unique(unlist(x$S)) %in% dimnames(x$S)[[1]]) == 
-                FALSE) 
-                warning("Semigroup labels do not match table elements.")
             Lbs <- dimnames(x$S)[[1]]
         }
-        if (any(is.na(x$gens)) == TRUE || is.null(x$gens) == 
+        if (missing(gens) == FALSE) {
+            x$gens <- gens
+        }
+        else if (any(is.na(x$gens)) == TRUE || is.null(x$gens) == 
             TRUE) {
-            warning("Generators are not provided, and first element of 'x' is taken.")
+            message("Generators are not provided, and first element of 'x' is taken.")
             x$gens <- 1
         }
         else {
@@ -77,7 +82,13 @@ function (x, main = NULL, seed = 0, maxiter = 100, alpha = c(1,
         }
         ifelse(is.null(x$ord) == FALSE, n <- x$ord, n <- nrow(xet))
         lb <- rownames(xet)
-        ifelse(is.null(x$gens) == FALSE, gens <- x$gens, gens <- colnames(xet))
+        if (missing(gens) == TRUE) {
+            ifelse(is.null(x$gens) == FALSE, gens <- x$gens, 
+                gens <- colnames(xet))
+        }
+        else {
+            invisible(NA)
+        }
         ifelse(identical(as.numeric(gens), as.numeric(colnames(xet))) == 
             TRUE, cgm <- array(0, dim = c(n, n, length(gens)), 
             dimnames = list(lb, lb, gens)), cgm <- array(0, dim = c(n, 

@@ -1,6 +1,5 @@
 \name{multigraph}
 \alias{multigraph}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Multigraphs and valued multigraphs
 }
@@ -8,16 +7,14 @@ Multigraphs and valued multigraphs
 A function to create and manipulate multigraphs and valued multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
-           directed = TRUE, loops, signed, valued, values, lbs, showLbs, att, lbat, 
-           showAtts, main = NULL, cex.main, col.main, font.main, coord, collRecip, 
-           undRecip, seed = NULL, maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, 
-           vcol0, col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
-           alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
-           mirrorH, scl, hds, vedist, mar, ffamily, fstyle, fsize, fsize2, fcol, fcol2, 
-           lclu, sel, new, mai, lscl, ...)
+multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, directed=TRUE, 
+           loops, signed, valued, values, lbs, showLbs, att, lbat, showAtts, main=NULL, 
+           cex.main, col.main, font.main, coord, collRecip, undRecip, seed=NULL, 
+           maxiter=100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, col, ecol, bwd, bwd2, 
+           pos, bg, bg2, asp, drp, add, swp, swp2, alpha=c(1, 1, 1, 1), rot, mirrorX, 
+           mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, 
+           fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, rm.isol, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
 	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
@@ -39,16 +36,16 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
    (optional) the scope of the graph (see details)
 }
   \item{directed}{
-	(logical) whether or not the graph is directed or undirected
+	(logical) whether or not the graph is directed or unidrected
 }
   \item{loops}{
-	(optional, logical) plot loops in the graph?
+	(optional, logical, and experimental) plot graph loops?
 }
   \item{signed}{
 	(optional and logical) whether or not the graph is a signed structure
 }
   \item{valued}{
-	(optional and logical) whether or not the network is depicted as a valued graph
+	(optional and logical) whether the graph is depicyed as valued or not
 }
   \item{values}{
 	(optional and logical) print the values of the bonds in edges?
@@ -75,16 +72,16 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional) the size of the plot's title
 }
   \item{col.main}{
-	(optional) the color of the plot's title
+%%     ~~Describe \code{col.main} here~~
 }
   \item{font.main}{
-	(optional) the font family of the plot's title
+%%     ~~Describe \code{font.main} here~~
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
+	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
 }
   \item{undRecip}{
 	(optional and logical) whether or not plot reciprocated edges as undirected
@@ -102,13 +99,13 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional) the size of the vertices
 }
   \item{cex2}{
-	(optional) the size of the background for the values with the \code{valued} option
+	the size of the background for the values with the \code{valued} option
 }
   \item{pch}{
 	(optional) the symbol representing the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
 }
   \item{lty}{
 	(optional) the shape of the edges
@@ -129,10 +126,10 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional) the width of the bundle edges. 
 }
   \item{bwd2}{
-	(optional and experimental) the width of the bundle loop edges. 
+	(optional) the width of the bundle loop edges. 
 }
   \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``at the middle of the vertex'')
+	(optional) the position of the vertices' labels (\code{0} means ``in middle of vertex'')
 }
   \item{bg}{
 	(optional) the background color of the plot
@@ -156,7 +153,7 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional and logical) whether or not swap reciprocals
 }
   \item{alpha}{
-	(optional) vector (vertex, edge, \code{bg}) with the alpha color transparency
+	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -174,10 +171,10 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional) mirror reflection across diagonal Y=-X
 }
   \item{mirrorV}{
-	(optional) same as \code{mirrorX}
+	same as \code{mirrorX}
 }
   \item{mirrorH}{
-	(optional) same as \code{mirrorY}
+	same as \code{mirrorY}
 }
   \item{scl}{
 	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
@@ -189,25 +186,25 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional and experimental) a real number with vertex - edge distance
 }
   \item{mar}{
-	(optional, vector) plot's margins
+	(optional) the margins of the plot
 }
   \item{ffamily}{
-	(optional) labels' font family
+	the font family
 }
   \item{fstyle}{
-	(optional) labels' font style
+	the font style
 }
   \item{fsize}{
-	(optional) labels' font size
+	the font size
 }
   \item{fsize2}{
-	(optional) labels' font size for \code{values}
+	the font size for \code{values}
 }
   \item{fcol}{
-	(optional) labels' font color
+	the font color
 }
   \item{fcol2}{
-	(optional) labels' font color for \code{values}
+	the font color for \code{values}
 }
   \item{lclu}{
 	(optional, vector) ``levels'' in \code{clu} (see Details)
@@ -222,17 +219,20 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
 	(optional, vector) plot inner margins
 }
   \item{lscl}{
-	(optional) for valued graphs, a real number of the loops' scale 
+	(optional for valued graphs) loop scale
+}
+  \item{rm.isol}{
+	(optional) remove isolated vertices?
 }
   \item{\dots}{
-	(optional) additional argument items (see e.g. \code{\link[graphics:par]{par}})
+	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
 Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. 
 For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there is an argument to prevent this from happening. It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these is accepted.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these is accepted for describing characteristics.
 
 The bundle width specified by \code{bwd} (and \code{bwd2} for loops) ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, numbers higher than one are possible. 
 Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
@@ -242,7 +242,7 @@ In some cases, such as when working with dynamic networks, it is needed to speci
 When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require having an equivalent command to \code{graphics::plot.new()} (cf. e.g. \code{sdam::plot.map()} function).
 }
 \value{
-A plot of the network as a multigraph that is valued or signed.
+A plot of the network as a multigraph or a weighted multigraph.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -251,7 +251,7 @@ A plot of the network as a multigraph that is valued or signed.
 Antonio Rivero Ostoic
 }
 %\note{
-%
+%%  ~~further notes~~
 %}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -270,18 +270,14 @@ multigraph(arr)
 ## Now with a force directed algorithm
 multigraph(arr, layout = "force")
 
-## As valued graph
-multigraph(arr, valued = TRUE)
+## As weighted graph
+multigraph(arr, weighted = TRUE)
 
 ## As signed graph
 multigraph(arr, signed = TRUE)
 
-## With loops and a customized vertex size
+## With loops and a costumized vertex size
 multigraph(arr, cex = 3, loops = TRUE)
-
-## plot with background
-multigraph(arr, cex = 3, loops = TRUE)
-multigraph("1, 2", new = TRUE)
 
 }
 

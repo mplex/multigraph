@@ -1,6 +1,6 @@
 \name{ccgraph}
 \alias{ccgraph}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Cayley colour graph
 }
@@ -8,13 +8,13 @@ Cayley colour graph
 A function to create and manipulate bipartite Cayley colour graphs
 }
 \usage{
-ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), scope, loops, 
-        collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, pch, 
-        lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, col, lbat, 
-        swp, swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, rot, 
-        hds, vedist, ffamily, fstyle, fsize, fcol, nr, ...)
+ccgraph(x, main=NULL, seed=0, maxiter=100, alpha=c(1, 1, 1), scope, loops, 
+        collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, 
+        pch, lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, 
+        col, lbat, swp, swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
+        mirrorH, rot, hds, vedist, ffamily, fstyle, fsize, fcol, nr, gens, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{x}{
 an algebraic structure, typically a \code{"Semigroup"} object class
@@ -160,6 +160,9 @@ an algebraic structure, typically a \code{"Semigroup"} object class
   \item{nr}{
 	for \code{conc} layout, number of radii
 }
+  \item{gens}{
+	(optional when absent) semigroup generators in \code{x}
+}
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
@@ -188,13 +191,9 @@ Antonio Rivero Ostoic
 \code{\link[multiplex:semigroup]{semigroup}}, \code{\link{multigraph}}, \code{\link{frcd}}, \code{\link{conc}}
 }
 
-%%## Create an abstract semigroup from image matrices in existing data set
-%%data(incubD)
-%%
-%%S <- semigroup(incubD$IM)
 
 \examples{
-## Create an abstract semigroup
+## Create an abstract semigroup from random data
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 1 ) )
 

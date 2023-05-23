@@ -7,12 +7,12 @@ Bipartite multigraph
 A function to create and manipulate bipartite multigraphs
 }
 \usage{
-  bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
-          "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
-          att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, valued, 
-          collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
-          maxiter = 100, bwd, clu, pch, rot, mirrorX, mirrorY, mirrorV, mirrorH, hds, 
-          vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, fcol, vclu, ...)
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
+       "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
+       att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, weighted, 
+       collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
+       maxiter = 100, bwd, clu, pch, fcol, rot, mirrorX, mirrorY, mirrorV, mirrorH, 
+       hds, vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, vclu,...)
 }
 \arguments{
   \item{net}{
@@ -42,88 +42,91 @@ A function to create and manipulate bipartite multigraphs
        \code{circ2} two semi-circles  
 }
   \item{scope}{
-   (optional) scope of the graph (see details)
+   (optional) the scope of the graph (see details)
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparency
+	vector (vertex, edge, \code{bg}) with the alpha color transparecy
 }
   \item{showLbs}{
-	(optional and logical) whether or not to show the vertex labels when dimnames available
+	(optional and logical) whether or not show the vertex labels when dimnames available
 }
   \item{showAtts}{
-	(optional and logical) whether or not to show the vertex attribute labels
+	(optional and logical) whether or not show the vertex attribute labels
 }
   \item{att}{
 	(optional) a vector or an array representing the vertex attributes
 }
   \item{lbat}{
-	(optional) labels for the vertex attributes
+	(optional) the labels for the vertex attributes
 }
   \item{main}{
 	(optional) title of the plot
 }
   \item{cex.main}{
-	(optional) size of the plot's title
+	(optional) the size of the plot's title
 }
   \item{bg}{
-	(optional) background color of the plot
+	(optional) the background color of the plot
 }
   \item{mar}{
-	(optional) margins of the plot
+	(optional) the margins of the plot
 }
   \item{directed}{
-	(optional and logical) whether or not the graph is directed or undirected
+	(optional and logical) whether or not the graph is directed or unidrected
 }
-  \item{valued}{
-	(optional and logical) whether or not the graph is valued or with dichotomous data
+  \item{weighted}{
+	(optional and logical) whether or not the graph is weighted or dichotomous
 }
   \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
+	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
 }
   \item{cex}{
-	(optional) size of the vertices
+	(optional) the size of the vertices
 }
   \item{pos}{
-	(optional) position of the vertices' labels (\code{0} means ``at the center of the vertex'')
+	(optional) the position of the vertices' labels (\code{0} means ``at the center of the vertex'')
 }
   \item{lwd}{
-	(optional) width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
 }
   \item{lty}{
-	(optional) shape of the edges
+	(optional) the shape of the edges
 }
   \item{col}{
 	(optional) alias for \code{vcol}
 }
   \item{ecol}{
-	(optional) color of the edges
+	(optional) the color of the edges
 }
   \item{vcol}{
-	(optional) color of the vertices
+	(optional) the color of the vertices
 }
   \item{vcol0}{
-	(optional) color of the vertices' contour (only works for \code{pch 21} through \code{25}
+	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
 }
   \item{asp}{
-	(optional) aspect ratio of the plot
+	(optional) the aspect ratio of the plot
 }
   \item{seed}{
-	(optional) random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) the random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{maxiter}{
-	(optional) maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) the maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{bwd}{
-	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
+	(optional) the width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{weighted} a value greater than one is possible
 }
   \item{clu}{
-	(optional) clustering of the vertices (see \emph{details})
+	(optional) the clustering the vertices (works only with \code{"bipc"} see \emph{details})
 }
   \item{pch}{
-	(optional) symbol representing the vertices
+	(optional) the symbol representing the vertices
+}
+  \item{fcol}{
+	the font color
 }
   \item{rot}{
 	(optional) clockwise rotation of the graph in degrees 
@@ -135,10 +138,10 @@ A function to create and manipulate bipartite multigraphs
 	(optional) mirror of the Y axis
 }
   \item{mirrorV}{
-	\emph{same as \code{mirrorX}}
+	same as \code{mirrorX}
 }
   \item{mirrorH}{
-	\emph{same as \code{mirrorY}}
+	same as \code{mirrorY}
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
@@ -147,46 +150,43 @@ A function to create and manipulate bipartite multigraphs
 	(optional and experimental) a real number with vertex - edge distance
 }
   \item{jitter}{
-	(optional) jitter in \code{stress} or \code{CA}
+	(optional) the jitter in \code{stress} or \code{CA}
 }
   \item{sort}{
 	(optional and logical) sort the vertex labels
 }
   \item{add}{
-	(optional) add nodes to the graph's domain
+	add nodes to the graph's domain
 }
   \item{adc}{
-	(optional) add nodes to the graph's codomain
+	add nodes to the graph's codomain
 }
   \item{perm}{
 	(optional) a list of vectors for the permutation of network members in both the domain and codomain
 }
   \item{ffamily}{
-	(optional) font family
+	the font family
 }
   \item{fstyle}{
-	(optional) font style
+	the font style
 }
   \item{fsize}{
-	(optional) font size
-}
-  \item{fcol}{
-	(optional) font color
+	the font size
 }
   \item{vclu}{
-	(optional) a list of vectors the clustering information in both the domain and the codomain
-%%     ~~Describe \code{vclu} here~~ \code{cluc} was 
+	(optional) the color vertex clustering 
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
 }
 }
 \details{
-Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three-dimensional arrays where each level corresponds to a particular type of tie. Thus the bipartite graphs, in this case, will be depicted with parallel edges. 
-Besides, it is possible to obtain a figure of the bipartite network using the binomial approach to two-mode data and plot it with a force-directed algorithm. 
+Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three dimensional arrays where each level corresponds to a particular type of tie, and thus the bipartite graphs in this case will be depicted with parallel edges. Besides, it is possible to obtain a graph of the bipartite network using the binomial approach to two-mode data, and plot it with a forced directed algorithm.
+
+The \code{clu} argument serves to identify classes of actors and events that is used in the column disposition with the \code{"bipc"} layout option.
 }
 \value{
-A plot of the two-mode network as a bipartite graph or multigraph with a projection
+A plot of the two-mode networks as bipartite graph or multigraph
 }
 %\references{
 %% ~put references to the literature/web site here ~

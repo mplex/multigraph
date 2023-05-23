@@ -7,7 +7,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
     alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, 
     mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, fstyle, 
-    fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, ...) 
+    fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, rm.isol, 
+    ...) 
 {
     cnet <- attr(net, "class")
     flgmlvl <- FALSE
@@ -82,8 +83,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ifelse(is.array(net) == TRUE || is.matrix(net) == TRUE, 
             NA, stop("\"net\" should be matrix or array."))
     }
-    ifelse(missing(signed) == FALSE && isTRUE(signed == TRUE) == 
-        TRUE, signed <- TRUE, signed <- FALSE)
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
     ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == TRUE) == 
@@ -286,6 +285,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     ifelse(isTRUE(dim(net)[1] > 8) == TRUE || isTRUE(valued == 
         TRUE) == TRUE || isTRUE(flgmlvl == TRUE) == TRUE, hds <- hds * 
         0.75, NA)
+    ifelse(missing(signed) == FALSE && isTRUE(signed == TRUE) == 
+        TRUE, signed <- TRUE, signed <- FALSE)
     if (isTRUE(signed == TRUE) == TRUE || isTRUE(cnet == "Signed") == 
         TRUE) {
         if (isTRUE(cnet == "Signed") == TRUE) {
@@ -328,6 +329,23 @@ function (net, layout = c("circ", "force", "stress", "conc",
             invisible(NA)
         }
     }
+    ifelse(missing(rm.isol) == FALSE && isTRUE(rm.isol == TRUE) == 
+        TRUE, rm.isol <- TRUE, rm.isol <- FALSE)
+    if (isTRUE(rm.isol == TRUE) == TRUE && isTRUE(dim(net)[1] > 
+        1L) == TRUE) {
+        if (missing(clu) == FALSE && is.vector(clu) == TRUE) {
+            clu <- clu[which(dimnames(net)[[1]] %in% multiplex::rel.sys(net)$incl)]
+        }
+        else {
+            NA
+        }
+        ifelse(missing(lclu) == TRUE, lclu <- seq(0, length(unique(clu))), 
+            NA)
+        net <- multiplex::rm.isol(net)
+    }
+    else {
+        invisible(NA)
+    }
     if (missing(lbs) == TRUE) {
         ifelse(is.null(dimnames(net)[[1]]) == TRUE, lbs <- as.character(seq_len(dim(net)[1])), 
             lbs <- dimnames(net)[[1]])
@@ -351,7 +369,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         net <- net[, , rev(seq_len(z))], NA)
     if (missing(att) == FALSE && is.array(att) == TRUE) {
         if (isTRUE(n != dim(att)[1]) == TRUE) {
-            warning("Dimensions in \"net\" and \"att\" differ. No attributes are shown.")
+            message("Dimensions in \"net\" and \"att\" differ. No attributes are shown.")
             showAtts <- FALSE
         }
     }
@@ -756,10 +774,14 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else if (missing(coord) == TRUE) {
         flgcrd <- FALSE
         switch(match.arg(layout), force = {
-            crd <- frcd(netd, seed = seed, maxiter = maxiter)
+            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
+                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
+                1L))/n))), crd <- frcd(netd, seed = seed, maxiter = maxiter))
         }, stress = {
-            crd <- stsm(netd, seed = seed, maxiter = maxiter, 
-                ...)
+            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
+                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
+                1L))/n))), crd <- stsm(netd, seed = seed, maxiter = maxiter, 
+                ...))
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 15L, NA)
         }, circ = {
@@ -1302,7 +1324,11 @@ function (net, layout = c("circ", "force", "stress", "conc",
             lp <- as.vector(which(diag(net) > 0))
             if (isTRUE(length(lp) > 0) == TRUE) {
                 for (i in seq_len(length(lp))) {
-                  if (isTRUE(n < 3) == TRUE) {
+                  if (isTRUE(n == 1L) == TRUE) {
+                    dcx <- (cex[lp[i]]^2) * 0.00025
+                    lpsz <- (cex[lp[i]]^2) * 0.00015
+                  }
+                  else if (isTRUE(n < 3) == TRUE) {
                     dcx <- (cex[lp[i]] * 0.0075)
                     lpsz <- (cex[lp[i]] * 0.005) - (dz)
                   }
@@ -1354,7 +1380,11 @@ function (net, layout = c("circ", "force", "stress", "conc",
                     ifelse(isTRUE(cex[lp[i]] <= 3L) == TRUE | 
                       isTRUE(n < 3) == TRUE, dz <- dz * 0.75, 
                       NA)
-                    if (isTRUE(n < 3) == TRUE) {
+                    if (isTRUE(n == 1L) == TRUE) {
+                      dcx <- (cex[lp[i]]^2) * 0.00025
+                      lpsz <- abs((cex[lp[i]]^2) * 0.00015)
+                    }
+                    else if (isTRUE(n < 3) == TRUE) {
                       dcx <- cex[lp[i]]/110L
                       lpsz <- abs((cex[lp[i]] * 0.007) - dz[k])
                     }
@@ -1443,7 +1473,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 use.names = FALSE)), NA)
             if (any(sel %in% lbs) == FALSE) {
                 options(warn = 0)
-                warning("Values in 'sel' are not found in 'net'.")
+                message("Values in 'sel' are not found in 'net'.")
                 lbs <- rep("", length(lbs))
             }
             else {
@@ -1454,7 +1484,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   vec <- append(vec, which(lbb %in% sel[i]))
                 }
                 rm(i)
-                lbs[vec] <- sel
+                suppressWarnings(lbs[vec] <- sel)
             }
         }
         options(warn = -1)
