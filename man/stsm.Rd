@@ -15,7 +15,7 @@ stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
 	an array representing the network relations
 }
   \item{seed}{
-        (mandatory) the seed of the initial layout (see details)
+        (mandatory) the seed of the initial layout (see \emph{details})
 }
   \item{maxiter}{
         (optional) the maximum number of iterations 
@@ -62,7 +62,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 ## Coordinates for the stress majorization layout with random start
 coord <- stsm(arr, seed = NULL)
 
-## Plot multigraph with customized coordenates
+## Plot multigraph with customized coordinates
 multigraph(arr, coord = coord)
 
 }

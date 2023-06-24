@@ -44,8 +44,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             net <- net$net[, , which(net$atnet[[1]] == 0)]
         }
         else if (is.data.frame(net$net) == TRUE) {
-            net <- multiplex::read.srt(net$net, header = TRUE, 
-                sep = ",")
+            net <- multiplex::edgel(net$net, header = TRUE, sep = ",")
         }
         else {
             NA
@@ -146,7 +145,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             stop("\"scope\" should be a list or a vector of lists.")
         for (k in seq_len(length(scope))) {
             if (is.factor(scope[[k]]) == TRUE) {
-                warning("Factor vectors should be outside \"scope\" since here levels are ignored.")
+                warning("Factor vectors should be outside \"scope\" since levels are ignored.")
                 break
             }
         }
@@ -356,7 +355,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
         }
         else {
-            stop("length of 'lbs' not equal to array extent for 'net'")
+            message("Length of \"lbs\" not equal to number of nodes in \"net\"")
+            dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[1:dim(net)[1]]
         }
     }
     else {
@@ -369,7 +369,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         net <- net[, , rev(seq_len(z))], NA)
     if (missing(att) == FALSE && is.array(att) == TRUE) {
         if (isTRUE(n != dim(att)[1]) == TRUE) {
-            message("Dimensions in \"net\" and \"att\" differ. No attributes are shown.")
+            message("Dimensions in \"net\" and \"att\" differ; no attributes are shown.")
             showAtts <- FALSE
         }
     }
@@ -767,7 +767,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     ifelse(isTRUE(fds < 1) == TRUE, fds <- (n - vedist), NA)
     if (missing(coord) == FALSE) {
         if (isTRUE(nrow(coord) == n) == FALSE) 
-            stop("Length of 'coord' does not match network order.")
+            stop("Length of \"coord\" does not match network order.")
         flgcrd <- TRUE
         crd <- coord
     }
@@ -844,8 +844,13 @@ function (net, layout = c("circ", "force", "stress", "conc",
         pos <- 4
     }
     else {
-        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
-            stop("Invalid \"pos\" value.")
+        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) {
+            message("\"pos\" value must be between 0-4; set to 4.")
+            pos <- 4
+        }
+        else {
+            invisible(NA)
+        }
     }
     ifelse(missing(mirrorX) == FALSE && isTRUE(mirrorX == TRUE) == 
         TRUE || missing(mirrorV) == FALSE && isTRUE(mirrorV == 
@@ -1473,7 +1478,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 use.names = FALSE)), NA)
             if (any(sel %in% lbs) == FALSE) {
                 options(warn = 0)
-                message("Values in 'sel' are not found in 'net'.")
+                message("Values in \"sel\" are not found in \"net\".")
                 lbs <- rep("", length(lbs))
             }
             else {

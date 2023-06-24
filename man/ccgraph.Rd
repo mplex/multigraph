@@ -23,10 +23,10 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) title of the plot
 }
   \item{seed}{
-	(optional) random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) random seed number for the vertices' initial coordinates; ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{maxiter}{
-	(optional) maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
+	(optional) maximum number of iterations in layout algorithms; ignored except for \code{force}, \code{stress} and \code{rand}
 }
   \item{alpha}{
 	vector (vertex, edge, \code{bg}) with the alpha color transparency
@@ -53,7 +53,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional and logical) whether the layout is concentric or not
 }
   \item{coord}{
-	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
+	(optional) data frame with the coordinates of the vertices; if coordinates are given then the \code{layout} option is ignored
 }
   \item{clu}{
 	(optional) clustering of the vertices (see \emph{details})
@@ -62,7 +62,7 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) size of the vertices
 }
   \item{lwd}{
-	(optional) width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) width of the edges; ignored if \code{valued} is set to \code{TRUE}
 }
   \item{pch}{
 	(optional) symbol representing the vertices
@@ -71,7 +71,8 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional) shape of the edges
 }
   \item{bwd}{
-	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
+	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size), and 
+	for \code{valued} a value greater than one is possible
 }
   \item{bwd2}{
 	(optional) width of the bundle loop edges. 
@@ -116,19 +117,19 @@ an algebraic structure, typically a \code{"Semigroup"} object class
 	(optional and logical) whether or not to swap reciprocals
 }
   \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
 }
   \item{mirrorX}{
-	(optional) mirror of the X axis
+	(optional) mirror of the \eqn{X} axis
 }
   \item{mirrorY}{
-	(optional) mirror of the Y axis
+	(optional) mirror of the \eqn{Y} axis
 }
   \item{mirrorD}{
-	(optional) mirror reflection across diagonal Y=X
+	(optional) mirror reflection across diagonal \eqn{Y=X}
 }
   \item{mirrorL}{
-	(optional) mirror reflection across diagonal Y=-X
+	(optional) mirror reflection across diagonal \eqn{Y=-X}
 }
   \item{mirrorV}{
 	same as \code{mirrorX}
@@ -199,7 +200,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 
 S <- semigroup(arr)
 
-## plot its Cayley graph
+## plot semigroup's Cayley graph
 ccgraph(S)
 }
 \keyword{ graphics }

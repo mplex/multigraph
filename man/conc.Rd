@@ -34,16 +34,17 @@ conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 
        \code{Y} reflection through the horizontal center line
 
-       \code{D} reflection across diagonal Y=X
+       \code{D} reflection across diagonal \eqn{Y=X}
 
-       \code{L} reflection across diagonal Y=-X
+       \code{L} reflection across diagonal \eqn{Y=-X}
 }
   \item{\dots}{
 	Additional argument items 
 }
 }
 \details{
-In a Euclidean plane computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). In case \code{nr} is not specified, approx. half of the vertices are located at one radius and half in another one.
+In a Euclidean plane computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). 
+In case \code{nr} is not specified, approx. half of the vertices are located at one radius and half in another one.
 
 The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or factor vector.
 }
@@ -71,7 +72,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 ## Coordinates for the concentric layout with two radii
 coord <- conc(arr, nr = 2)
 
-## Plot multigraph with customized coordenates
+## Plot multigraph with customized coordinates
 multigraph(arr, coord = coord)
 
 }

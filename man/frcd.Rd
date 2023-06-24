@@ -15,7 +15,7 @@ frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
 	an array representing the network relations
 }
   \item{seed}{
-        (mandatory) the seed of the initial layout (see details)
+        (mandatory) the seed of the initial layout (see \emph{details})
 }
   \item{maxiter}{
         (optional) the maximum number of iterations 
@@ -27,14 +27,15 @@ frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
 	Additional argument items 
 }
   \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
 }
   \item{mov}{
-	(optional and experimental)  numerical scalar (x and y) or vector (x, y) to move the graph
+	(optional and experimental)  numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) to move the graph
 }
 }
 \details{
-This function is meant as an internal routine for graph visualization. However, it can be used for the \code{coord} option both in \code{multigraph} and in \code{bmgraph} where \code{NULL} in \code{seed} implies a random seed based on the clock watch of the computer. 
+This function is meant as an internal routine for graph visualization. 
+However, it can be used for the \code{coord} option both in \code{multigraph} and in \code{bmgraph} where \code{NULL} in \code{seed} implies a random seed based on the clock watch of the computer. 
 }
 \value{
 A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
@@ -62,7 +63,7 @@ arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
 ## Coordinates for the force directed layout with random start
 coord <- frcd(arr, seed = NULL)
 
-## Plot multigraph with customized coordenates
+## Plot multigraph with customized coordinates
 multigraph(arr, coord = coord)
 
 }

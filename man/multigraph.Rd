@@ -33,7 +33,7 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
        \code{rand} random 
 }
   \item{scope}{
-   (optional) the scope of the graph (see details)
+   (optional) the scope of the graph (see \emph{details})
 }
   \item{directed}{
 	(logical) whether or not the graph is directed or unidrected
@@ -72,10 +72,10 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	(optional) the size of the plot's title
 }
   \item{col.main}{
-%%     ~~Describe \code{col.main} here~~
+	(optional) the color of the plot's title
 }
   \item{font.main}{
-%%     ~~Describe \code{font.main} here~~
+	(optional) the font of the plot's title
 }
   \item{coord}{
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
@@ -105,7 +105,7 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	(optional) the symbol representing the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges. Ignored if \code{weighted} is set to \code{TRUE}
+	(optional) the width of the edges; ignored if \code{weighted} is set to \code{TRUE}
 }
   \item{lty}{
 	(optional) the shape of the edges
@@ -159,16 +159,16 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	(optional) clockwise rotation of the graph in degrees 
 }
   \item{mirrorX}{
-	(optional) mirror of the X axis
+	(optional) mirror of the \eqn{X} axis
 }
   \item{mirrorY}{
-	(optional) mirror of the Y axis
+	(optional) mirror of the \eqn{Y} axis
 }
   \item{mirrorD}{
-	(optional) mirror reflection across diagonal Y=X
+	(optional) mirror reflection across diagonal \eqn{Y=X}
 }
   \item{mirrorL}{
-	(optional) mirror reflection across diagonal Y=-X
+	(optional) mirror reflection across diagonal \eqn{Y=-X}
 }
   \item{mirrorV}{
 	same as \code{mirrorX}
@@ -177,7 +177,7 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	same as \code{mirrorY}
 }
   \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
 }
   \item{hds}{
 	(optional and experimental) arcs' head scale
@@ -207,7 +207,7 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	the font color for \code{values}
 }
   \item{lclu}{
-	(optional, vector) ``levels'' in \code{clu} (see Details)
+	(optional, vector) ``levels'' in \code{clu} (see \emph{details})
 }
   \item{sel}{
 	(optional, vector) selection of node's labels to plot

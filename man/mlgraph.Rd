@@ -18,22 +18,22 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
-  a \code{"Multilevel"} class object or a 3D array with clustering information
+  a \code{"Multilevel"} class object or a three dimensional array with clustering information
 }
   \item{layout}{
     the visualization layout: 
 
-       \code{circ} circular 
+       \code{circ} circular
 
-       \code{force} force-directed   
+       \code{force} force-directed
 
-       \code{stress} stress-majorization  
+       \code{stress} stress-majorization
 
        \code{rand} random 
 
-       \code{conc} concentric 
+       \code{conc} concentric
 
-       \code{bip} as bipartite graph   
+       \code{bip} as bipartite graph
 }
   \item{main}{
 	(optional) title of the plot
@@ -72,13 +72,13 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
 }
   \item{clu}{
-	(optional) clustering of the vertices (see \emph{details})
+	(optional) clustering of the vertices as a list of vectors with integers or NULL (see \emph{details})
 }
   \item{cex}{
 	(optional) size of the vertices
 }
   \item{lwd}{
-	(optional) width of the edges. Ignored if \code{valued} is set to \code{TRUE}
+	(optional) width of the edges; ignored if \code{valued} is set to \code{TRUE}
 }
   \item{pch}{
 	(optional) symbol representing the vertices
@@ -87,7 +87,8 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional) shape of the edges
 }
   \item{bwd}{
-	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For \code{valued} a value greater than one is possible
+	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size), and 
+	for \code{valued} a value greater than one is possible
 }
   \item{bwd2}{
 	(optional) width of the bundle loop edges. 
@@ -132,16 +133,16 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional and logical) whether or not to swap reciprocals
 }
   \item{mirrorX}{
-	(optional) mirror of the X axis
+	(optional) mirror of the \eqn{X} axis
 }
   \item{mirrorY}{
-	(optional) mirror of the Y axis
+	(optional) mirror of the \eqn{Y} axis
 }
   \item{mirrorD}{
-	(optional) mirror reflection across diagonal Y=X
+	(optional) mirror reflection across diagonal \eqn{Y=X}
 }
   \item{mirrorL}{
-	(optional) mirror reflection across diagonal Y=-X
+	(optional) mirror reflection across diagonal \eqn{Y=-X}
 }
   \item{lbs}{
 	(optional) vertex labels
@@ -159,7 +160,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(optional and experimental) arcs' head scale
 }
   \item{scl}{
-	(optional and experimental) numerical scalar (x and y) or vector (x, y) of the graph's scale 
+	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
 }
   \item{vedist}{
 	(optional and experimental) a real number with vertex - edge distance
@@ -189,7 +190,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
 	(experimental) control loops 2
 }
   \item{nr}{
-	for \code{conc} layout, number of radii
+	integer or \code{NULL} with the number of radii for \code{conc} layout (see \emph{details})
 }
   \item{\dots}{
 	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
@@ -205,6 +206,9 @@ In this case, a vector made of lists and scalars or combinations of these is acc
 The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). 
 For the \code{valued} option, a number greater than one is possible.
 
+In a multilevel structure, argument \code{clu} is to class network members 
+and it is possible to class all members of the domain or co-domain into a single class by setting the vector to \code{NULL}. 
+Similarly, \code{NULL} in argument \code{nr} for the \code{conc} layout implies the use of two radii, one for each domain.
 }
 \value{
 A plot of the multilevel graph structure for the network
@@ -215,9 +219,9 @@ A plot of the multilevel graph structure for the network
 \author{
 Antonio Rivero Ostoic
 }
-%\note{
-%%  ~~further notes~~
-%}
+\note{
+Multilevel graphs depend on multilevel class objects
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -225,9 +229,17 @@ Antonio Rivero Ostoic
 \code{\link[multiplex:mlvl]{mlvl}}, \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
 \examples{
-# create multilevel class object
+## Not run:
+# create network data as arrays
+arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
+arr2 <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
+       c(3,3,2))>.5, 3 ) )
 
-# plot the multilevel graph
-
+# create multilevel class object and plot multilevel graph
+require(multiplex)
+mlvl(arr, arr2) |> 
+  mlgraph()
+## End(**Not run**)
 }
 \keyword{ graphics }

@@ -23,7 +23,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         }
         else {
             if (is.array(net) == FALSE) 
-                stop("'net' must be data frame, array, vector or list.")
+                stop("\"net\" must be data frame, array, vector or list.")
         }
     }
     if (missing(perm) == FALSE) {
@@ -152,7 +152,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         ifelse(match.arg(layout) == "bipc", flgclu <- FALSE, 
             flgclu <- TRUE)
         if (is.list(clu) == FALSE) {
-            stop("'clu' must be a list.")
+            stop("\"clu\" must be a list.")
         }
         else {
             if (all(unlist(lapply(clu, is.character))) == TRUE) {
@@ -175,7 +175,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     if (match.arg(layout) == "bipc") {
         if (isTRUE(nrow(net) != length(clu[[1]])) == TRUE || 
             isTRUE(ncol(net) != length(clu[[2]])) == TRUE) 
-            stop("'clu' length differs from 'net'")
+            stop("\"clu\" length differs from \"net\"")
         uact <- unique(clu[[1]])
         uevt <- unique(clu[[2]])
         if (is.character(uact) == TRUE || is.factor(uact) == 
@@ -344,6 +344,15 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     }
     else {
         if (missing(vclu) == FALSE && is.list(vclu) == TRUE) {
+            if (any(unlist(lapply(vclu, is.null))) == TRUE) {
+                ifelse(unlist(lapply(vclu, is.null))[1] == TRUE, 
+                  vclu[[1]] <- rep(1L, nrow(net)), NA)
+                ifelse(unlist(lapply(vclu, is.null))[2] == TRUE, 
+                  vclu[[2]] <- rep(1L, ncol(net)), NA)
+            }
+            else {
+                NA
+            }
             vccol <- vcol
             for (i in seq_len(nlevels(factor(vclu[[1]])))) {
                 vccol[which(as.numeric(vclu[[1]]) == i)] <- vcol[i]
@@ -522,7 +531,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     }
     else if (missing(cex) == FALSE) {
         if (is.vector(cex) == FALSE) 
-            stop("'cex' must be a vector")
+            stop("\"cex\" must be a vector")
         cex[which(is.na(cex))] <- 0
     }
     if (isTRUE(length(cex) == 1L) == TRUE) {
@@ -555,7 +564,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
         ffds), fds <- 140L - (n * ffds))
     if (missing(coord) == FALSE) {
         if (isTRUE(nrow(coord) == n) == FALSE) 
-            stop("Length of 'coord' does not match network order.")
+            stop("Length of \"coord\" does not match network order.")
         flgcrd <- TRUE
         crd <- coord
     }
@@ -759,8 +768,13 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     }
     else {
         flgpos <- FALSE
-        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
-            stop("Invalid \"pos\" value.")
+        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) {
+            message("\"pos\" value must be between 0-4; set to 4.")
+            pos <- 4
+        }
+        else {
+            invisible(NA)
+        }
         if (isTRUE(length(pos) == 1) == TRUE) {
             ifelse(match.arg(layout) == "bip3" | match.arg(layout) == 
                 "bip3e", pos <- rep(pos, 3), pos <- rep(pos, 
@@ -1648,7 +1662,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
                 }
             }
             else {
-                warning("'pos' with length 1.")
+                message("\"pos\" with length 1.")
             }
         }
     }

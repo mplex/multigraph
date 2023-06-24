@@ -367,6 +367,15 @@ function (net, layout = c("circ", "force", "stress", "rand",
     }
     vltz <- Lt
     if (missing(clu) == FALSE) {
+        if (any(unlist(lapply(clu, is.null))) == TRUE) {
+            ifelse(unlist(lapply(clu, is.null))[1] == TRUE, clu[[1]] <- rep(1L, 
+                nrow(net)), NA)
+            ifelse(unlist(lapply(clu, is.null))[2] == TRUE, clu[[2]] <- rep(1L, 
+                ncol(net)), NA)
+        }
+        else {
+            NA
+        }
         if ("cn2" %in% attr(mlv, "class")) {
             clu <- clu[[1]]
         }
@@ -453,7 +462,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
     }
     else {
         if (is.vector(cex) == FALSE) 
-            stop("'cex' must be a vector")
+            stop("\"cex\" must be a vector")
         cex[which(is.na(cex))] <- 0
         cex <- cex[seq_len(n)]
         flgcx <- TRUE
@@ -579,7 +588,7 @@ function (net, layout = c("circ", "force", "stress", "rand",
     }
     if (missing(coord) == FALSE) {
         if (isTRUE(nrow(coord) == n) == FALSE) 
-            stop("Length of 'coord' does not match network order.")
+            stop("Length of \"coord\" does not match network order.")
         flgcrd <- TRUE
         crd <- coord
     }
@@ -598,6 +607,8 @@ function (net, layout = c("circ", "force", "stress", "rand",
             crd <- data.frame(X = round(stats::runif(n) * 1L, 
                 5), Y = round(stats::runif(n) * 1L, 5))
         }, conc = {
+            ifelse(is.null(nr) == TRUE, nr <- c(rep(1L, length(mlv$lbs$dm)), 
+                rep(2L, length(mlv$lbs$cdm))), NA)
             crd <- conc(netd, nr, ...)
         }, bip = {
             act <- nrm(rng(length(mlv$lbs$dm)))
