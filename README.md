@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph)
+<!-- [![Build Status](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph) -->
 [![CRAN version](http://www.r-pkg.org/badges/version/multigraph)](https://cran.r-project.org/package=multigraph)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/multigraph)](https://cran.rstudio.com/web/packages/multigraph/index.html)
 
@@ -15,7 +15,8 @@
 
 <br />
 
-To install **`multigraph`** 
+To install **`multigraph`** with the **R** console,
+**R** IDE, or Notebook with **R** kernel in.
 
 ```r
 # from CRAN
@@ -44,7 +45,7 @@ library("multigraph")
 ### Multigraph: Florentine Families dataset
 
 Padgett's Florentine Families dataset is publicly available as a Ucinet DL file format. 
-Use function `read.dl` of the **`multiplex`** package to retrieve this data with the **R** console.
+Use function `read.dl` of the **`multiplex`** package to retrieve this data.
 
 <br />
 
@@ -421,6 +422,10 @@ bmgraph(floflies, ecol = 1)
 
 ### Cayley graph
 
+See [Plot partially ordered semigroup](https://htmlpreview.github.io/?https://github.com/mplex/sunbelt2023/blob/main/pres/Multilevel%20Structure%20of%20G20%20Trade%20Network.html#plot-partially-ordered-semigroup)
+
+or 
+
 ```r
 ?ccgraph
 ```
@@ -432,6 +437,11 @@ bmgraph(floflies, ecol = 1)
 <br />
 
 ### Multilevel graph
+
+See [Multilevel Structure of G20 Trade Network](https://htmlpreview.github.io/?https://github.com/mplex/sunbelt2023/blob/main/pres/Multilevel%20Structure%20of%20G20%20Trade%20Network.html#multilevel-structures)
+
+
+or
 
 ```r
 ?mlgraph
@@ -445,7 +455,7 @@ bmgraph(floflies, ecol = 1)
 
 
 
-##### **NOTICE**: For **R** (>4.0.0), use **`multiplex`** version 2.9.6 or higher.
+##### **Notice** for **R** (>4.0.0), use **`multiplex`** version 3 or higher.
 
 <br />
 
