@@ -59,7 +59,7 @@ floflies <- multiplex::read.dl(file = "http://moreno.ss.uci.edu/padgett.dat")
 floflies <- multiplex::read.dl(file = "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/padgett.dat")
 
 
-# look at the data
+# adjacency matrices
 floflies
 
 , , PADGM
@@ -105,14 +105,14 @@ TORNABUON         0       0         0        0         0      0        0        
 
 <br /> 
 
-Object `floflies` represents the Florentine families’ network where `"PADGM"` are marriage relations and `"PADGB"` correspond to business ties among the 16 actors.
+Object `floflies` represents the Florentine families network where `"PADGM"` are marriage relations and `"PADGB"` correspond to business ties among the 16 actors.
 
 <br /> 
 
 
 ### Plotting multigraphs
 
-Plot the Florentine families' network with the `multigraph` function:
+Graph of the Florentine families network using `multigraph` function with the default circular layout:
 
 ```r
 multigraph(floflies)
@@ -122,8 +122,6 @@ multigraph(floflies)
 
 <br /> 
 
-The network is symmetric and the default layout of the function is circular. 
-
 Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *note that with vector graphics the rendering may vary according to the device used.*
 
 <br /> 
@@ -131,7 +129,7 @@ Check also out the [vector image](figs/floflies.pdf) of this multigraph, and *no
 
 #### Force-directed layout
 
-Besides the circular layout, another possibility is to apply a *force-directed* layout for the visualization of the multiplex network. 
+Besides a circular layout, another possibility is to apply a *force-directed* layout for the visualization of the multiplex network. 
 Function `multigraph` provides a number of arguments for graph, edges, and nodes levels, which can be recorded in an object list 
 named `scp` to be used in the `scope` argument of the function.
 
@@ -212,6 +210,8 @@ TORNABUON     48       0     7
 GINORI        32       0     9
 PUCCI          3       0     1
 ```
+
+<br /> 
 
 
 However, in order to depict the multigraph of `floflies` with the information contained in `flofliesatt`, be sure that the order of the actors matches in both objects.
