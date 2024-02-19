@@ -56,8 +56,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if (isTRUE(is.data.frame(net) == TRUE) == FALSE) {
         if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(cnet == 
             "Signed") == FALSE) {
-            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE, 
-                lbs = sort(unique(multiplex::dhc(unlist(net)))))
+            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
         }
         else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
             ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
@@ -355,7 +354,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
         }
         else {
-            message("Length of \"lbs\" not equal to number of nodes in \"net\"")
+            message("Length of \"lbs\" not equal to number of nodes in \"net\".")
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[1:dim(net)[1]]
         }
     }
@@ -626,7 +625,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             fsize <- cex * 0.25)
     }
     else {
-        fsize <- fsize/10
+        fsize <- fsize/10L
     }
     ifelse(isTRUE(valued == FALSE) == TRUE && isTRUE(bwd > 1L) == 
         TRUE, bwd <- 1L, NA)
@@ -719,10 +718,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
         vcol0 <- vcol
     }
     if (isTRUE(n > 100) == TRUE) {
-        ffds <- n/10
+        ffds <- n/10L
     }
     else if (isTRUE(n > 20) == TRUE) {
-        ffds <- n/100
+        ffds <- n/100L
     }
     else if (isTRUE(n == 2) == TRUE) {
         ffds <- -5
