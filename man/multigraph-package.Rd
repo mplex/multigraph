@@ -12,9 +12,9 @@ Functions to create and manipulate multigraphs, bipartite graphs, Cayley graphs,
 \tabular{ll}{
 Package: \tab multigraph \cr
 Type: \tab Package \cr
-Version: \tab 0.99 (devel) \cr
+Version: \tab 0.99-2 (devel) \cr
 Depends: \tab \CRANpkg{multiplex} (>= 3.0.0) \cr
-Date: \tab 23 June 2023 \cr
+Date: \tab 13 March 2024 \cr
 License: \tab GPL-3 \cr
 }
 This package contains functions to plot diverse types of graphs representing complex network structures. 

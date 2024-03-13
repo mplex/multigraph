@@ -235,7 +235,15 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
                 levels(factor(clu[[2]]))[i])
         }
         rm(i)
-        net <- net[cls1, cls2]
+        if (is.na(dim(net)[3]) == TRUE) {
+            net <- net[cls1, cls2]
+        }
+        else {
+            for (k in seq_len(dim(net)[3])) {
+                net[, , k] <- net[cls1, cls2, k]
+            }
+            rm(k)
+        }
     }
     else {
         NA
@@ -687,7 +695,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
             }
             rm(i)
             crd[, 2] <- crd[, 2] * cos(pi) - crd[, 1] * sin(pi)
-            rownames(crd) <- lbs
+            rownames(crd) <- make.unique(lbs)
             ifelse(isTRUE(length(uact) == 1L) == TRUE && isTRUE(length(uevt) == 
                 1L) == TRUE, fds <- fds - 30L, fds <- fds + 20L)
         }, rand = {
@@ -735,11 +743,11 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
             evt1[2, ] <- evt1[2, ] * cos(pi) - evt1[1, ] * sin(pi)
             crd <- as.data.frame(t(cbind(act1, evt1)))
             crd[which(is.na(crd))] <- 0.5
-            rt <- 10
+            rt <- 10L
             crd[, 1] <- (crd[, 1] * cos(rt * (pi/180L)) - crd[, 
                 2] * sin(rt * (pi/180L)))/0.4
             crd[, 2] <- (crd[, 2] * cos(rt * (pi/180L)) + crd[, 
-                1] * sin(rt * (pi/180L)))/1
+                1] * sin(rt * (pi/180L)))/1L
             crd[, 1:2] <- crd[, 1:2] - min(crd[, 1:2])
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 10L, NA)
@@ -768,13 +776,8 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
     }
     else {
         flgpos <- FALSE
-        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) {
-            message("\"pos\" value must be between 0-4; set to 4.")
-            pos <- 4
-        }
-        else {
-            invisible(NA)
-        }
+        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) 
+            stop("Invalid \"pos\" value.")
         if (isTRUE(length(pos) == 1) == TRUE) {
             ifelse(match.arg(layout) == "bip3" | match.arg(layout) == 
                 "bip3e", pos <- rep(pos, 3), pos <- rep(pos, 
@@ -1662,7 +1665,7 @@ function (net, layout = c("bip", "bip3", "bip3e", "bipc", "force",
                 }
             }
             else {
-                message("\"pos\" with length 1.")
+                message("\"pos\" has length 1.")
             }
         }
     }

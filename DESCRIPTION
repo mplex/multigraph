@@ -1,10 +1,10 @@
 Package: multigraph
 Type: Package
 Title: Plot and Manipulate Multigraphs
-Version: 0.99
+Version: 0.99-2
 Depends: R (>= 3.6.0), multiplex (>= 3.0.0)
 Imports: methods
-Date: 2023-06-23
+Date: 2024-03-13
 Authors@R: person(given = "Antonio", family = "Rivero Ostoic", role = c("aut", "cre"), email = "multiplex@post.com")
 Author: Antonio Rivero Ostoic [aut, cre]
 Maintainer: Antonio Rivero Ostoic <multiplex@post.com>
@@ -14,4 +14,4 @@ BugReports: https://github.com/mplex/multigraph/issues/
 Repository: CRAN
 License: GPL-3
 NeedsCompilation: no
-Packaged: 23-06-2023 10:27:40 UTC; an_to
+Packaged: 2024-03-13 08:48:57 UTC; aost
