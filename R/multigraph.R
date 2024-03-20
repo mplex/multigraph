@@ -119,8 +119,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
         }
     }
-    if (missing(showLbs) == FALSE && isTRUE(showLbs == TRUE) == 
-        TRUE) {
+    if ((missing(showLbs) == FALSE && isTRUE(showLbs == TRUE) == 
+        TRUE) || (missing(lbs) == FALSE)) {
         showLbs <- TRUE
     }
     else if (missing(showLbs) == FALSE && isTRUE(showLbs == FALSE) == 
@@ -331,12 +331,14 @@ function (net, layout = c("circ", "force", "stress", "conc",
         TRUE, rm.isol <- TRUE, rm.isol <- FALSE)
     if (isTRUE(rm.isol == TRUE) == TRUE && isTRUE(dim(net)[1] > 
         1L) == TRUE) {
+        inc <- multiplex::rel.sys(net)$incl
         if (missing(clu) == FALSE && is.vector(clu) == TRUE) {
-            clu <- clu[which(dimnames(net)[[1]] %in% multiplex::rel.sys(net)$incl)]
+            clu <- clu[which(dimnames(net)[[1]] %in% inc)]
         }
         else {
-            NA
+            clu <- rep(1, dim(net)[1])
         }
+        ifelse(missing(lbs) == FALSE, lbs <- lbs[inc], NA)
         ifelse(missing(lclu) == TRUE, lclu <- seq(0, length(unique(clu))), 
             NA)
         net <- multiplex::rm.isol(net)
@@ -354,7 +356,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
         }
         else {
-            message("Length of \"lbs\" not equal to number of nodes in \"net\".")
+            message("Length of \"lbs\" not equal to number of nodes in \"net\"")
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[1:dim(net)[1]]
         }
     }
@@ -625,7 +627,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             fsize <- cex * 0.25)
     }
     else {
-        fsize <- fsize/10L
+        fsize <- fsize/10
     }
     ifelse(isTRUE(valued == FALSE) == TRUE && isTRUE(bwd > 1L) == 
         TRUE, bwd <- 1L, NA)
@@ -718,10 +720,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
         vcol0 <- vcol
     }
     if (isTRUE(n > 100) == TRUE) {
-        ffds <- n/10L
+        ffds <- n/10
     }
     else if (isTRUE(n > 20) == TRUE) {
-        ffds <- n/100L
+        ffds <- n/100
     }
     else if (isTRUE(n == 2) == TRUE) {
         ffds <- -5

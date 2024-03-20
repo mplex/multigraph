@@ -13,10 +13,17 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
     if (missing(nr) == TRUE) {
         clu <- rep(1, n)
     }
-    else if (isTRUE(length(nr) == 1L) == TRUE && is.numeric(nr) == 
-        TRUE) {
-        if (isTRUE(nr >= n) == TRUE | isTRUE(nr <= 0) == TRUE) 
-            stop("Value of 'nr' must be greater than zero and lower than network order.")
+    else if (is.numeric(nr) == TRUE) {
+        if (isTRUE(nr >= n) == TRUE | isTRUE(nr <= 0) == TRUE) {
+            message("Value of 'nr' must be greater than zero and lower than network order.")
+            nr <- 1L
+        }
+        else if (isTRUE(is.integer(nr) == FALSE) == TRUE) {
+            nr <- round(nr)
+        }
+        else {
+            NA
+        }
         clu <- vector()
         for (i in seq_len(nr)) {
             clu <- append(clu, rep(i, ceiling(n/nr)))
@@ -49,19 +56,6 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
         nr[which((nr %in% tmpnr) == TRUE)] <- nlevels(factor(tmpnr))
         clu <- methods::as(as.vector(nr), "numeric")
         rm(tmpnr)
-    }
-    else if (is.numeric(nr) == TRUE) {
-        ifelse(is.integer(nr) == TRUE, clu <- nr[seq_len(n)], 
-            clu <- methods::as(as.vector(nr[seq_len(n)]), "integer"))
-        clu[which(is.na(clu))] <- 0L
-        ifelse(isTRUE(0 %in% (clu)) == TRUE, clu <- clu + 1L, 
-            NA)
-        tmpclu <- clu
-        for (i in seq_len(nlevels(factor(clu)))) {
-            clu[which(levels(factor(tmpclu))[i] == clu)] <- i
-        }
-        rm(i)
-        rm(tmpclu)
     }
     else {
         NA
@@ -120,27 +114,6 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
         rad <- rad + 1L
     }
     rm(i)
-    if (isTRUE(r > 1L) == TRUE) {
-        nnds <- data.frame(matrix(ncol = ncol(nds), nrow = nrow(nds)))
-        nnds[which(lbs %in% nlst[[1]]), ] <- nds[seq_len(length(nlst[[1]])), 
-            ]
-        yp <- tabulate(clu)[1]
-        for (i in seq_len(r - 1L)) {
-            k <- 1L
-            for (j in which(lbs %in% nlst[[i + 1L]])) {
-                nnds[j, ] <- nds[(yp + 1L):(yp + tabulate(clu)[i + 
-                  1L]), ][k, ]
-                k <- k + 1L
-            }
-            rm(j)
-            yp <- yp + tabulate(clu)[i + 1L]
-        }
-        rm(i)
-        nds <- nnds
-    }
-    else {
-        NA
-    }
     switch(match.arg(mirror), N = {
         NA
     }, X = {
