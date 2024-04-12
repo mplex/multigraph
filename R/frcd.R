@@ -20,7 +20,7 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         lbs <- rownames(mat))
     cmps <- multiplex::comps(netd)
     nds <- matrix(0, nrow = n, ncol = 2)
-    rownames(nds) <- lbs
+    rownames(nds) <- make.unique(lbs)
     set.seed(seed)
     for (k in 1:length(cmps$com)) {
         if (is.null(cmps$com[[k]]) == FALSE) {
@@ -42,27 +42,22 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
                 locx <- ndc[, 1]
                 locy <- ndc[, 2]
                 K <- 0.75 * sqrt(((max(locx) - min(locx)) * (max(locy) - 
-                  min(locy)))/nrow(mt))
-                forcex <- rep(0, nrow(mt))
-                forcey <- rep(0, nrow(mt))
+                  min(locy)))/dim(mt)[1])
+                forcex <- rep(0, dim(mt)[1])
+                forcey <- rep(0, dim(mt)[1])
                 for (niter in seq_len(maxiter)) {
-                  for (i in seq_len(nrow(mt))) {
+                  for (i in seq_len(dim(mt)[1])) {
                     forcevx <- 0
                     forcevy <- 0
-                    for (j in seq_len(nrow(mt))) {
-                      if (isTRUE(i != j) == TRUE) {
-                        dx <- locx[j] - locx[i]
-                        dy <- locy[j] - locy[i]
-                        d <- sqrt(dx^2 + dy^2)
-                        if (isTRUE(mt[i, j] == 0) == FALSE) {
-                          Fd <- (d/K) - K^2/d^2
-                        }
-                        else if (isTRUE(mt[i, j] == 0) == TRUE) {
-                          Fd <- -K^2/d^2
-                        }
-                        forcevx <- forcevx + Fd * dx
-                        forcevy <- forcevy + Fd * dy
-                      }
+                    for (j in which(!(seq_len(dim(mt)[1]) %in% 
+                      i))) {
+                      dx <- locx[j] - locx[i]
+                      dy <- locy[j] - locy[i]
+                      d <- sqrt(dx^2 + dy^2)
+                      ifelse(isTRUE(mt[i, j] == 0) == FALSE, 
+                        Fd <- (d/K) - K^2/d^2, Fd <- (-K^2/d^2))
+                      forcevx <- forcevx + Fd * dx
+                      forcevy <- forcevy + Fd * dy
                     }
                     rm(j)
                     forcex[i] <- forcevx
@@ -70,13 +65,13 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
                   }
                   rm(i)
                   TEMP <- 2L/niter
-                  for (i in seq_len(nrow(mt))) {
-                    forcemag <- sqrt(forcex[i]^2 + forcey[i]^2)
+                  for (l in seq_len(dim(mt)[1])) {
+                    forcemag <- sqrt(forcex[l]^2 + forcey[l]^2)
                     scala <- min(forcemag, TEMP)/forcemag
-                    locx[i] <- locx[i] + (forcex[i] * scala)
-                    locy[i] <- locy[i] + (forcey[i] * scala)
+                    locx[l] <- locx[l] + (forcex[l] * scala)
+                    locy[l] <- locy[l] + (forcey[l] * scala)
                   }
-                  rm(i)
+                  rm(l)
                 }
                 rm(niter)
             }
@@ -123,9 +118,10 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         }
     }
     rm(k)
-    ifelse(isTRUE(sum(nds) == 0) == TRUE, rat <- 1, rat <- (max(nds[, 
+    ifelse(isTRUE(sum(nds) == 0) == TRUE, rat <- 1L, rat <- (max(nds[, 
         1]) - min(nds[, 1]))/(max(nds[, 2]) - min(nds[, 2])))
-    if (isTRUE(length(cmps$isol) > 1) == TRUE) {
+    ni <- length(cmps$isol)
+    if (isTRUE(ni > 1) == TRUE) {
         nds[, 1] <- (nds[, 1] - min(nds[, 1]))/(max(nds[, 1]) - 
             min(nds[, 1]))
         ifelse(isTRUE(rat > 0) == TRUE, nds[, 2] <- ((nds[, 2] - 
@@ -134,45 +130,37 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
             2]) - min(nds[, 2]))) * (rat))
         nds <- as.matrix((nds))
         ndst <- nds[which(nds[, 1] != 0), ]
-        tmpi <- popl(length(cmps$isol), seed = seed) * (length(cmps$isol) * 
-            2L/n)
+        tmpi <- popl(ni, seed = seed) * (ni/10L)
         if (is.null(cmps$com) == FALSE) {
-            fct <- jitter(sample(4)[2])
-            locx <- ((tmpi[, 1]/fct) - (min(ndst[, 1])) - 0)
-            ifelse(isTRUE(rat > 0) == TRUE, locy <- ((min(ndst[, 
-                2])) - (tmpi[, 2]/fct) - 0), locy <- ((max(ndst[, 
-                2])) + (tmpi[, 2]/fct) + 0))
+            lcx <- ((tmpi[, 1]) - (min(ndst[, 1])))
+            ifelse(isTRUE(rat > 0) == TRUE, lcy <- ((min(ndst[, 
+                2])) - abs(tmpi[, 2]) - 0), lcy <- ((max(ndst[, 
+                2])) + abs(tmpi[, 2]) + 0))
             ndst.chull <- grDevices::chull(ndst)
             ndst.chull <- ndst[ndst.chull, ]
             ifelse(isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
                 1]))) > length(which(ndst.chull[, 1] > mean(ndst.chull[, 
-                1])))) == TRUE, locx <- locx + (K/(n - 1L)), 
-                locx <- locx + ((K/(n - 1L)) * -1))
+                1])))) == TRUE, lcx <- lcx + abs(K * 0.5), lcx <- lcx * 
+                -1)
             ifelse(isTRUE(length(which(ndst.chull[, 2] < mean(ndst.chull[, 
                 2]))) > length(which(ndst.chull[, 2] > mean(ndst.chull[, 
-                2])))) == TRUE, locy <- locy - (K/(n - 1L)), 
-                locy <- locy - ((K/(n - 1L)) * -1))
+                2])))) == TRUE, lcy <- lcy - abs(K * 0.5), lcy <- lcy * 
+                -1)
         }
         else {
-            locx <- (tmpi[, 1])
-            locy <- (tmpi[, 2])
+            lcx <- (tmpi[, 1])
+            lcy <- (tmpi[, 2])
         }
-        nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy))
+        nds[which(lbs %in% cmps$isol), ] <- cbind(lcx, lcy)
     }
-    else if (isTRUE(length(cmps$isol) == 1L) == TRUE) {
+    else if (isTRUE(ni == 1L) == TRUE) {
         ndst <- nds[which(nds[, 1] != 0), ]
-        locx <- max(ndst[, 1]) + (K/(n - 1L))
-        ifelse(isTRUE(rat < 0) == TRUE, locy <- max(ndst[, 2]) + 
-            (K/(n - 1L)), locy <- min(ndst[, 2]) - (K/(n - 1L)))
-        nds[which(lbs %in% cmps$isol), ] <- (cbind(locx, locy)) * 
-            stats::rcauchy(1L)/n
+        lcx <- max(ndst[, 1]) + (K/(n - 1L))
+        ifelse(isTRUE(rat < 0) == TRUE, lcy <- max(ndst[, 2]) + 
+            (K/(n - 1L)), lcy <- min(ndst[, 2]) - (K/(n - 1L)))
+        nds[which(lbs %in% cmps$isol), ] <- (cbind(lcx, lcy)) * 
+            K
     }
-    nds[, 1] <- (nds[, 1] - min(nds[, 1]))/(max(nds[, 1]) - min(nds[, 
-        1])) + (K/(n - 1L))
-    ifelse(isTRUE(rat > 0) == TRUE, nds[, 2] <- ((nds[, 2] - 
-        min(nds[, 2]))/(max(nds[, 2]) - min(nds[, 2]))) * (1L/rat), 
-        nds[, 2] <- ((nds[, 2] - min(nds[, 2]))/(max(nds[, 2]) - 
-            min(nds[, 2]))) * (rat) + (K/(n - 1L)))
     nds[, 2] <- nds[, 2] * -1
     if (missing(scl) == FALSE) {
         nds[, 1] <- nds[, 1] * scl[1]

@@ -235,7 +235,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     ifelse(missing(fcol) == TRUE, fcol <- 1, NA)
     ifelse(missing(bwd) == TRUE, bwd <- 1, NA)
-    ifelse(isTRUE(bwd < 0L) == TRUE, bwd <- 0L, NA)
+    ifelse(isTRUE(bwd < 0L) == TRUE, bwd <- 0, NA)
     if (missing(bg) == TRUE) {
         bg <- graphics::par()$bg
         flgbg <- FALSE
@@ -351,13 +351,20 @@ function (net, layout = c("circ", "force", "stress", "conc",
             lbs <- dimnames(net)[[1]])
     }
     else if (missing(lbs) == FALSE) {
+        if (identical(lbs, make.unique(lbs)) == FALSE) {
+            message("Make unique \"lbs\" because of duplicated entry(ies).")
+            lbs <- make.unique(lbs)
+        }
+        else {
+            NA
+        }
         if (isTRUE(length(lbs) == dim(net)[1]) == TRUE || is.null(dimnames(net)[[1]]) == 
             TRUE) {
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
         }
         else {
-            message("Length of \"lbs\" not equal to number of nodes in \"net\"")
-            dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[1:dim(net)[1]]
+            message("Length of \"lbs\" not equal to number of nodes in \"net\".")
+            dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[seq_len(dim(net)[1])]
         }
     }
     else {
@@ -627,7 +634,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
             fsize <- cex * 0.25)
     }
     else {
-        fsize <- fsize/10
+        fsize <- fsize/10L
     }
     ifelse(isTRUE(valued == FALSE) == TRUE && isTRUE(bwd > 1L) == 
         TRUE, bwd <- 1L, NA)
@@ -720,10 +727,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
         vcol0 <- vcol
     }
     if (isTRUE(n > 100) == TRUE) {
-        ffds <- n/10
+        ffds <- n/10L
     }
     else if (isTRUE(n > 20) == TRUE) {
-        ffds <- n/100
+        ffds <- n/100L
     }
     else if (isTRUE(n == 2) == TRUE) {
         ffds <- -5
