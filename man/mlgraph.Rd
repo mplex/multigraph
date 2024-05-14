@@ -23,17 +23,14 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
   \item{layout}{
     the visualization layout: 
 
-       \code{circ} circular
-
-       \code{force} force-directed
-
-       \code{stress} stress-majorization
-
-       \code{rand} random 
-
-       \code{conc} concentric
-
-       \code{bip} as bipartite graph
+\itemize{ 
+       \item  \code{circ} circular
+       \item  \code{force} force-directed
+       \item  \code{stress} stress-majorization
+       \item  \code{rand} random 
+       \item  \code{conc} concentric
+       \item  \code{bip} as bipartite graph
+       }
 }
   \item{main}{
 	(optional) title of the plot

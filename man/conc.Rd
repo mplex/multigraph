@@ -28,15 +28,14 @@ conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 }
   \item{mirror}{
 	mirror transformation
-       \code{N} identity (default)
 
-       \code{X} reflection through the vertical center line
-
-       \code{Y} reflection through the horizontal center line
-
-       \code{D} reflection across diagonal \eqn{Y=X}
-
-       \code{L} reflection across diagonal \eqn{Y=-X}
+\itemize{ 
+       \item \code{N} identity (default)
+       \item \code{X} reflection through the vertical center line
+       \item \code{Y} reflection through the horizontal center line
+       \item \code{D} reflection across diagonal \eqn{Y=X}
+       \item \code{L} reflection across diagonal \eqn{Y=-X}
+       }
 }
   \item{\dots}{
 	Additional argument items 
@@ -44,7 +43,7 @@ conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
 }
 \details{
 In a Euclidean plane computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). 
-In case \code{nr} is not specified, approx. half of the vertices are located at one radius and half in another one.
+In case that the number of radii is not specified in \code{nr}, approx. half of the vertices are located at one radius and half in another one.
 
 The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or factor vector.
 }

@@ -16,11 +16,16 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         netdrp <- net
     }
     mat <- multiplex::mnplx(netd, directed = FALSE)
-    ifelse(is.null(rownames(mat)) == TRUE, lbs <- seq_len(n), 
-        lbs <- rownames(mat))
-    cmps <- multiplex::comps(netd)
     nds <- matrix(0, nrow = n, ncol = 2)
-    rownames(nds) <- make.unique(lbs)
+    if (is.null(rownames(mat)) == TRUE) {
+        lbs <- seq_len(n)
+        rownames(nds) <- lbs
+    }
+    else {
+        lbs <- rownames(mat)
+        rownames(nds) <- make.unique(lbs)
+    }
+    cmps <- multiplex::comps(netd)
     set.seed(seed)
     for (k in 1:length(cmps$com)) {
         if (is.null(cmps$com[[k]]) == FALSE) {

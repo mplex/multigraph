@@ -7,12 +7,12 @@ Bipartite multigraph
 A function to create and manipulate bipartite multigraphs
 }
 \usage{
-  bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
-          "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
-          att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, valued, 
-          collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
-          maxiter = 100, bwd, clu, pch, rot, mirrorX, mirrorY, mirrorV, mirrorH, hds, 
-          vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, fcol, vclu, ...)
+bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "force", "rand", "circ", 
+       "stress", "CA", "circ2"), scope, coord, alpha = c(1, 1, 1), showLbs, showAtts, 
+       att = NULL, lbat = "1", main = NULL, cex.main, bg, mar, directed, valued, 
+       collRecip, cex, pos, lwd, lty, col, ecol, vcol, vcol0, asp, seed = NULL, 
+       maxiter = 100, bwd, clu, pch, rot, mirrorX, mirrorY, mirrorV, mirrorH, hds, 
+       vedist, jitter, sort, add, adc, perm, ffamily, fstyle, fsize, fcol, vclu, ...)
 }
 \arguments{
   \item{net}{
@@ -21,25 +21,18 @@ A function to create and manipulate bipartite multigraphs
   \item{layout}{
     the visualization layout:   
 
-       \code{bip} (default) bipartite graph   
-
-       \code{bip3} bipartite graph with three columns   
-
-       \code{bip3e} bipartite graph with three columns for events   
-
-       \code{bipc} ``clustered'' bipartite graph   
-
-       \code{force} force-directed algorithm    
-
-       \code{rand} random   
-
-       \code{circ} circular   
-
-       \code{stress} stress-majorization algorithm    
-
-       \code{CA} correspondence analysis   
-
-       \code{circ2} two semi-circles  
+\itemize{ 
+       \item \code{bip} (default) bipartite graph   
+       \item \code{bip3} bipartite graph with three columns   
+       \item \code{bip3e} bipartite graph with three columns for events   
+       \item \code{bipc} ``clustered'' bipartite graph   
+       \item \code{force} force-directed algorithm    
+       \item \code{rand} random   
+       \item \code{circ} circular   
+       \item \code{stress} stress-majorization algorithm    
+       \item \code{CA} correspondence analysis   
+       \item \code{circ2} two semi-circles  
+       }
 }
   \item{scope}{
    (optional) scope of the graph (see \emph{details})
@@ -182,12 +175,9 @@ A function to create and manipulate bipartite multigraphs
 }
 }
 \details{
-Bipartite graphs are visualization devices for two-mode networks. Although this type of data would typically record as a data frame, it is possible to use even three-dimensional arrays where each level corresponds to a particular type of tie. Thus the bipartite graphs, in this case, will be depicted with parallel edges. 
-Besides, it is possible to obtain a figure of the bipartite network using the binomial approach to two-mode data and plot it with a force-directed algorithm. 
+Bipartite graphs serve as visual aids for two-mode networks. While these networks are typically represented as data frames, they can also be visualized using three-dimensional arrays, where each level corresponds to a specific type of connection, resulting in parallel edges within the bipartite graph. Additionally, a bipartite network can be generated using a force-directed algorithm to create a visual representation. 
 
-Since bipartite graphs have two domains of vertices, the clustering information in \code{vclu}, for the colors of vertices for example, 
-is in a list with two vectors; one vector for each domain. 
-It is possible to class all members of the domain or co-domain into a single class by setting the vector to \code{NULL}.
+With bipartite graphs consisting of two sets of vertices, clustering information, such as vertex colors, can be stored in a list \code{vclu} with two vectors, one for each vertex set. It is possible to group all members of a vertex set into a single class by setting the corresponding vector to \code{NULL}.
 }
 \value{
 A plot of the two-mode network as a bipartite graph or multigraph with a projection

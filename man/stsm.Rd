@@ -34,7 +34,8 @@ stsm(net, seed = seed, maxiter = 40, drp, jitter, method, ...)
 }
 }
 \details{
-This function is meant as an internal routine for graph visualization. However, it can be used with the \code{coord} option both in \code{multigraph} and in \code{bmgraph} where \code{NULL} in \code{seed} implies a random seed based on the clock watch of the computer. 
+Like the function \code{\link{frcd}}, this routine serves as an internal tool for graph visualization. It is also designed to establish the coordinate system using the \code{coord} option within the \code{\link{multigraph}} and \code{\link{bmgraph}} functions. 
+In this scenario, the graph's coordinate system commences with nodes randomly positioned, and if \code{NULL} is entered in the \code{seed} argument, an initial seed will be generated based on the computer clock watch where the number of iterations in \code{maxiter} is \eqn{40}.
 }
 \value{
 A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.

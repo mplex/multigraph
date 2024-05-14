@@ -20,9 +20,6 @@ frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
   \item{maxiter}{
         (optional) the maximum number of iterations 
 }
-  \item{drp}{
-	(optional) for \code{valued} networks, drop values less than specified
-}
   \item{\dots}{
 	Additional argument items 
 }
@@ -32,10 +29,15 @@ frcd(net, seed = seed, maxiter, drp, scl, mov, ...)
   \item{mov}{
 	(optional and experimental)  numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) to move the graph
 }
+  \item{drp}{
+	(optional) for \code{valued} networks, drop values less than specified
+}
 }
 \details{
-This function is meant as an internal routine for graph visualization. 
-However, it can be used for the \code{coord} option both in \code{multigraph} and in \code{bmgraph} where \code{NULL} in \code{seed} implies a random seed based on the clock watch of the computer. 
+This function is meant as an internal routine for graph visualization with a force-directed layout procedure. 
+However, it can be used to set the coordinate system with the \code{coord} option in functions \code{\link{multigraph}} and in \code{\link{bmgraph}}. 
+In such case, the coordinate system of the graph starts with a random displacement of nodes where \code{NULL} in the \code{seed} argument implies 
+an initial seed based on the computer clock watch, and the number of iterations in \code{maxiter} is \eqn{60+n}.
 }
 \value{
 A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.

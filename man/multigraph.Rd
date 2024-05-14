@@ -7,13 +7,14 @@ Multigraphs and valued multigraphs
 A function to create and manipulate multigraphs and valued multigraphs with different layout options
 }
 \usage{
-multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, directed=TRUE, 
-           loops, signed, valued, values, lbs, showLbs, att, lbat, showAtts, main=NULL, 
-           cex.main, col.main, font.main, coord, collRecip, undRecip, seed=NULL, 
-           maxiter=100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, col, ecol, bwd, bwd2, 
-           pos, bg, bg2, asp, drp, add, swp, swp2, alpha=c(1, 1, 1, 1), rot, mirrorX, 
-           mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, 
-           fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, rm.isol, ...)
+multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
+           directed=TRUE, loops, signed, valued, values, lbs, showLbs, att, lbat, 
+           showAtts, main=NULL, cex.main, col.main, font.main, coord, collRecip, undRecip, 
+           seed=NULL, maxiter=100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, col, ecol, 
+           bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, alpha=c(1, 1, 1, 1), rot, 
+           mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, scl, hds, vedist, mar, 
+           ffamily, fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, 
+           rm.isol, ...)
 }
 \arguments{
   \item{net}{
@@ -22,15 +23,14 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
   \item{layout}{
     the visualization layout: 
 
-       \code{circ} circular 
+\itemize{ 
+       \item \code{circ} circular 
+       \item \code{force} force-directed   
+       \item \code{stress} stress-majorization  
+       \item \code{conc} concentric 
+       \item \code{rand} random 
+       }
 
-       \code{force} force-directed   
-
-       \code{stress} stress-majorization  
-
-       \code{conc} concentric 
-
-       \code{rand} random 
 }
   \item{scope}{
    (optional) the scope of the graph (see \emph{details})
@@ -105,7 +105,7 @@ multigraph(net, layout=c("circ", "force", "stress", "conc", "rand"), scope, dire
 	(optional) the symbol representing the vertices
 }
   \item{lwd}{
-	(optional) the width of the edges; ignored if \code{weighted} is set to \code{TRUE}
+	(optional) the width of the edges; ignored if \code{valued} is set to \code{TRUE}
 }
   \item{lty}{
 	(optional) the shape of the edges
@@ -239,10 +239,11 @@ Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
 
 In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the ``levels'' of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
 
-When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require having an equivalent command to \code{graphics::plot.new()} (cf. e.g. \code{sdam::plot.map()} function).
+When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require having an equivalent command to \code{\link[graphics:plot.new]{graphics::plot.new()}}
+ (cf. e.g. \code{\link[sdam:plot.map]{sdam::plot.map()}} function).
 }
 \value{
-A plot of the network as a multigraph or a weighted multigraph.
+A plot of the network as a multigraph or a valued multigraph.
 }
 %\references{
 %% ~put references to the literature/web site here ~
