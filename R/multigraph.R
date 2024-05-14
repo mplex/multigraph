@@ -784,7 +784,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         switch(match.arg(layout), force = {
             ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
                 pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
-                1L))/n))), crd <- frcd(netd, seed = seed, maxiter = maxiter))
+                1L))/n))), crd <- frcd21(netd, seed = seed, maxiter = maxiter))
         }, stress = {
             ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
                 pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
@@ -798,6 +798,15 @@ function (net, layout = c("circ", "force", "stress", "conc",
             ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
                 10L, NA)
         }, conc = {
+            if (missing(lbs) == FALSE && is.null(dimnames(netd)[[1]]) == 
+                TRUE) {
+                if (identical(lbs, make.unique(lbs)) == FALSE) {
+                  message("Make unique \"lbs\" because of duplicated entry(ies).")
+                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- make.unique(lbs)
+                } else {
+                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- lbs
+                }
+            }
             crd <- conc(netd, ...)
         }, rand = {
             set.seed(seed)
