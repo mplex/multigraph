@@ -1,8 +1,7 @@
 
 <!-- [![Build Status](https://travis-ci.org/mplex/multigraph.svg?branch=master)](https://travis-ci.org/mplex/multigraph) -->
-[![CRAN version](http://www.r-pkg.org/badges/version/multigraph)](https://cran.r-project.org/package=multigraph)
-[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/multigraph)](https://cran.rstudio.com/web/packages/multigraph/index.html)
-
+[![CRAN version](https://www.r-pkg.org/badges/version/multigraph?color=green)](https://cran.r-project.org/package=multigraph)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/multigraph?color=blue)](https://r-pkg.org/pkg/multigraph)
 
 
 <br />
