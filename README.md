@@ -446,8 +446,31 @@ or
 ?mlgraph
 ```
 
+<br />
 
 <br />
+
+
+### Miscellaneous: Time and geography
+
+Function `multigraph` with argument `"new"` allows superimposing graphs over a cartographical map, for example, as with the animated plot below produced together with packages [`gifski`](https://CRAN.R-project.org/package=gifski) and [`sdam`](https://CRAN.R-project.org/package=sdam) that represents a network dynamic in ancient Mediterranean Sea (cf. [Shipwrecks network in the Mediterranean Basin](https://htmlpreview.github.io/?https://github.com/sdam-au/R_code/blob/master/HTML/Shipwrecks%20Network%20in%20the%20Mediterranean%20Basin.html) ).
+
+
+<br />
+
+
+```r
+# pseudo-code
+sdam::plot.map(type="med", new=TRUE)
+multigraph(net, ..., new=TRUE)
+```
+
+<br />
+
+
+![Time and geography network animated](figs/shipwrecks-animation.gif)
+
+
 
 <br />
 
