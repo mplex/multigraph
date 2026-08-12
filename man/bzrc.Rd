@@ -1,6 +1,5 @@
 \name{bzrc}
 \alias{bzrc}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 internal function
 }

@@ -7,7 +7,7 @@ internal function
 internal function
 }
 %\usage{
-%mbnd(pares, r, b, vlt, cx, lwd, ecol, directed, asp, bwd, alfa, fds, flgcx, valued)
+%mbnd(pars, r, b, vlt, cx, lw, ecol, directed, bw, alfa, fds, flgcx, valued, flgcr, hds, n)
 %}
 %
 \keyword{internal}

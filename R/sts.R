@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 sts <-
 function (nds, delta = NULL, mwd = NULL) 
 {
@@ -25,3 +26,4 @@ function (nds, delta = NULL, mwd = NULL)
     rm(j)
     as.vector(strss)
 }
+

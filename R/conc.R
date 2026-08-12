@@ -1,10 +1,11 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 conc <-
-function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y", 
+function (net, nr, irot, inv, iflip, mirror = c("N", "X", "Y", 
     "D", "L"), ...) 
 {
     n <- dim(net)[1]
-    if (isTRUE(is.null(dimnames(net)[1]) == TRUE | is.null(dimnames(net)[1][[1]])) == 
-        FALSE) {
+    if (isTRUE((is.null(dimnames(net)[1]) == TRUE | is.null(dimnames(net)[1][[1]])) == 
+        FALSE) && any(duplicated(dimnames(net)[[1]])) == FALSE) {
         lbs <- dimnames(net)[[1]]
     }
     else {
@@ -13,9 +14,12 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
     if (missing(nr) == TRUE) {
         clu <- rep(1, n)
     }
-    else if (is.numeric(nr) == TRUE) {
+    else if (isTRUE(length(nr) == 1L) == TRUE && is.numeric(nr) == 
+        TRUE) {
         if (isTRUE(nr >= n) == TRUE | isTRUE(nr <= 0) == TRUE) {
-            message("Value of 'nr' must be greater than zero and lower than network order.")
+            message(paste("Number of radii in ", sQuote(deparse(substitute(nr))), 
+                " must be positive and lower than network order.", 
+                sep = ""))
             nr <- 1L
         }
         else if (isTRUE(is.integer(nr) == FALSE) == TRUE) {
@@ -31,22 +35,25 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
         rm(i)
         clu <- clu[seq_len(n)]
     }
-    else if (is.factor(nr) == TRUE) {
+    else if ((isTRUE(length(nr) > 1L) == TRUE && is.vector(nr) == 
+        TRUE) || is.factor(nr) == TRUE) {
         tmpnr <- nr[seq_len(n)]
         if (any(is.na(tmpnr)) == TRUE) 
-            stop("Insufficient length of 'nr'.")
+            stop(paste("Missing data found in ", sQuote(deparse(substitute(nr))), 
+                ".", sep = ""))
         for (i in seq_len(nlevels(factor(nr)))) {
             levels(nr) <- c(levels(nr), i)
             nr[which(levels(factor(tmpnr))[i] == nr)] <- i
         }
         rm(i)
-        clu <- methods::as(as.vector(nr), "numeric")
+        clu <- as.integer(as.vector(nr))
         rm(tmpnr)
     }
     else if (is.character(nr) == TRUE) {
         tmpnr <- nr[seq_len(n)]
         if (any(is.na(tmpnr)) == TRUE) 
-            stop("Insufficient length of 'nr'.")
+            stop(paste("Missing data found in ", sQuote(deparse(substitute(nr))), 
+                ".", sep = ""))
         nr[which(nr == nr[1])] <- 1
         for (i in seq_len(nlevels(factor(tmpnr)) - 1L)) {
             nr[which(nr == nr[which((nr %in% tmpnr) == TRUE)[(i - 
@@ -54,7 +61,7 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
         }
         rm(i)
         nr[which((nr %in% tmpnr) == TRUE)] <- nlevels(factor(tmpnr))
-        clu <- methods::as(as.vector(nr), "numeric")
+        clu <- as.integer(as.vector(nr))
         rm(tmpnr)
     }
     else {
@@ -69,6 +76,13 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
     else {
         flgirot <- FALSE
     }
+    if (missing(iflip) == FALSE && (isTRUE(class(iflip) %in% 
+        c("numeric", "integer")) == TRUE)) {
+        flgiflp <- TRUE
+    }
+    else {
+        flgiflp <- FALSE
+    }
     if (missing(inv) == FALSE && isTRUE(inv == TRUE) == TRUE) {
         oclu <- clu
         k <- 1L
@@ -81,8 +95,7 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
     else {
         inv <- FALSE
     }
-    nlst <- list()
-    length(nlst) <- r
+    nlst <- vector(mode = "list", length = r)
     for (i in seq_len(r)) {
         nlst[[i]] <- lbs[which(clu == i)]
     }
@@ -102,18 +115,34 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
         }
         ifelse(isTRUE(flgirot == TRUE) == TRUE, x[, 2:1] <- xyrt(x[, 
             2:1], (irot[i] * -1L)), NA)
-        if (missing(flip) == FALSE && isTRUE(flip == TRUE) == 
-            TRUE) {
-            ifelse(isTRUE((i%%2L) == 0L) == TRUE, x[, 1] <- x[, 
-                1] * cos(pi) - x[, 2] * sin(pi), NA)
-        }
-        else {
-            NA
-        }
+        ifelse(isTRUE(flgiflp == TRUE) == TRUE && isTRUE(i %in% 
+            iflip) == TRUE, x[, 1] <- x[, 1] * cos(pi) - x[, 
+            2] * sin(pi), NA)
         nds <- rbind(nds, x[, 2:1])
         rad <- rad + 1L
     }
     rm(i)
+    if (isTRUE(r > 1L) == TRUE && isTRUE(inv == TRUE) == TRUE) {
+        nnds <- data.frame(matrix(ncol = ncol(nds), nrow = nrow(nds)))
+        nnds[which(lbs %in% nlst[[1]]), ] <- nds[seq_len(length(nlst[[1]])), 
+            ]
+        yp <- tabulate(clu)[1]
+        for (i in seq_len(r - 1L)) {
+            k <- 1L
+            for (j in which(lbs %in% nlst[[i + 1L]])) {
+                nnds[j, ] <- nds[(yp + 1L):(yp + tabulate(clu)[i + 
+                  1L]), ][k, ]
+                k <- k + 1L
+            }
+            rm(j)
+            yp <- yp + tabulate(clu)[i + 1L]
+        }
+        rm(i)
+        nds <- nnds
+    }
+    else {
+        NA
+    }
     switch(match.arg(mirror), N = {
         NA
     }, X = {
@@ -135,3 +164,4 @@ function (net, nr, irot, inv, flip, mirror = c("N", "X", "Y",
     })
     nds
 }
+

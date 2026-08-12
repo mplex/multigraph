@@ -1,242 +1,120 @@
 \name{mlgraph}
 \alias{mlgraph}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Multilevel graph
+Multilevel Graph
 }
 \description{
-A function to create and manipulate multilevel graphs
+A function to create and manipulate multilevel graphs.
 }
 \usage{
 mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main = NULL, 
         seed = NULL, maxiter = 100, directed = TRUE, alpha = c(1, 1, 1), scope, collRecip, 
-        undRecip, showLbs, showAtts, cex.main, coord, clu, cex, lwd, pch, lty, bwd, bwd2, 
-        att, bg, mar, pos, asp, ecol, vcol, vcol0, col, lbat, swp, loops, swp2, mirrorX, 
-        mirrorY, mirrorD, mirrorL, lbs, mirrorV, mirrorH, rot, hds, scl, vedist, ffamily, 
-        fstyle, fsize, fcol, valued, modes, elv, lng, nr, ...)
+        lbs, showLbs, showAtts, cex.main, col.main, font.main, coord, clu, cex, lwd, pch, 
+        lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, col, lbat, loops, rot, 
+        mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, hds, scl, vedist, vldist, 
+        flip, ffamily, fstyle, fsize, fcol, valued, modes, elv, lng, nr, new, jitter, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{net}{
-  a \code{"Multilevel"} class object or a three dimensional array with clustering information
-}
+  \item{net}{A \dQuote{\code{Multilevel}} class object or a 3D array with clustering information.}
   \item{layout}{
-    the visualization layout: 
-
-\itemize{ 
-       \item  \code{circ} circular
-       \item  \code{force} force-directed
-       \item  \code{stress} stress-majorization
-       \item  \code{rand} random 
-       \item  \code{conc} concentric
-       \item  \code{bip} as bipartite graph
-       }
+    Visualization layout: 
+      \itemize{ 
+       \item \code{circ} Circular
+       \item \code{force} Force-directed
+       \item \code{stress} Stress-majorization
+       \item \code{rand} Random
+       \item \code{conc} Concentric
+       \item \code{bip} Bipartite graph
+      }
 }
-  \item{main}{
-	(optional) title of the plot
-}
-  \item{seed}{
-	(optional) random seed number for the vertices' initial coordinates. Ignored except for \code{force}, \code{stress} and \code{rand}
-}
-  \item{maxiter}{
-	(optional) maximum number of iterations in layout algorithms. Ignored except for \code{force}, \code{stress} and \code{rand}
-}
-  \item{directed}{
-	(logical) whether or not the graph is directed or undirected
-}
-  \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparency
-}
-  \item{scope}{
-   (optional) scope of the graph (see details)
-}
-  \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
-}
-  \item{undRecip}{
-	(optional and logical) whether or not plot reciprocated edges as undirected
-}
-  \item{showLbs}{
-	(optional and logical) whether or not to show the vertex labels
-}
-  \item{showAtts}{
-	(optional and logical) whether or not to show the vertex attribute labels
-}
-  \item{cex.main}{
-	(optional) size of the plot's title
-}
-  \item{coord}{
-	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
-}
-  \item{clu}{
-	(optional) clustering of the vertices as a list of vectors with integers or NULL (see \emph{details})
-}
-  \item{cex}{
-	(optional) size of the vertices
-}
-  \item{lwd}{
-	(optional) width of the edges; ignored if \code{valued} is set to \code{TRUE}
-}
-  \item{pch}{
-	(optional) symbol representing the vertices
-}
-  \item{lty}{
-	(optional) shape of the edges
-}
-  \item{bwd}{
-	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size), and 
-	for \code{valued} a value greater than one is possible
-}
-  \item{bwd2}{
-	(optional) width of the bundle loop edges. 
-}
-  \item{att}{
-	(optional) a vector or an array representing the vertex attributes
-}
-  \item{bg}{
-	(optional) background color of the plot
-}
-  \item{mar}{
-	(optional) margins of the plot
-}
-  \item{pos}{
-	(optional) position of the vertices' labels (\code{0} means ``at the center of the vertex'')
-}
-  \item{asp}{
-	(optional) aspect ratio of the plot
-}
-  \item{ecol}{
-	(optional) color of the edges
-}
-  \item{vcol}{
-	(optional) color of the vertices
-}
-  \item{vcol0}{
-	(optional) color of the vertices' contour (only works for \code{pch 21} through \code{25}
-}
-  \item{col}{
-	(optional) alias for \code{vcol}
-}
-  \item{lbat}{
-	(optional) labels for the vertex attributes
-}
-  \item{swp}{
-	(optional and logical) whether or not to swap the bundle patterns
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
-}
-  \item{swp2}{
-	(optional and logical) whether or not to swap reciprocals
-}
-  \item{mirrorX}{
-	(optional) mirror of the \eqn{X} axis
-}
-  \item{mirrorY}{
-	(optional) mirror of the \eqn{Y} axis
-}
-  \item{mirrorD}{
-	(optional) mirror reflection across diagonal \eqn{Y=X}
-}
-  \item{mirrorL}{
-	(optional) mirror reflection across diagonal \eqn{Y=-X}
-}
-  \item{lbs}{
-	(optional) vertex labels
-}
-  \item{mirrorV}{
-	same as \code{mirrorX}
-}
-  \item{mirrorH}{
-	same as \code{mirrorY}
-}
-  \item{rot}{
-	(optional) clockwise rotation of the graph in degrees 
-}
-  \item{hds}{
-	(optional and experimental) arcs' head scale
-}
-  \item{scl}{
-	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
-}
-  \item{vedist}{
-	(optional and experimental) a real number with vertex - edge distance
-}
-  \item{ffamily}{
-	the font family
-}
-  \item{fstyle}{
-	the font style
-}
-  \item{fsize}{
-	the font size
-}
-  \item{fcol}{
-	the font color
-}
-  \item{valued}{
-	(optional and logical) whether the graph is depicyed as valued or not
-}
-  \item{modes}{
-	(optional) a vector indicating which matrices are domains and which codomains (works only with a \code{"Multilevel"} class object)
-}
-  \item{elv}{
-	(experimental) control loops 1
-}
-  \item{lng}{
-	(experimental) control loops 2
-}
-  \item{nr}{
-	integer or \code{NULL} with the number of radii for \code{conc} layout (see \emph{details})
-}
-  \item{\dots}{
-	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
-}
+  \item{main}{(optional) Main title of the plot graph.}
+  \item{seed}{(optional, for \code{force}, \code{stress} and \code{rand}) Random seed number for initial coordinates of vertices.}
+  \item{maxiter}{(optional when \code{seed}) Maximum number of iterations.}
+  \item{directed}{(logical) Are graph edges in domain directed?}
+  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{scope}{(optional) Scope of graph, edges, and vertices.}
+  \item{collRecip}{(optional, logical and experimental) Collapse reciprocated edges in graph domain?}
+  \item{lbs}{(optional) List of customized vertex labels for domain and codomain.}
+  \item{showLbs}{(optional and logical) Display vertex labels in graph?}
+  \item{showAtts}{(optional and logical) Display vertex attribute labels?}
+  \item{cex.main}{Font size of title in plot graph.}
+  \item{col.main}{Font colour of title in plot graph.}
+  \item{font.main}{Font family of title in plot graph.}
+  \item{coord}{(optional) Data frame with graph coordinates for vertices after binamial projection.}
+  \item{clu}{(optional) Clustering of vertices as a list of vectors with integers or \code{NULL} (see \emph{details}).}
+  \item{cex}{(optional) Vertex size.}
+  \item{lwd}{(optional, ignored for \code{valued}) Width of edges.}
+  \item{pch}{(optional) Symbols for vertices in domain and in codomain.}
+  \item{lty}{(optional) Shapes of edges in domain and in codomain.}
+  \item{bwd}{(optional, default \code{1}) Real number for width between bundle edges.}
+  \item{bwd2}{(optional) Width of bundle loop edges.}
+  \item{att}{(optional) Vector or array representing vertex attributes.}
+  \item{bg}{(optional) Background colour of plot graph.}
+  \item{mar}{(optional) Vector with margins for plot.}
+  \item{pos}{(optional) Positions of labels from vertex:
+   \itemize{ 
+       \item {\code{1}}: Below
+       \item {\code{2}}: Left
+       \item {\code{3}}: Above
+       \item {\code{4}}: Right
+       \item {\code{0}}: Center
+      }}
+  \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
+  \item{ecol}{(optional) Colour of edges by type in domain and codomain.}
+  \item{vcol}{(optional) Colour of vertices.}
+  \item{vcol0}{(optional, only for \code{pch=21} through \code{pch=25}) Colour of vertices contour.}
+  \item{col}{(optional) Alias for \code{vcol}.}
+  \item{lbat}{(optional) Labels for vertex attributes.}
+  \item{loops}{(optional and logical) Plot loops in graph?}
+  \item{rot}{(optional) Clockwise rotation in degrees on graph.}
+  \item{mirrorX}{(optional) Mirror by \eqn{X} axis.}
+  \item{mirrorY}{(optional) Mirror by \eqn{Y} axis.}
+  \item{mirrorD}{(optional) Mirror reflection across diagonal \eqn{Y=X}.}
+  \item{mirrorL}{(optional) Mirror reflection across diagonal \eqn{Y=-X}.}
+  \item{mirrorV}{\dQuote{Same as \code{mirrorX}}.}
+  \item{mirrorH}{\dQuote{Same as \code{mirrorY}}.}
+  \item{hds}{(optional, for \code{directed}) Head scale of arcs.}
+  \item{scl}{(optional) Numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of graph scale.}
+  \item{vedist}{(optional) Vertex--edge distance.}
+  \item{vldist}{(optional) Vertex--loop distance.}
+  \item{flip}{(optional and logical) Flip loops?}
+  \item{ffamily}{(optional) Font family of vertex labels in graph.}
+  \item{fstyle}{(optional) Font style of vertex labels in graph with options: \code{bold}, \code{italic}, \code{bolditalic}.}
+  \item{fsize}{(optional) Font size of vertex labels in graph.}
+  \item{fcol}{(optional) Font colour of text in graph vertices.}
+  \item{valued}{(optional and logical) Depict a valued graph?}
+  \item{modes}{(optional, for \dQuote{\code{Multilevel}} class) Vector of domains and codomains in \code{net} matrices.}
+  \item{elv}{(experimental for \code{"bip"}) Elevation of intra-domain edges.}
+  \item{lng}{(experimental for \code{"bip"}) Elevation control intra-domain edges.}
+  \item{nr}{(optional, for \code{conc}) Integer or \code{NULL} with number of radii layout.}
+  \item{new}{(optional, logical) Plot a new graph on existing canvas?}
+  \item{jitter}{(optional, for \code{stress}) Amount of jitter to add on coordinates.}
+  \item{\dots}{Additional argument items.}
 }
 \details{
-Multilevel graphs serve to represent networks with different ``levels'' such as different domains in the network structure. 
+Multilevel graphs depend on multilevel class objects, and they are graphs that serve to represent networks with different \dQuote{levels} such as different domains in the network structure. 
 A characteristic of multilevel networks is the existence of ties within and across domains.
 
 Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. 
-In this case, a vector made of lists and scalars or combinations of these is accepted.
+In this case, a lists made of vectors and scalars or combinations of these can be passed for rendering.
 
-The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). 
+The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertex size). 
 For the \code{valued} option, a number greater than one is possible.
 
-In a multilevel structure, argument \code{clu} is to class network members 
+In a multilevel structure, argument \code{clu} is to class network members, 
 and it is possible to class all members of the domain or co-domain into a single class by setting the vector to \code{NULL}. 
 Similarly, \code{NULL} in argument \code{nr} for the \code{conc} layout implies the use of two radii, one for each domain.
 }
 \value{
-A plot of the multilevel graph structure for the network
+A plot of the multilevel graph structure for the network.
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
-\author{
-Antonio Rivero Ostoic
-}
-\note{
-Multilevel graphs depend on multilevel class objects
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
+%\references{} ~
+%\author{} ~
+%\note{} ~
+%\section{Warning }{....} ~
 \seealso{
 \code{\link[multiplex:mlvl]{mlvl}}, \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
-\examples{
-## Not run:
-# create network data as arrays
-arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
-       c(3,3,2))>.5, 3 ) )
-arr2 <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
-       c(3,3,2))>.5, 3 ) )
-
-# create multilevel class object and plot multilevel graph
-require(multiplex)
-mlvl(arr, arr2) |> 
-  mlgraph()
-## End(**Not run**)
-}
-\keyword{ graphics }
+%\examples{
+%}
+\keyword{graphics}

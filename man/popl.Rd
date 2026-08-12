@@ -6,5 +6,8 @@ internal function
 \description{
 internal function
 }
+%\usage{
+%popl(n, seed = seed)
+%}
 %
 \keyword{internal}

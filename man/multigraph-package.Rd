@@ -6,23 +6,21 @@
 Plot and Manipulate Multigraphs
 }
 \description{
-Functions to create and manipulate multigraphs, bipartite graphs, Cayley graphs, and valued multilevel graphs.
+Functions to create and network manipulate multigraphs, bipartite graphs, multilevel graphs, and semigroup Cayley colour graphs.
 }
 \details{
-\tabular{ll}{
-Package: \tab multigraph \cr
-Type: \tab Package \cr
-Version: \tab 0.99-4 (devel) \cr
-Depends: \tab \CRANpkg{multiplex} (>= 3.0.0) \cr
-Date: \tab 14 May 2024 \cr
-License: \tab GPL-3 \cr
-}
-This package contains functions to plot diverse types of graphs representing complex network structures. 
-For one-mode data, it is possible to depict signed and valued multigraphs and bipartite graphs for two-mode data as well. 
-Moreover, multilevel graphs that \emph{combine} one- and two-mode network data are represented with the latest function. 
-Finally, Cayley graphs serve to depict relations among the ties in multiplex networks recorded in the algebraic object semigroup. 
-
-Note that this package is still under development.
+  \tabular{ll}{
+     Package: \tab multigraph \cr
+     Type: \tab Package \cr
+     Version: \tab 1.0 \cr
+     Depends: \tab \CRANpkg{multiplex} (>= 4.0) \cr
+     Date: \tab 12 August 2026 \cr
+     License: \tab GPL-3 \cr
+  }
+The \pkg{multigraph} package contains functions to plot diverse types of graphs representing complex network structures that are dichotomous or valued. 
+For one-mode data, function \code{multigraph} depicts signed and valued multigraphs with loops, and bipartite graphs for affiliation networks uses function \code{bmgraph}. 
+Moreover, multilevel graphs that \dQuote{combine} one- and two-mode network data are represented with \code{mlgraph} function, 
+and Cayley colour graphs with \code{ccgraph}, which serve to depict relations among the ties in multiplex networks recorded in the algebraic object semigroup. 
 }
 \author{
 J. Antonio Rivero Ostoic
@@ -30,17 +28,16 @@ J. Antonio Rivero Ostoic
 Maintainer: Antonio Rivero Ostoic <multiplex@post.com>
 }
 \references{
-Ostoic, J.A.R. \emph{Algebraic Analysis of Social Networks: Models, Methods and Applications Using R}, Wiley, 2021
-
-Ostoic, J.A.R. ``Algebraic Analysis of Multiple Social Networks with \code{multiplex}.'' \emph{Journal of Statistical Software}, 91(11), 1-41. <doi:10.18637/jss.v092.i11>
+Ostoic, J.A.R. \emph{Algebraic Analysis of Social Networks: Models, Methods and Applications Using R}, Wiley, 2021 \cr
+Ostoic, J.A.R. \dQuote{Algebraic Analysis of Multiple Social Networks with \code{multiplex}.} \emph{Journal of Statistical Software}, 91(11), 1-41. <doi:10.18637/jss.v092.i11>
 }
-
 \seealso{
-\code{\link[multiplex:multiplex-package]{multiplex-package}}, \code{\link[multiplex:incubs]{incubs}}, \code{\link[multiplex:zbind]{zbind}}, \code{\link[multiplex:transf]{transf}}
+\code{\link[multiplex:multiplex-package]{multiplex-package}}, \code{\link[multiplex:incubs]{incubs}}, \code{\link[multiplex:read.dl]{read.dl}}, 
+\code{\link[multiplex:read.gml]{read.gml}}, \code{\link[multiplex:transf]{transf}}, \code{\link[multiplex:edgel]{edgel}}, \code{\link[multiplex:zbind]{zbind}}, 
+\code{\link[multiplex:semigroup]{semigroup}}
 }
-
-\keyword{ graphs}
-\keyword{ manip }
-\keyword{ IO }
-\keyword{ data }
-\keyword{ file }
+\keyword{graphs}
+\keyword{manip}
+\keyword{IO}
+\keyword{data}
+\keyword{file}

@@ -1,285 +1,156 @@
 \name{multigraph}
 \alias{multigraph}
 \title{
-Multigraphs and valued multigraphs
+Multigraphs and Valued Multigraphs
 }
 \description{
-A function to create and manipulate multigraphs and valued multigraphs with different layout options
+A function to create and manipulate multigraphs and valued multigraphs with different layout options.
 }
 \usage{
 multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope, 
-           directed=TRUE, loops, signed, valued, values, lbs, showLbs, att, lbat, 
-           showAtts, main=NULL, cex.main, col.main, font.main, coord, collRecip, undRecip, 
-           seed=NULL, maxiter=100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, col, ecol, 
-           bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, alpha=c(1, 1, 1, 1), rot, 
-           mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, scl, hds, vedist, mar, 
-           ffamily, fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, 
-           rm.isol, ...)
+           directed = TRUE, loops, signed, valued, values, lbs, showLbs, att, 
+           lbat, showAtts, main = NULL, cex.main, col.main, font.main, coord, 
+           collRecip, undRecip, seed = NULL, maxiter = 100, clu, cex, cex2, 
+           pch, lwd, lty, vcol, vcol0, col, ecol, bwd, bwd2, pos, bg, bg2, asp, 
+           drp, add, swp, swp2, flip, alpha = c(1, 1, 1, 1), rot, mirrorX, 
+           mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, scl, hds, vedist, 
+           vldist, mar, ffamily, fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, 
+           new, mai, lscl, rm.isol, nr, jitter, ...)
 }
 \arguments{
-  \item{net}{
-	an array; usually with three dimensions of stacked matrices where the multiple relations are placed.
-}
+  \item{net}{Array with usually three dimensions of stacked matrices where the multiple relations are placed.}
   \item{layout}{
-    the visualization layout: 
-
-\itemize{ 
-       \item \code{circ} circular 
-       \item \code{force} force-directed   
-       \item \code{stress} stress-majorization  
-       \item \code{conc} concentric 
-       \item \code{rand} random 
-       }
-
-}
-  \item{scope}{
-   (optional) the scope of the graph (see \emph{details})
-}
-  \item{directed}{
-	(logical) whether or not the graph is directed or unidrected
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
-}
-  \item{signed}{
-	(optional and logical) whether or not the graph is a signed structure
-}
-  \item{valued}{
-	(optional and logical) whether the graph is depicyed as valued or not
-}
-  \item{values}{
-	(optional and logical) print the values of the bonds in edges?
-}
-  \item{lbs}{
-	(optional) the vertices labels
-}
-  \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels
-}
-  \item{att}{
-	(optional) a vector or an array representing the vertex attributes
-}
-  \item{lbat}{
-	(optional) the labels for the vertices' attributes
-}
-  \item{showAtts}{
-	(optional and logical) whether or not show the vertex attribute labels
-}
-  \item{main}{
-	(optional) title of the plot
-}
-  \item{cex.main}{
-	(optional) the size of the plot's title
-}
-  \item{col.main}{
-	(optional) the color of the plot's title
-}
-  \item{font.main}{
-	(optional) the font of the plot's title
-}
-  \item{coord}{
-	(optional) data frame with the coordinates of the vertices. If coordinates are given then the \code{layout} option is ignored
-}
-  \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the unidrected graph
-}
-  \item{undRecip}{
-	(optional and logical) whether or not plot reciprocated edges as undirected
-}
-  \item{seed}{
-	(optional) the random seed number for the vertices' initial coordinates. Ignored for \code{circ} and \code{conc}
-}
-  \item{maxiter}{
-	(optional) the maximum number of iterations in layout algorithms. Only for \code{force}, \code{stress}, and \code{rand}
-}
-  \item{clu}{
-	(optional) the clustering of the vertices (see \emph{details})
-}
-  \item{cex}{
-	(optional) the size of the vertices
-}
-  \item{cex2}{
-	the size of the background for the values with the \code{valued} option
-}
-  \item{pch}{
-	(optional) the symbol representing the vertices
-}
-  \item{lwd}{
-	(optional) the width of the edges; ignored if \code{valued} is set to \code{TRUE}
-}
-  \item{lty}{
-	(optional) the shape of the edges
-}
-  \item{vcol}{
-	(optional) the color of the vertices
-}
-  \item{vcol0}{
-	(optional) the color of the vertices' contour (only works for \code{pch 21} through \code{25}
-}
-  \item{col}{
-	(optional) alias for \code{vcol}
-}
-  \item{ecol}{
-	(optional) the color of the edges
-}
-  \item{bwd}{
-	(optional) the width of the bundle edges. 
-}
-  \item{bwd2}{
-	(optional) the width of the bundle loop edges. 
-}
-  \item{pos}{
-	(optional) the position of the vertices' labels (\code{0} means ``in middle of vertex'')
-}
-  \item{bg}{
-	(optional) the background color of the plot
-}
-  \item{bg2}{
-	(optional) the background color for \code{values}
-}
-  \item{asp}{
-	(optional) the aspect ratio of the plot
-}
-  \item{drp}{
-	(optional) for \code{valued} networks, drop values less than the specified
-}
-  \item{add}{
-	(optional) nodes to add to the graph
-}
-  \item{swp}{
-	(optional and logical) whether or not swap the bundle patterns
-}
-  \item{swp2}{
-	(optional and logical) whether or not swap reciprocals
-}
-  \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparecy
-}
-  \item{rot}{
-	(optional) clockwise rotation of the graph in degrees 
-}
-  \item{mirrorX}{
-	(optional) mirror of the \eqn{X} axis
-}
-  \item{mirrorY}{
-	(optional) mirror of the \eqn{Y} axis
-}
-  \item{mirrorD}{
-	(optional) mirror reflection across diagonal \eqn{Y=X}
-}
-  \item{mirrorL}{
-	(optional) mirror reflection across diagonal \eqn{Y=-X}
-}
-  \item{mirrorV}{
-	same as \code{mirrorX}
-}
-  \item{mirrorH}{
-	same as \code{mirrorY}
-}
-  \item{scl}{
-	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
-}
-  \item{hds}{
-	(optional and experimental) arcs' head scale
-}
-  \item{vedist}{
-	(optional and experimental) a real number with vertex - edge distance
-}
-  \item{mar}{
-	(optional) the margins of the plot
-}
-  \item{ffamily}{
-	the font family
-}
-  \item{fstyle}{
-	the font style
-}
-  \item{fsize}{
-	the font size
-}
-  \item{fsize2}{
-	the font size for \code{values}
-}
-  \item{fcol}{
-	the font color
-}
-  \item{fcol2}{
-	the font color for \code{values}
-}
-  \item{lclu}{
-	(optional, vector) ``levels'' in \code{clu} (see \emph{details})
-}
-  \item{sel}{
-	(optional, vector) selection of node's labels to plot
-}
-  \item{new}{
-	(optional, logical) new graph on an existing plot?
-}
-  \item{mai}{
-	(optional, vector) plot inner margins
-}
-  \item{lscl}{
-	(optional for valued graphs) loop scale
-}
-  \item{rm.isol}{
-	(optional) remove isolated vertices?
-}
-  \item{\dots}{
-	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
-}
+    Visualization layout: 
+   \itemize{ 
+       \item \code{circ} Circular 
+       \item \code{force} Force-directed 
+       \item \code{stress} Stress-majorization 
+       \item \code{conc} Concentric 
+       \item \code{rand} Random 
+   }}
+  \item{scope}{(optional) Scope of graph, edges, and vertices (see \emph{details}).}
+  \item{directed}{(logical) Are graph edges directed?}
+  \item{loops}{(optional and logical) Plot loops in graph?}
+  \item{signed}{(optional and logical) Has the graph a signed structure?}
+  \item{valued}{(optional and logical) Depict a valued graph?}
+  \item{values}{(optional and logical) Print values of bonds in edges?}
+  \item{lbs}{(optional) Vector of customized vertex labels.}
+  \item{showLbs}{(optional and logical) Display vertex labels in graph?}
+  \item{att}{(optional) Vector or array representing vertex attributes.}
+  \item{lbat}{(optional) Vector of labels for vertex attributes.}
+  \item{showAtts}{(optional and logical) Display vertex attribute labels?}
+  \item{main}{(optional) Main title of the plot graph.}
+  \item{cex.main}{Font size of title in plot graph.}
+  \item{col.main}{Font colour of title in plot graph.}
+  \item{font.main}{Font family of title in plot graph.}
+  \item{coord}{(optional) Data frame with graph coordinates for vertices.}
+  \item{collRecip}{(optional and logical) Collapse reciprocated edges in graph?}
+  \item{undRecip}{(optional and logical) Plot reciprocated edges as undirected?}
+  \item{seed}{(optional, for \code{force}, \code{stress} and \code{rand}) Random seed number for initial coordinates of vertices.}
+  \item{maxiter}{(optional when \code{seed}) Maximum number of iterations.}
+  \item{clu}{(optional) Clustering for vertices (see \emph{details}).}
+  \item{cex}{(optional) Vertex size.}
+  \item{cex2}{(optional, for \code{values}) Size of background in values.}
+  \item{pch}{(optional) Symbol(s) for vertices.}
+  \item{lwd}{(optional, ignored for \code{valued}) Width of edges.}
+  \item{lty}{(optional) Shape of edges.}
+  \item{vcol}{(optional) Colour of vertices.}
+  \item{vcol0}{(optional, only for \code{pch=21} through \code{pch=25}) Colour of vertices contour.}
+  \item{col}{(optional) Alias for \code{vcol}.}
+  \item{ecol}{(optional) Colour of edges.}
+  \item{bwd}{(optional, default \code{1}) Real number for width between bundle edges.}
+  \item{bwd2}{(optional) Width of bundle loop edges.}
+  \item{pos}{(optional) Position of labels from vertex:
+   \itemize{ 
+       \item {\code{1}}: Below
+       \item {\code{2}}: Left
+       \item {\code{3}}: Above
+       \item {\code{4}}: Right
+       \item {\code{0}}: Center
+      }}
+  \item{bg}{(optional) Background colour of plot graph.}
+  \item{bg2}{(optional, for \code{values}) Background color.}
+  \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
+  \item{drp}{(optional) for \code{valued}) Drop values in  network less than specified.}
+  \item{add}{(optional) Vector of vertices to add to graph.}
+  \item{swp}{(optional and logical) Swap bundle patterns?}
+  \item{swp2}{(optional and logical) Swap reciprocals?}
+  \item{flip}{(optional and logical) Flip loops?}
+  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{rot}{(optional) Clockwise rotation in degrees on graph.}
+  \item{mirrorX}{(optional) Mirror by \eqn{X} axis.}
+  \item{mirrorY}{(optional) Mirror by \eqn{Y} axis.}
+  \item{mirrorD}{(optional) Mirror reflection across diagonal \eqn{Y=X}.}
+  \item{mirrorL}{(optional) Mirror reflection across diagonal \eqn{Y=-X}.}
+  \item{mirrorV}{\dQuote{Same as \code{mirrorX}}.}
+  \item{mirrorH}{\dQuote{Same as \code{mirrorY}}.}
+  \item{scl}{(optional) Numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of graph scale.}
+  \item{hds}{(optional, for \code{directed}) Head scale of arcs.}
+  \item{vedist}{(optional) Vertex--edge distance.}
+  \item{vldist}{(optional) Vertex--loop distance.}
+  \item{mar}{(optional) Vector with margins for plot.}
+  \item{ffamily}{(optional) Font family of vertex labels in graph.}
+  \item{fstyle}{(optional) Font style of vertex labels in graph with options: \code{bold}, \code{italic}, \code{bolditalic}.}
+  \item{fsize}{(optional) Font size of vertex labels in graph.}
+  \item{fsize2}{(optional) Font size for \code{values}.}
+  \item{fcol}{(optional) Font colour of text in graph vertices.}
+  \item{fcol2}{(optional) Font colour of text in \code{values}.}
+  \item{lclu}{(optional) Vector with \dQuote{levels} in \code{clu} (see \emph{details}).}
+  \item{sel}{(optional) Vector with selection of vertex labels to plot.}
+  \item{new}{(optional, logical) Plot a new graph on existing canvas?}
+  \item{mai}{(optional) Vector with inner margins for plot.}
+  \item{lscl}{(optional, for \code{valued}) Loop scale in graph.}
+  \item{rm.isol}{(optional and logical) Remove isolated vertices?}
+  \item{nr}{(optional, for \code{conc}) Number of radii.}
+  \item{jitter}{(optional, for \code{stress}) Amount of jitter to add on coordinates.}
+  \item{\dots}{Additional argument items.}
 }
 \details{
 Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. 
-For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there is an argument to prevent this from happening. It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
+For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there is an argument to prevent this from happening. 
+It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. 
+Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. In this case, a vector made of lists and scalars or combinations of these is accepted for describing characteristics.
+Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. 
+In this case, a vector made of lists and scalars or combinations of these is accepted for describing characteristics.
 
 The bundle width specified by \code{bwd} (and \code{bwd2} for loops) ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, numbers higher than one are possible. 
 Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
 
-In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the ``levels'' of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
+In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the \dQuote{levels} of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
 
-When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require having an equivalent command to \code{\link[graphics:plot.new]{graphics::plot.new()}}
- (cf. e.g. \code{\link[sdam:plot.map]{sdam::plot.map()}} function).
+If coordinates are given then the \code{layout} option is ignored.
+
+When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require package functions having an equivalent command to \code{\link[graphics:plot.new]{graphics::plot.new()}}.
 }
 \value{
 A plot of the network as a multigraph or a valued multigraph.
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
-\author{
-Antonio Rivero Ostoic
-}
-%\note{
-%%  ~~further notes~~
-%}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
+%\references{} ~
+%\author{} ~
+%\note{} ~
+%\section{Warning }{....} ~
 \seealso{
 \code{\link{bmgraph}}, \code{\link{ccgraph}}, \code{\link{frcd}}, \code{\link{stsm}}, \code{\link{conc}}
 }
 \examples{
-## Create the data: two binary relations among three elements
+# Two binary relations among three elements
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 3 ) )
 
-## Plot the multigraph of this network
+# Plot multigraph of this network
 multigraph(arr)
 
-## Now with a force directed algorithm
+# Plot with a force directed algorithm
 multigraph(arr, layout = "force")
 
-## As weighted graph
-multigraph(arr, weighted = TRUE)
+# As valued graph
+multigraph(arr, valued = TRUE)
 
-## As signed graph
+# As signed graph
 multigraph(arr, signed = TRUE)
 
-## With loops and a costumized vertex size
+# With loops and custumized vertex size
 multigraph(arr, cex = 3, loops = TRUE)
-
 }
-
-\keyword{ graphics }
+\keyword{graphics}

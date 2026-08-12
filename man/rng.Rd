@@ -6,5 +6,8 @@ internal function
 \description{
 internal function
 }
+%\usage{
+%rng(r)
+%}
 %
 \keyword{internal}

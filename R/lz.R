@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 lz <-
 function (x, delta, w) 
 {
@@ -25,3 +26,4 @@ function (x, delta, w)
     L[which(L == Inf)] <- 0
     L
 }
+

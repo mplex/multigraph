@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 multigraph <-
 function (net, layout = c("circ", "force", "stress", "conc", 
     "rand"), scope, directed = TRUE, loops, signed, valued, values, 
@@ -5,24 +6,28 @@ function (net, layout = c("circ", "force", "stress", "conc",
     col.main, font.main, coord, collRecip, undRecip, seed = NULL, 
     maxiter = 100, clu, cex, cex2, pch, lwd, lty, vcol, vcol0, 
     col, ecol, bwd, bwd2, pos, bg, bg2, asp, drp, add, swp, swp2, 
-    alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, mirrorL, 
-    mirrorV, mirrorH, scl, hds, vedist, mar, ffamily, fstyle, 
-    fsize, fsize2, fcol, fcol2, lclu, sel, new, mai, lscl, rm.isol, 
-    ...) 
+    flip, alpha = c(1, 1, 1, 1), rot, mirrorX, mirrorY, mirrorD, 
+    mirrorL, mirrorV, mirrorH, scl, hds, vedist, vldist, mar, 
+    ffamily, fstyle, fsize, fsize2, fcol, fcol2, lclu, sel, new, 
+    mai, lscl, rm.isol, nr, jitter, ...) 
 {
     cnet <- attr(net, "class")
     flgmlvl <- FALSE
     flgcn2 <- FALSE
     flgpf <- FALSE
+    ifelse(missing(valued) == FALSE && isTRUE(valued == TRUE) == 
+        TRUE, valued <- TRUE, valued <- FALSE)
+    ifelse(missing(values) == FALSE && isTRUE(values == TRUE) == 
+        TRUE, values <- TRUE, values <- FALSE)
+    ifelse(missing(showAtts) == FALSE && isTRUE(showAtts == FALSE) == 
+        TRUE, showAtts <- FALSE, showAtts <- TRUE)
     if (isTRUE("Rel.System" %in% cnet) == TRUE) {
         net <- net$Ties
     }
     else if (isTRUE("Multilevel" %in% cnet) == TRUE) {
-        mlvl <- net
+        mlv <- net
         if (isTRUE("bpn" %in% cnet) == TRUE) {
             flgmlvl <- TRUE
-            ifelse(missing(pch) == TRUE, pch <- c(rep(1, length(mlvl$lbs$dm)), 
-                rep(0, length(mlvl$lbs$cdm))), NA)
         }
         else if (isTRUE("cn2" %in% cnet) == TRUE) {
             flgcn2 <- TRUE
@@ -30,48 +35,82 @@ function (net, layout = c("circ", "force", "stress", "conc",
         else {
             NA
         }
-        net <- mlvl$mlnet
+        net <- mlv$mlnet
     }
     else if (isTRUE("pathfinder" %in% cnet) == TRUE) {
         flgpf <- TRUE
         maxw <- net$max
         net <- net$Q
     }
-    else if (isTRUE(tolower(cnet) == "dataset") == TRUE || isTRUE(tolower(cnet) == 
+    else if (isTRUE(tolower(cnet) == "dataset") == TRUE || any(tolower(cnet) %in% 
         "data.set") == TRUE) {
         if (is.array(net$net) == TRUE) {
-            att <- net$net[, , which(net$atnet[[1]] == 1)]
-            net <- net$net[, , which(net$atnet[[1]] == 0)]
+            if (isTRUE(showAtts == TRUE) == TRUE) {
+                att <- net$net[, , which(net$atnet[[1]] == 1)]
+                net <- net$net[, , which(net$atnet[[1]] == 0)]
+            }
+            else {
+                net <- net$net
+            }
         }
         else if (is.data.frame(net$net) == TRUE) {
-            net <- multiplex::edgel(net$net, header = TRUE, sep = ",")
+            net <- multiplex::edgel(net$net, toarray = TRUE, 
+                header = TRUE, valued = valued, sep = ",")
         }
         else {
             NA
         }
+    }
+    else if (is.vector(net) == TRUE && is.list(net) == FALSE) {
+        ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
+            TRUE) == TRUE, net <- multiplex::transf(net, type = "toarray", 
+            lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(unlist(net), 
+                as.character(add)))))), net <- multiplex::trnf(net, 
+            tolist = FALSE, lb2lb = TRUE))
+    }
+    else if (is.data.frame(net) == TRUE) {
+        net <- multiplex::edgel(net, toarray = TRUE, header = TRUE, 
+            valued = valued, sep = ",")
     }
     else {
         NA
     }
+    ifelse(missing(add) == FALSE && is.vector(add) == TRUE, flgad <- TRUE, 
+        flgad <- FALSE)
     if (isTRUE(is.data.frame(net) == TRUE) == FALSE) {
-        if (isTRUE(is.list(net) == TRUE) == TRUE && isTRUE(cnet == 
-            "Signed") == FALSE) {
-            net <- multiplex::transf(net, type = "toarray", lb2lb = TRUE)
+        if (is.list(net) == TRUE && isTRUE(cnet == "Signed") == 
+            FALSE) {
+            if (isTRUE("data.set" %in% tolower(class(net))) == 
+                TRUE) {
+                if (isTRUE(typeof(net) == "list") == TRUE) {
+                  net <- lapply(net, as.vector)
+                }
+                else if (isTRUE(typeof(net) == "character") == 
+                  TRUE) {
+                  net <- as.vector(net)
+                }
+            }
+            else {
+                NA
+            }
+            if (isTRUE(length(unique(unlist(lapply(net, dim)))) > 
+                1L) == TRUE) 
+                stop(paste(sQuote("net"), " should be a square array.", 
+                  sep = ""), call. = FALSE)
+            ifelse(isTRUE(flgad == TRUE) == TRUE, net <- multiplex::transf(net, 
+                type = "toarray", lb2lb = TRUE, lbs = sort(unique(unlist(multiplex::dhc(c(unlist(net), 
+                  as.character(add))))))), net <- multiplex::transf(net, 
+                type = "toarray", lb2lb = TRUE))
         }
-        else if (isTRUE(is.vector(net) == TRUE) == TRUE) {
-            ifelse(missing(add) == FALSE && isTRUE(is.vector(add) == 
-                TRUE) == TRUE, net <- multiplex::transf(net, 
-                type = "toarray", lb2lb = TRUE, lbs = sort(unique(multiplex::dhc(c(net, 
-                  add))))), net <- multiplex::trnf(net, tolist = FALSE, 
-                lb2lb = TRUE))
-        }
-        else if (isTRUE(is.null(net) == TRUE) == TRUE && (missing(add) == 
-            FALSE && isTRUE(is.vector(add) == TRUE) == TRUE)) {
+        else if (is.null(net) == TRUE && isTRUE(flgad == TRUE) == 
+            TRUE) {
             net <- matrix(0L, nrow = length(add), ncol = length(add), 
                 dimnames = list(add, add))
         }
         else {
-            NA
+            ifelse(isTRUE(flgad == TRUE) == TRUE, net <- multiplex::transf(net, 
+                type = "toarray", lbs = c(dimnames(net)[[1]], 
+                  as.character(add))), NA)
         }
     }
     else {
@@ -79,18 +118,21 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     if (isTRUE(cnet == "Signed") == FALSE) {
         ifelse(is.array(net) == TRUE || is.matrix(net) == TRUE, 
-            NA, stop("\"net\" should be matrix or array."))
+            NA, stop(paste(sQuote("net"), " should be a matrix or array.", 
+                sep = ""), call. = FALSE))
     }
     ifelse(isTRUE(dim(net)[3] == 1) == TRUE, net <- net[, , 1], 
         NA)
     ifelse(missing(undRecip) == FALSE && isTRUE(undRecip == TRUE) == 
         TRUE, undRecip <- TRUE, undRecip <- FALSE)
-    ifelse(missing(valued) == FALSE && isTRUE(valued == TRUE) == 
-        TRUE, valued <- TRUE, valued <- FALSE)
-    ifelse(missing(values) == FALSE && isTRUE(values == TRUE) == 
-        TRUE, values <- TRUE, values <- FALSE)
-    ifelse(missing(loops) == FALSE && isTRUE(loops == TRUE) == 
-        TRUE, loops <- TRUE, loops <- FALSE)
+    if (isTRUE(flgmlvl == TRUE) == TRUE) {
+        ifelse(missing(loops) == FALSE && isTRUE(loops == FALSE) == 
+            TRUE, loops <- FALSE, loops <- TRUE)
+    }
+    else {
+        ifelse(missing(loops) == FALSE && isTRUE(loops == TRUE) == 
+            TRUE, loops <- TRUE, loops <- FALSE)
+    }
     ifelse(missing(mirrorH) == FALSE && isTRUE(mirrorH == TRUE) == 
         TRUE, mirrorY <- TRUE, NA)
     ifelse(missing(mirrorV) == FALSE && isTRUE(mirrorV == TRUE) == 
@@ -118,6 +160,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
             ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
                 TRUE) == TRUE, collRecip <- TRUE, collRecip <- FALSE)
         }
+        else {
+            ifelse(missing(collRecip) == FALSE && isTRUE(collRecip == 
+                FALSE) == TRUE, collRecip <- FALSE, collRecip <- TRUE)
+        }
     }
     if ((missing(showLbs) == FALSE && isTRUE(showLbs == TRUE) == 
         TRUE) || (missing(lbs) == FALSE)) {
@@ -131,20 +177,32 @@ function (net, layout = c("circ", "force", "stress", "conc",
         ifelse(is.null(dimnames(net)[[1]]) == FALSE, showLbs <- TRUE, 
             showLbs <- FALSE)
     }
-    ifelse(missing(showAtts) == FALSE && isTRUE(showAtts == FALSE) == 
-        TRUE, showAtts <- FALSE, showAtts <- TRUE)
-    ifelse(missing(swp) == FALSE && isTRUE(swp == TRUE) == TRUE, 
-        swp <- TRUE, swp <- FALSE)
+    if (missing(swp) == FALSE && isTRUE(swp == TRUE) == TRUE) {
+        if (isTRUE(valued == TRUE) == TRUE) {
+            warning(paste("Option ", sQuote("swp"), " not supported for ", 
+                sQuote("valued"), " graphs.", sep = ""), call. = FALSE)
+            swp <- FALSE
+        }
+        else {
+            swp <- TRUE
+        }
+    }
+    else {
+        swp <- FALSE
+    }
     ifelse(missing(swp2) == FALSE && isTRUE(swp2 == TRUE) == 
         TRUE, swp2 <- TRUE, swp2 <- FALSE)
     ifelse(isTRUE(directed == FALSE) == TRUE, directed <- FALSE, 
         NA)
     if (missing(scope) == FALSE) {
         if (isTRUE(is.list(scope) == TRUE) == FALSE) 
-            stop("\"scope\" should be a list or a vector of lists.")
+            stop(paste("Values in ", sQuote("scope"), " should be in a list or a vector of lists.", 
+                sep = ""), call. = FALSE)
         for (k in seq_len(length(scope))) {
             if (is.factor(scope[[k]]) == TRUE) {
-                warning("Factor vectors should be outside \"scope\" since levels are ignored.")
+                warning(paste("Vectors with class ", dQuote("factor"), 
+                  " must be outside ", sQuote("scope"), " since levels are ignored.", 
+                  sep = ""), call. = FALSE)
                 break
             }
         }
@@ -220,20 +278,24 @@ function (net, layout = c("circ", "force", "stress", "conc",
         NA
     }
     ifelse(missing(asp) == TRUE, asp <- 1, NA)
-    ifelse(missing(lwd) == TRUE, lwd <- 1, NA)
+    ifelse(missing(lwd) == TRUE, lwd <- 1, lwd <- abs(lwd))
     if (isTRUE(flgmlvl == TRUE) == TRUE) {
-        ifelse(missing(pch) == FALSE && isTRUE(length(pch) == 
-            2) == TRUE, pch <- c(rep(pch[1], length(mlvl$lbs$dm)), 
-            rep(pch[2], length(mlvl$lbs$cdm))), NA)
+        ifelse(missing(pch) == TRUE && all(mlv$lbs$cdm %in% mlv$lbs$dm) == 
+            FALSE, pch <- c(rep(21, length(mlv$lbs$dm)), rep(22, 
+            length(which(!(mlv$lbs$cdm %in% mlv$lbs$dm))))), 
+            NA)
+        ifelse(missing(pch) == TRUE, pch <- c(21, 22), NA)
         ifelse(missing(ecol) == FALSE && isTRUE(length(ecol) == 
-            2) == TRUE, ecol <- c(rep(ecol[1], length(which(mlvl$modes == 
-            "1M"))), rep(ecol[2], length(which(mlvl$modes == 
-            "2M")))), NA)
+            2) == TRUE, ecol <- c(rep(ecol[1], length(which(mlv$modes == 
+            "1M"))), rep(ecol[2], length(which(mlv$modes == "2M")))), 
+            NA)
+        ifelse(missing(fcol) == TRUE, fcol <- c(1, 1), fcol <- rep(fcol, 
+            2))
     }
     else {
         ifelse(missing(pch) == TRUE, pch <- 21, NA)
+        ifelse(missing(fcol) == TRUE, fcol <- 1, NA)
     }
-    ifelse(missing(fcol) == TRUE, fcol <- 1, NA)
     ifelse(missing(bwd) == TRUE, bwd <- 1, NA)
     ifelse(isTRUE(bwd < 0L) == TRUE, bwd <- 0, NA)
     if (missing(bg) == TRUE) {
@@ -242,6 +304,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     else {
         obg <- graphics::par()$bg
+        ifelse(isTRUE(bg == 0) == TRUE, bg <- "#FFFFFF", NA)
         flgbg <- TRUE
     }
     ifelse(missing(cex.main) == TRUE, cex.main <- graphics::par()$cex.main, 
@@ -315,24 +378,47 @@ function (net, layout = c("circ", "force", "stress", "conc",
         }
     }
     else {
+        net[is.na(net)] <- 0L
         net <- replace(net, net == Inf, 0L)
     }
-    if (isTRUE(valued == TRUE) == TRUE && missing(lscl) == FALSE) {
-        ifelse(isTRUE(lscl > 1L) == TRUE || isTRUE(lscl < 0) == 
-            TRUE, lscl <- 1, NA)
-        if (isTRUE(max(net) == max(diag(net))) == TRUE) {
-            net[which(net == max(net))] <- max(net) * lscl
+    ifelse(isTRUE(is.na(dim(net)[3]) == TRUE) == TRUE, z <- 1L, 
+        z <- dim(net)[3])
+    if (missing(lscl) == FALSE) {
+        if (isTRUE(valued == TRUE) == TRUE) {
+            ifelse(isTRUE(lscl > 2L) == TRUE || isTRUE(lscl < 
+                0) == TRUE, lscl <- 1, NA)
+            if (isTRUE(max(net) == max(diag(multiplex::mnplx(net, 
+                valued = TRUE)))) == TRUE) {
+                if (isTRUE(z > 1L) == TRUE) {
+                  for (k in z) {
+                    net[which(net[, , z] == max(net[, , z]))] <- max(net[, 
+                      , z]) * lscl
+                  }
+                  rm(k)
+                }
+                else {
+                  net[which(net == max(net))] <- max(net) * lscl
+                }
+            }
+            else {
+                invisible(NA)
+            }
         }
-        else {
-            invisible(NA)
+        else if (isTRUE(valued == FALSE) == TRUE) {
+            ifelse(isTRUE(lscl > 1L) == TRUE || isTRUE(lscl < 
+                0) == TRUE, lscl <- 1, NA)
         }
+    }
+    else {
+        NA
     }
     ifelse(missing(rm.isol) == FALSE && isTRUE(rm.isol == TRUE) == 
         TRUE, rm.isol <- TRUE, rm.isol <- FALSE)
     if (isTRUE(rm.isol == TRUE) == TRUE && isTRUE(dim(net)[1] > 
         1L) == TRUE) {
-        inc <- multiplex::rel.sys(net)$incl
-        if (missing(clu) == FALSE && is.vector(clu) == TRUE) {
+        inc <- multiplex::rel.sys(net, bonds = "entire")$incl
+        if (missing(clu) == FALSE && isTRUE(length(clu) == dim(net)[1]) == 
+            TRUE && is.vector(clu) == TRUE) {
             clu <- clu[which(dimnames(net)[[1]] %in% inc)]
         }
         else {
@@ -344,42 +430,57 @@ function (net, layout = c("circ", "force", "stress", "conc",
         net <- multiplex::rm.isol(net)
     }
     else {
-        invisible(NA)
+        ifelse(missing(clu) == FALSE, NA, clu <- rep(1, dim(net)[1]))
     }
+    n <- dim(net)[1]
     if (missing(lbs) == TRUE) {
         ifelse(is.null(dimnames(net)[[1]]) == TRUE, lbs <- as.character(seq_len(dim(net)[1])), 
             lbs <- dimnames(net)[[1]])
     }
     else if (missing(lbs) == FALSE) {
+        ifelse(isTRUE(flgmlvl == TRUE) == TRUE, lbs <- unlist(lbs), 
+            NA)
+        ifelse(isTRUE(is.character(lbs) == TRUE) == FALSE, lbs <- as.character(lbs), 
+            NA)
         if (identical(lbs, make.unique(lbs)) == FALSE) {
-            message("Make unique \"lbs\" because of duplicated entry(ies).")
+            warning(paste("Make unique ", sQuote("lbs"), " because of duplicated entries.", 
+                sep = ""), call. = FALSE)
             lbs <- make.unique(lbs)
         }
         else {
             NA
         }
-        if (isTRUE(length(lbs) == dim(net)[1]) == TRUE || is.null(dimnames(net)[[1]]) == 
-            TRUE) {
+        if (isTRUE(length(lbs) == dim(net)[1]) == TRUE) {
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs
         }
         else {
-            message("Length of \"lbs\" not equal to number of nodes in \"net\".")
+            warning(paste("Length of ", sQuote("lbs"), " not equal to number of vertices in ", 
+                sQuote("net"), ".", sep = ""), call. = FALSE)
             dimnames(net)[[1]] <- dimnames(net)[[2]] <- lbs[seq_len(dim(net)[1])]
         }
     }
     else {
         NA
     }
-    n <- dim(net)[1]
-    ifelse(isTRUE(is.na(dim(net)[3]) == TRUE) == TRUE, z <- 1L, 
-        z <- dim(net)[3])
-    ifelse(isTRUE(swp == TRUE) == TRUE && isTRUE(z > 1L) == TRUE, 
-        net <- net[, , rev(seq_len(z))], NA)
+    if (isTRUE(swp == TRUE) == TRUE && isTRUE(z > 1L) == TRUE) {
+        net <- net[, , rev(seq_len(z))]
+    }
+    else {
+        NA
+    }
     if (missing(att) == FALSE && is.array(att) == TRUE) {
-        if (isTRUE(n != dim(att)[1]) == TRUE) {
-            message("Dimensions in \"net\" and \"att\" differ; no attributes are shown.")
+        if (isTRUE(n != dim(att)[1]) == TRUE && isTRUE(flgad == 
+            FALSE) == TRUE) {
+            warning(paste("Attributes are not shown since dimensions in ", 
+                sQuote("net"), " and ", sQuote("att"), " differ.", 
+                sep = ""), call. = FALSE)
             showAtts <- FALSE
         }
+    }
+    if (any(is.na(net)) == TRUE) {
+        net[is.na(net)] <- 0
+        warning(paste("Missing values in ", sQuote("net"), " are ignored.", 
+            sep = ""), call. = FALSE)
     }
     if (missing(drp) == FALSE && is.numeric(drp) == TRUE) {
         netdrp <- replace(net, net <= drp, 0)
@@ -444,10 +545,10 @@ function (net, layout = c("circ", "force", "stress", "conc",
         bd <- multiplex::bundles(netd, loops = loops, lb2lb = FALSE, 
             collapse = FALSE)
     }
-    ifelse(isTRUE(z == 1L) == TRUE, r <- 1L, r <- length(bd[[1]]))
     ifelse(isTRUE(sum(net) == 0) == TRUE && isTRUE(loops == TRUE) == 
         TRUE, bd$loop <- character(0), NA)
     bds <- multiplex::summaryBundles(bd, byties = TRUE)
+    ifelse(isTRUE(z == 1L) == TRUE, r <- 1L, r <- length(bd[[1]]))
     if (missing(ecol) == TRUE) {
         ifelse(isTRUE(signed == TRUE) == TRUE, ecol <- rep(1, 
             2), ecol <- grDevices::gray.colors(r, start = 0.1, 
@@ -484,77 +585,104 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 Ltc <- Lt
             }
             else {
-                ifelse(isTRUE(swp == TRUE) == TRUE && isTRUE(valued == 
-                  TRUE) == FALSE, Ltc <- rev(seq_len(r)), Ltc <- seq_len(r))
+                ifelse(isTRUE(swp == TRUE) == TRUE, Ltc <- rev(seq_len(r)), 
+                  Ltc <- seq_len(r))
             }
         }
     }
+    ifelse(isTRUE(flgmlvl == FALSE) == TRUE, Lt <- abs(Lt), Lt <- unlist(Lt))
     vltz <- Lt
     if (missing(clu) == FALSE) {
-        if (is.vector(as.vector(clu)) == FALSE) {
-            if (is.factor(clu) == TRUE) {
-                tmpclu <- clu
-                for (i in seq_len(nlevels(factor(clu)))) {
-                  levels(clu) <- c(levels(clu), i)
-                  clu[which(levels(factor(tmpclu))[i] == clu)] <- i
-                }
-                rm(i)
-                clu <- methods::as(as.vector(clu), "numeric")
+        flgclu <- TRUE
+        ifelse(is.numeric(clu) == TRUE && isTRUE(min(clu) < 0) == 
+            TRUE, clu <- abs(clu), NA)
+        if (isTRUE(flgmlvl == FALSE) == TRUE) {
+            if (isTRUE(length(clu) == 1) == TRUE) {
+                clu <- rep(clu, n)
+                nclu <- 1L
             }
-            else if (is.character(clu) == TRUE) {
-                tmpclu <- clu
-                clu[which(clu == clu[1])] <- 1
-                for (i in seq_len(nlevels(factor(tmpclu)) - 1L)) {
-                  clu[which(clu == clu[which((clu %in% tmpclu) == 
-                    TRUE)[(i - 0)]])] <- (i + 1L)
+            else if (isTRUE(length(clu) > 1L) == TRUE) {
+                if (is.vector(clu) == TRUE & is.factor(clu) == 
+                  TRUE) {
+                  tmpclu <- clu
+                  for (i in seq_len(nlevels(factor(clu)))) {
+                    levels(clu) <- c(levels(clu), i)
+                    clu[which(levels(factor(tmpclu))[i] == clu)] <- i
+                  }
+                  rm(i)
+                  rm(tmpclu)
                 }
-                rm(i)
-                clu[which((clu %in% tmpclu) == TRUE)] <- nlevels(factor(tmpclu))
-                clu <- methods::as(as.vector(clu), "numeric")
-                rm(tmpclu)
+                else if (is.character(clu) == TRUE) {
+                  tmpclu <- clu
+                  clu[which(clu == clu[1])] <- 1
+                  for (i in seq_len(nlevels(factor(tmpclu)) - 
+                    1L)) {
+                    clu[which(clu == clu[which((clu %in% tmpclu) == 
+                      TRUE)[(i - 0)]])] <- (i + 1L)
+                  }
+                  rm(i)
+                  clu[which((clu %in% tmpclu) == TRUE)] <- nlevels(factor(tmpclu))
+                  rm(tmpclu)
+                }
+                clu <- as.integer(as.vector(clu))
+                if (missing(lclu) == FALSE && is.vector(lclu) == 
+                  TRUE) {
+                  nclu <- length(lclu)
+                }
+                else {
+                  nclu <- nlevels(factor(clu))
+                }
             }
         }
-        else {
+        else if (isTRUE(flgmlvl == TRUE) == TRUE) {
+            if (any(unlist(lapply(clu, is.null))) == TRUE) {
+                ifelse(unlist(lapply(clu, is.null))[1] == TRUE, 
+                  clu[[1]] <- rep(1L, nrow(net)), NA)
+                ifelse(unlist(lapply(clu, is.null))[2] == TRUE, 
+                  clu[[2]] <- rep(1L, ncol(net)), NA)
+            }
+            else {
+                NA
+            }
+            ifelse("cn2" %in% attr(mlv, "class"), clu <- clu[[1]], 
+                NA)
             if (is.list(clu) == TRUE) {
-                uact <- unique(clu[[1]])
-                uevt <- unique(clu[[2]])
-                if (is.character(uact) == TRUE || is.factor(uact) == 
-                  TRUE) {
-                  tmp <- as.vector(uact)
-                  for (i in seq_len(nlevels(factor(uact)))) {
-                    tmp[which(levels(factor(uact))[i] == tmp)] <- i
+                ifelse(is.factor(clu[[1]]) == TRUE, uact <- levels(clu[[1]]), 
+                  uact <- unique(clu[[1]]))
+                ifelse(is.factor(clu[[2]]) == TRUE, uevt <- levels(clu[[2]]), 
+                  uevt <- unique(clu[[2]]))
+                clutmp <- clu
+                if (is.character(uact) == TRUE) {
+                  tmpa <- as.vector(clu[[1]])
+                  for (i in seq_len(length(uact))) {
+                    tmpa[which(tmpa == uact[i])] <- i
                   }
                   rm(i)
-                  uact <- as.numeric(tmp)
-                  rm(tmp)
-                  ifelse(is.character(clu[[1]]) == TRUE, clu[[1]] <- factor(clu[[1]]), 
-                    NA)
-                  if (is.factor(clu[[1]]) == TRUE) {
-                    for (i in seq_len(nlevels(factor(clu[[1]])))) {
-                      levels(clu[[1]])[levels(clu[[1]]) == levels(factor(clu[[1]]))[i]] <- uact[i]
-                    }
-                    rm(i)
-                    clu[[1]] <- as.numeric(as.vector(clu[[1]]))
-                  }
+                  clu[[1]] <- as.numeric(tmpa)
+                  rm(tmpa)
                 }
-                if (is.character(uevt) == TRUE || is.factor(uevt) == 
-                  TRUE) {
-                  tmp <- as.vector(uevt)
-                  for (i in seq_len(nlevels(factor(uevt)))) {
-                    tmp[which(levels(factor(uevt))[i] == tmp)] <- i
+                if (is.character(uevt) == TRUE) {
+                  tmpe <- as.vector(clu[[2]])
+                  for (i in seq_len(length(uevt))) {
+                    tmpe[which(tmpe == uevt[i])] <- i
                   }
                   rm(i)
-                  uevt <- as.numeric(tmp)
-                  rm(tmp)
-                  if (is.factor(clu[[2]]) == TRUE) {
-                    for (i in seq_len(nlevels(factor(clu[[2]])))) {
-                      levels(clu[[2]])[levels(clu[[2]]) == levels(factor(clu[[2]]))[i]] <- uevt[i]
-                    }
-                    rm(i)
-                    clu[[2]] <- as.numeric(as.vector(clu[[2]]))
-                  }
+                  clu[[2]] <- as.numeric(tmpe)
+                  rm(tmpe)
                 }
-                if (any(clu[[2]] %in% clu[[1]]) == TRUE) {
+                if (any(clutmp[[2]] %in% clutmp[[1]]) == TRUE) {
+                  k <- 0L
+                  tmp2 <- clutmp[[2]]
+                  while (any(tmp2 %in% clutmp[[1]]) == TRUE) {
+                    tmp2 <- replace(tmp2, which(tmp2 == min(tmp2)), 
+                      (max(clutmp[[1]]) + k))
+                    k <- k + 1L
+                  }
+                  clutmp[[2]] <- tmp2
+                  rm(tmp2)
+                  clu <- as.vector(unlist(clutmp))
+                }
+                else if (any(clu[[2]] %in% clu[[1]]) == TRUE) {
                   k <- 0L
                   tmp2 <- clu[[2]]
                   while (any(tmp2 %in% clu[[1]]) == TRUE) {
@@ -564,22 +692,26 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   }
                   clu[[2]] <- tmp2
                   rm(tmp2)
+                  clu <- as.vector(unlist(clu))
                 }
-                clu <- as.vector(unlist(clu))
             }
             else {
                 NA
             }
-        }
-        if (missing(lclu) == FALSE && is.vector(lclu) == TRUE) {
-            nclu <- length(lclu)
-        }
-        else {
             nclu <- nlevels(factor(clu))
         }
     }
     else {
-        nclu <- 1L
+        flgclu <- FALSE
+        if (isTRUE(flgmlvl == TRUE) == TRUE && missing(vcol) == 
+            FALSE && (is.vector(vcol) == TRUE || is.list(vcol) == 
+            TRUE)) {
+            nclu <- c(rep(vcol[1], length(mlv$lbs$dm)), rep(vcol[2], 
+                length(mlv$lbs$cdm)))
+        }
+        else {
+            nclu <- 1L
+        }
     }
     flgcx <- FALSE
     if (missing(cex) == TRUE && isTRUE(loops == FALSE) == TRUE) {
@@ -604,7 +736,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
     }
     else {
         if (is.vector(cex) == FALSE) 
-            stop("'cex' must be a vector")
+            stop(paste(sQuote("cex"), " should be a vector.", 
+                sep = ""))
         cex[which(is.na(cex))] <- 0
         cex <- cex[seq_len(n)]
         flgcx <- TRUE
@@ -657,43 +790,88 @@ function (net, layout = c("circ", "force", "stress", "conc",
         pch <- rep(pch[1], n)
     }
     if (missing(vcol) == TRUE) {
-        if (missing(col) == TRUE) {
-            vcol <- grDevices::gray.colors(nclu)
+        if (isTRUE(flgmlvl == TRUE) == TRUE) {
+            ifelse(missing(col) == TRUE, vcol <- c(rep("#C0C0C0", 
+                length(mlv$lbs$dm)), rep("#408080", length(which(!(mlv$lbs$cdm %in% 
+                mlv$lbs$dm))))), vcol <- col)
+            ifelse(missing(vcol0) == TRUE, vcol0 <- rep(vcol, 
+                2), NA)
         }
         else {
-            vcol <- col
+            ifelse(missing(col) == TRUE, vcol <- rep("#FFFFFF", 
+                nclu), vcol <- col)
+            ifelse(missing(vcol0) == TRUE, vcol0 <- rep("#808080", 
+                nclu), NA)
         }
     }
-    if (isTRUE(length(vcol) == 1L) == TRUE) {
-        vcol <- rep(vcol, n)
+    else {
+        ifelse(isTRUE(length(vcol) == 1L) == TRUE, vcol <- rep(vcol, 
+            n), NA)
     }
-    else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
-        1) == TRUE) {
-        vcol <- rep(vcol[1], n)
+    if (isTRUE(flgmlvl == TRUE) == TRUE) {
+        if (isTRUE(flgclu == FALSE) == TRUE) {
+            vcol <- c(rep(vcol[1], length(mlv$lbs$dm)), rep(vcol[2], 
+                length(mlv$lbs$cdm)))
+        }
+        else if (isTRUE(flgclu == TRUE) == TRUE) {
+            if (isTRUE(length(vcol) == nclu) == TRUE) {
+                if (identical(vcol, clu) == FALSE) {
+                  tmpvcol <- rep(0, n)
+                  for (i in seq_len(nclu)) {
+                    tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
+                  }
+                  rm(i)
+                  vcol <- tmpvcol
+                  rm(tmpvcol)
+                }
+            }
+            else if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
+                1) == TRUE) {
+                vcol <- rep(vcol[1], n)
+            }
+        }
     }
-    else if ((isTRUE(length(vcol) == nclu) == TRUE) && (isTRUE(nclu < 
-        length(vcol)) == TRUE || identical(vcol, clu) == FALSE || 
-        missing(lclu) == FALSE)) {
-        tmpvcol <- rep(0, n)
-        if (missing(lclu) == FALSE) {
-            if (isTRUE(min(lclu) == 0L) == TRUE) {
-                lclu[which(lclu == 0L)] <- max(lclu) + 1L
-                lclu <- sort(lclu)
-                clu[which(clu == 0L)] <- max(lclu)
-            }
-            for (i in seq_len(nclu)) {
-                tmpvcol[which(clu == lclu[i])] <- vcol[i]
-            }
-            rm(i)
+    else {
+        if (isTRUE(length(vcol) != n) == TRUE & isTRUE(nclu == 
+            1) == TRUE) {
+            vcol <- rep(vcol[1], n)
         }
-        else {
-            for (i in seq_len(nclu)) {
-                tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
+        else if ((isTRUE(length(vcol) == nclu) == TRUE) && (isTRUE(nclu < 
+            length(vcol)) == TRUE || identical(vcol, clu) == 
+            FALSE || missing(lclu) == FALSE)) {
+            if (isTRUE(n > 1) == TRUE) {
+                if ((is.factor(clu) == FALSE && isTRUE(min(clu) == 
+                  0) == TRUE) && missing(lclu) == TRUE) {
+                  lclu <- as.numeric(levels(as.factor(clu)))
+                }
+                else if (missing(lclu) == FALSE) {
+                  NA
+                }
+                else {
+                  lclu <- NULL
+                }
+                tmpvcol <- rep(0, n)
+                if (is.null(lclu) == FALSE) {
+                  if (isTRUE(min(lclu) == 0L) == TRUE) {
+                    lclu[which(lclu == 0L)] <- max(lclu) + 1L
+                    lclu <- sort(lclu)
+                    clu[which(clu == 0L)] <- max(lclu)
+                  }
+                  for (i in seq_len(nclu)) {
+                    tmpvcol[which(clu == lclu[i])] <- vcol[i]
+                  }
+                  rm(i)
+                }
+                else {
+                  for (i in seq_len(nclu)) {
+                    tmpvcol[which(clu == (levels(factor(clu))[i]))] <- vcol[i]
+                  }
+                  rm(i)
+                }
+                vcol <- tmpvcol
+                rm(tmpvcol)
             }
-            rm(i)
         }
-        vcol <- tmpvcol
-        rm(tmpvcol)
     }
     vcol[which(is.na(vcol))] <- graphics::par()$bg
     vcol[which(vcol == 0)] <- graphics::par()$bg
@@ -726,27 +904,77 @@ function (net, layout = c("circ", "force", "stress", "conc",
     else {
         vcol0 <- vcol
     }
-    if (isTRUE(n > 100) == TRUE) {
-        ffds <- n/10L
+    if (missing(coord) == FALSE) {
+        flgcrd <- TRUE
+        if (missing(rm.isol) == FALSE && isTRUE(rm.isol == TRUE) == 
+            TRUE) {
+            ifelse(all(lbs %in% rownames(coord)) == FALSE, stop(paste("Rownames in ", 
+                sQuote("coord"), " do not match network labels in ", 
+                sQuote("net"), ".", sep = ""), call. = FALSE), 
+                crd <- coord[which(rownames(coord) %in% lbs), 
+                  ])
+        }
+        else {
+            if (isTRUE(nrow(coord) == n) == FALSE) 
+                stop(paste("Length of ", sQuote("coord"), " does not match number of vertices in ", 
+                  sQuote("net"), ".", sep = ""))
+            crd <- coord
+        }
     }
-    else if (isTRUE(n > 20) == TRUE) {
-        ffds <- n/100L
+    else if (missing(coord) == TRUE) {
+        flgcrd <- FALSE
+        switch(match.arg(layout), force = {
+            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
+                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
+                1L))/n))), crd <- frcd(netd, seed = seed, maxiter = maxiter))
+            ifelse(missing(jitter) == FALSE, crd <- apply(crd, 
+                2, function(z) {
+                  jitter(z, amount = (min(10, jitter))/100L)
+                }), NA)
+        }, stress = {
+            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
+                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
+                1L))/n))), crd <- stsm(netd, seed = seed, maxiter = maxiter, 
+                ...))
+            ifelse(missing(jitter) == FALSE, crd <- apply(crd, 
+                2, function(z) {
+                  jitter(z, amount = (min(10, jitter))/100L)
+                }), NA)
+        }, circ = {
+            crd <- data.frame(X = sin(2L * pi * ((0:(n - 1L))/n)), 
+                Y = cos(2L * pi * ((0:(n - 1L))/n)))
+        }, conc = {
+            if (missing(lbs) == FALSE && is.null(dimnames(netd)[[1]]) == 
+                TRUE) {
+                if (identical(lbs, make.unique(lbs)) == FALSE) {
+                  warning(paste("Make unique ", sQuote("lbs"), 
+                    " because of duplicated entries.", sep = ""), 
+                    call. = FALSE)
+                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- make.unique(lbs)
+                } else {
+                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- lbs
+                }
+            }
+            if (missing(nr) == TRUE) {
+                nr <- 1
+            } else {
+                if (isTRUE(dim(netd)[1] < length(nr)) == TRUE) {
+                  warning(paste("Number of radii in ", sQuote("nr"), 
+                    " larger than number of vertices in ", sQuote("net"), 
+                    ".", sep = ""), call. = FALSE)
+                  nr <- nr[1:dim(netd)[1]]
+                } else {
+                  NA
+                }
+            }
+            crd <- conc(netd, nr = nr, ...)
+        }, rand = {
+            set.seed(seed)
+            crd <- data.frame(X = round(stats::runif(n) * 1L, 
+                5), Y = round(stats::runif(n) * 1L, 5))
+        })
     }
-    else if (isTRUE(n == 2) == TRUE) {
-        ffds <- -5
-    }
-    else {
-        ffds <- 0
-    }
-    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 120L - (n * 
-        ffds), fds <- 145L - (n * ffds))
-    if (isTRUE(flgcx == TRUE) == TRUE || (isTRUE(flgcx == FALSE) == 
-        TRUE && isTRUE(cex > 5) == TRUE)) {
-        fds <- fds - 10L
-    }
-    else if (isTRUE(flgcx == FALSE) == TRUE) {
-        NA
-    }
+    ifelse(isTRUE(directed == TRUE) == TRUE, fds <- 130L, fds <- 140L)
     ifelse(missing(scl) == TRUE, scl <- rep(1, 2), NA)
     ifelse(isTRUE(length(scl) == 1) == TRUE, scl <- rep(scl, 
         2), scl <- scl[1:2])
@@ -762,72 +990,42 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if (missing(vedist) == TRUE) {
         vedist <- 0
     }
-    else if (isTRUE(vedist > 10L) == TRUE) {
-        vedist <- 10L
-    }
-    else if (isTRUE(vedist < (-10L)) == TRUE) {
-        vedist <- -10L
-    }
     else {
-        NA
-    }
-    fds <- fds - (vedist * 10L)
-    ifelse(isTRUE(fds < 1) == TRUE, fds <- (n - vedist), NA)
-    if (missing(coord) == FALSE) {
-        if (isTRUE(nrow(coord) == n) == FALSE) 
-            stop("Length of \"coord\" does not match network order.")
-        flgcrd <- TRUE
-        crd <- coord
-    }
-    else if (missing(coord) == TRUE) {
-        flgcrd <- FALSE
-        switch(match.arg(layout), force = {
-            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
-                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
-                1L))/n))), crd <- frcd(netd, seed = seed, maxiter = maxiter))
-        }, stress = {
-            ifelse(isTRUE(n < 2L) == TRUE, crd <- data.frame(X = sin(2L * 
-                pi * ((0:(n - 1L))/n)), Y = cos(2L * pi * ((0:(n - 
-                1L))/n))), crd <- stsm(netd, seed = seed, maxiter = maxiter, 
-                ...))
-            ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
-                15L, NA)
-        }, circ = {
-            crd <- data.frame(X = sin(2L * pi * ((0:(n - 1L))/n)), 
-                Y = cos(2L * pi * ((0:(n - 1L))/n)))
-            ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 
-                10L, NA)
-        }, conc = {
-            if (missing(lbs) == FALSE && is.null(dimnames(netd)[[1]]) == 
-                TRUE) {
-                if (identical(lbs, make.unique(lbs)) == FALSE) {
-                  message("Make unique \"lbs\" because of duplicated entry(ies).")
-                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- make.unique(lbs)
-                } else {
-                  dimnames(netd)[[1]] <- dimnames(netd)[[2]] <- lbs
-                }
+        if (isTRUE(directed == TRUE) == TRUE) {
+            if (isTRUE(vedist > 5L) == TRUE) {
+                vedist <- 5L
             }
-            crd <- conc(netd, ...)
-        }, rand = {
-            set.seed(seed)
-            crd <- data.frame(X = round(stats::runif(n) * 1L, 
-                5), Y = round(stats::runif(n) * 1L, 5))
-        })
+            else if (isTRUE(vedist < (-5L)) == TRUE) {
+                vedist <- -5L
+            }
+        }
+        else {
+            if (isTRUE(vedist > 10L) == TRUE) {
+                vedist <- 10L
+            }
+            else if (isTRUE(vedist < (-10L)) == TRUE) {
+                vedist <- -10L
+            }
+        }
     }
+    ifelse(isTRUE(vedist > n) == TRUE, fds <- fds - (n * 10L), 
+        fds <- fds - (vedist * 10L))
+    ifelse(isTRUE(flgcx == TRUE) == TRUE, fds <- fds - 25L, NA)
     if (missing(rot) == FALSE) {
         crd[, 1:2] <- xyrt(crd[, 1:2], as.numeric(rot))
         crd[, 1:2] <- crd[, 1:2] - min(crd[, 1:2])
-        cnt <- 1L
         ifelse(isTRUE(n == 2) == TRUE && isTRUE(rot == -90) == 
             TRUE, rot <- -89.9, NA)
     }
     else {
-        cnt <- 0
+        NA
     }
-    if (isTRUE(flgcrd == FALSE) == TRUE) {
-        if (match.arg(layout) == "circ" && missing(pos) == TRUE) {
-            angl <- vector()
-            length(angl) <- n
+    ifelse(missing(flip) == FALSE && isTRUE(flip == FALSE) == 
+        TRUE, flip <- FALSE, flip <- TRUE)
+    if (match.arg(layout) %in% c("circ", "conc")) {
+        if (isTRUE(flip == TRUE) == TRUE || missing(pos) == TRUE) {
+            ifelse(missing(rot) == FALSE, cnt <- 1L, cnt <- 0)
+            angl <- vector(length = n)
             for (i in seq_len(n)) {
                 ifelse((atan2((crd[i, 2] - cnt), (crd[i, 1] - 
                   cnt)) * (180L/pi)) >= 0, angl[i] <- atan2((crd[i, 
@@ -836,6 +1034,9 @@ function (net, layout = c("circ", "force", "stress", "conc",
                     1] - cnt)) * (180L/pi))%%180L) + 180L)
             }
             rm(i)
+        }
+        if (isTRUE(flgcrd == FALSE) == TRUE && missing(pos) == 
+            TRUE) {
             pos <- vector()
             for (i in seq_len(length(angl))) {
                 if (isTRUE(65 < angl[i]) == TRUE && isTRUE(115 > 
@@ -857,43 +1058,112 @@ function (net, layout = c("circ", "force", "stress", "conc",
             rm(i)
         }
     }
-    if (missing(pos) == TRUE) {
-        pos <- 4
-    }
-    else {
-        if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == TRUE) {
-            message("\"pos\" value must be between 0-4; set to 4.")
-            pos <- 4
+    if ((isTRUE(flip == TRUE) == TRUE && isTRUE(loops == TRUE) == 
+        TRUE) & (match.arg(layout) %in% c("stress", "force", 
+        "rand", "conc") || missing(coord) == FALSE)) {
+        crdf <- cbind(crd[, 1] - mean(crd[, 1]), crd[, 2] - mean(crd[, 
+            2]))
+        angl <- vector(length = nrow(crd))
+        for (i in seq_len(nrow(crd))) {
+            ifelse((atan2((crdf[i, 2]), (crdf[i, 1])) * (180L/pi)) >= 
+                0, angl[i] <- atan2((crdf[i, 2]), (crdf[i, 1])) * 
+                (180L/pi), angl[i] <- ((atan2((crdf[i, 2]), (crdf[i, 
+                1])) * (180L/pi))%%180L) + 180L)
+        }
+        rm(i)
+        cmp <- multiplex::comps(netd)$com
+        if (length(cmp) > 1) {
+            rownames(crdf) <- rownames(crd)
+            names(angl) <- rownames(crdf)
+            for (k in seq_len(length(cmp))) {
+                angl[which(names(angl) %in% names(which(crdf[which(names(angl) %in% 
+                  cmp[[k]]), 2] < mean(crdf[which(names(angl) %in% 
+                  cmp[[k]]), 2]))))] <- 181L
+                angl[which(names(angl) %in% names(which(crdf[which(names(angl) %in% 
+                  cmp[[k]]), 2] > mean(crdf[which(names(angl) %in% 
+                  cmp[[k]]), 2]))))] <- 179L
+            }
+            rm(k)
         }
         else {
             invisible(NA)
+        }
+        rm(cmp)
+    }
+    if (isTRUE(flgmlvl == TRUE) == TRUE) {
+        if (missing(pos) == TRUE) {
+            if (isTRUE("cn2" %in% attr(mlv, "class")) == TRUE || 
+                (all(mlv$lbs$dm %in% mlv$lbs$cdm) == TRUE && 
+                  all(mlv$lbs$cdm %in% mlv$lbs$dm) == TRUE)) {
+                pos <- c(0, 0)
+            }
+            else {
+                pos <- c(2, 4)
+            }
+        }
+        else if (missing(pos) == FALSE) {
+            if (isTRUE("cn2" %in% attr(mlv, "class")) == TRUE || 
+                (all(mlv$lbs$dm %in% mlv$lbs$cdm) == TRUE && 
+                  all(mlv$lbs$cdm %in% mlv$lbs$dm) == TRUE)) {
+                ifelse(isTRUE(length(pos) > 1) == TRUE && match.arg(layout) != 
+                  "circ", warning(paste("Only first value of ", 
+                  sQuote("pos"), " is taken.", sep = ""), call. = FALSE), 
+                  NA)
+                pos <- rep(pos[1], 2)
+            }
+            ifelse(isTRUE(length(pos) == 1) == TRUE, pos <- rep(pos, 
+                2), pos <- pos[1:2])
+            if (isTRUE(min(pos) < 0L) == TRUE | isTRUE(max(pos) > 
+                4L) == TRUE) 
+                stop(paste("Values in ", sQuote("pos"), " must be between 0 and 4.", 
+                  sep = ""), call. = FALSE)
+        }
+    }
+    else {
+        if (missing(pos) == TRUE) {
+            pos <- 4
+        }
+        else {
+            if (isTRUE(pos < 0L) == TRUE | isTRUE(pos > 4L) == 
+                TRUE) {
+                stop(paste("Values in ", sQuote("pos"), " must be between 0 and 4.", 
+                  sep = ""), call. = FALSE)
+            }
+            else {
+                invisible(NA)
+            }
         }
     }
     ifelse(missing(mirrorX) == FALSE && isTRUE(mirrorX == TRUE) == 
         TRUE || missing(mirrorV) == FALSE && isTRUE(mirrorV == 
         TRUE) == TRUE, crd[, 1] <- crd[, 1] * cos(pi) - crd[, 
         2] * sin(pi), mirrorX <- FALSE)
-    ifelse(missing(mirrorY) == FALSE && isTRUE(mirrorY == TRUE) == 
-        TRUE || missing(mirrorH) == FALSE && isTRUE(mirrorH == 
-        TRUE) == TRUE, crd[, 2] <- crd[, 2] * cos(pi) - crd[, 
-        1] * sin(pi), mirrorY <- FALSE)
-    if (match.arg(layout) == "circ" && isTRUE(flgcrd == FALSE) == 
-        TRUE) {
-        if (isTRUE(mirrorX == TRUE) == TRUE && isTRUE(length(pos) == 
-            n) == TRUE) {
-            pos[which(pos == 2)] <- 0
-            pos[which(pos == 4)] <- 2
-            pos[which(pos == 0)] <- 4
+    if (isTRUE(n > 1) == TRUE) {
+        ifelse(missing(mirrorY) == FALSE && isTRUE(mirrorY == 
+            TRUE) == TRUE || missing(mirrorH) == FALSE && isTRUE(mirrorH == 
+            TRUE) == TRUE, crd[, 2] <- crd[, 2] * cos(pi) - crd[, 
+            1] * sin(pi), mirrorY <- FALSE)
+        if (match.arg(layout) == "circ" && isTRUE(flgcrd == FALSE) == 
+            TRUE) {
+            if (isTRUE(mirrorX == TRUE) == TRUE && isTRUE(length(pos) == 
+                n) == TRUE) {
+                pos[which(pos == 2)] <- 0
+                pos[which(pos == 4)] <- 2
+                pos[which(pos == 0)] <- 4
+            }
+            else if (isTRUE(mirrorY == TRUE) == TRUE && isTRUE(length(pos) == 
+                n) == TRUE) {
+                pos[which(pos == 1)] <- 0
+                pos[which(pos == 3)] <- 1
+                pos[which(pos == 0)] <- 3
+            }
+            else {
+                NA
+            }
         }
-        else if (isTRUE(mirrorY == TRUE) == TRUE && isTRUE(length(pos) == 
-            n) == TRUE) {
-            pos[which(pos == 1)] <- 0
-            pos[which(pos == 3)] <- 1
-            pos[which(pos == 0)] <- 3
-        }
-        else {
-            NA
-        }
+    }
+    else {
+        mirrorY <- FALSE
     }
     if (missing(mirrorL) == FALSE && isTRUE(mirrorL == TRUE) == 
         TRUE) {
@@ -972,7 +1242,14 @@ function (net, layout = c("circ", "force", "stress", "conc",
         c(0, 0, cex.main/10L, 0)))
     obg <- graphics::par()$bg
     graphics::par(bg = grDevices::adjustcolor(bg, alpha = alpha[3]))
-    if (isTRUE(loops == TRUE) == TRUE) {
+    if (isTRUE(loops == TRUE) == TRUE && isTRUE(flip == TRUE) == 
+        TRUE && missing(new) == TRUE) {
+        ylim <- c(min(nds[, 2]) - (max(cex)/50L), max(nds[, 2]) + 
+            (max(cex)/70L))
+        xlim <- c(min(nds[, 1]) - (max(cex)/100L), max(nds[, 
+            1]) + (max(cex)/100L))
+    }
+    else if (isTRUE(loops == TRUE) == TRUE) {
         ylim <- c(min(nds[, 2]) - (max(cex)/100L), max(nds[, 
             2]) + (max(cex)/70L))
         xlim <- c(min(nds[, 1]) - (max(cex)/100L), max(nds[, 
@@ -994,7 +1271,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
         names(grDevices::postscriptFonts())) == TRUE, graphics::par(family = font.main), 
         NA)
     ifelse(missing(new) == FALSE && isTRUE(new == TRUE) == TRUE, 
-        par(new = TRUE), NA)
+        suppressWarnings(par(new = TRUE)), NA)
     suppressWarnings(graphics::plot(nds, type = "n", axes = FALSE, 
         xlab = "", ylab = "", ylim = ylim, xlim = xlim, asp = asp, 
         main = main, cex.main = cex.main, col.main = col.main, 
@@ -1017,7 +1294,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
         rm(i)
     }
     if (isTRUE(loops == TRUE) == TRUE) {
-        tlbslp <- tlbs
         tlbs <- tlbs[which(tlbs != "loop")]
     }
     else {
@@ -1036,8 +1312,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if (isTRUE(swp == TRUE) == TRUE) {
         Lt <- Lt[rev(seq_len(length(Lt)))]
         lwd <- lwd[length(lwd):1]
-        ifelse(isTRUE(valued == TRUE) == TRUE, vecol <- vecol[rev(seq_len(length(vecol)))], 
-            NA)
         alfa <- alfa[rev(seq_len(length(alfa)))]
     }
     if (isTRUE(loops == TRUE) == TRUE && isTRUE(valued == TRUE) == 
@@ -1058,7 +1332,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
     if ((isTRUE(collRecip == TRUE) == TRUE && isTRUE(undRecip == 
         TRUE) == FALSE) && isTRUE(valued == TRUE) == FALSE && 
         isTRUE(c("recp") %in% attr(bds, "names")) == TRUE) {
-        trcp <- multiplex::transf(rcp, type = "tolist")
+        trcp <- multiplex::trnf(rcp, tolist = TRUE)
     }
     else {
         NA
@@ -1093,16 +1367,17 @@ function (net, layout = c("circ", "force", "stress", "conc",
             }
             rbds <- length(bds[[k]])
             if (isTRUE(rbds > 0L) == TRUE) {
-                q <- which(tlbs[k] == attr(bd, "names"))
+                qn <- which(tlbs[k] == attr(bd, "names"))
                 if (isTRUE(z == 1L) == TRUE) {
                   vlt <- rep(Lt, rbds)
                   vecol <- rep(ecol[1], rbds)
-                  tbnd <- as.vector(unlist(bd[q]))
+                  tbnd <- as.vector(unlist(bd[qn]))
                   if (isTRUE(length(tbnd) > 0L) == TRUE) {
                     ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
-                      TRUE, vlt <- append(vlt, rep(Lt, q)), NA)
+                      TRUE, vlt <- append(vlt, rep(Lt, qn)), 
+                      NA)
                     ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
-                      TRUE, vltz <- append(vltz, rep(Lt, q)), 
+                      TRUE, vltz <- append(vltz, rep(Lt, qn)), 
                       NA)
                   }
                   vltc <- vlt[1]
@@ -1110,7 +1385,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 else {
                   vlt <- vector()
                   for (i in seq_along(Lt)) {
-                    tbnd <- as.vector(unlist(bd[[q]][i]))
+                    tbnd <- as.vector(unlist(bd[[qn]][i]))
                     if (isTRUE(length(tbnd) > 0L) == TRUE) {
                       ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
                         TRUE, vlt <- append(vlt, rep(Lt[i], length(which(tbnd %in% 
@@ -1130,7 +1405,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                     vltc <- vector()
                     if (isTRUE(Lt == Ltc) == FALSE) {
                       for (i in seq_along(Ltc)) {
-                        tbnd <- as.vector(unlist(bd[[q]][i]))
+                        tbnd <- as.vector(unlist(bd[[qn]][i]))
                         if (isTRUE(length(tbnd) > 0L) == TRUE) {
                           ifelse(isTRUE(any(tbnd %in% bds[[k]])) == 
                             TRUE, vltc <- append(vltc, rep(Ltc[i], 
@@ -1164,8 +1439,7 @@ function (net, layout = c("circ", "force", "stress", "conc",
                       c("txch")) == TRUE)) {
                     if (isTRUE(multiplex::dhc(bds[[k]][1])[1] > 
                       multiplex::dhc(bds[[k]][1])[2]) == TRUE) {
-                      Prs <- vector()
-                      length(Prs) <- length(prs)
+                      Prs <- vector(length = length(prs))
                       Prs[which(seq_len(length(prs))%%2L == 1L)] <- prs[which(seq_len(length(prs))%%2L == 
                         0L)]
                       Prs[which(seq_len(length(prs))%%2L == 0L)] <- prs[which(seq_len(length(prs))%%2L == 
@@ -1242,7 +1516,6 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   bw <- bwd
                   hd <- hds
                 }
-                lw <- lw * mscl
                 if (isTRUE((collRecip == TRUE) == TRUE && isTRUE(undRecip == 
                   TRUE) == FALSE) && isTRUE(tlbs[k] %in% c("recp")) == 
                   FALSE && isTRUE(valued == TRUE) == FALSE && 
@@ -1296,8 +1569,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
                           as.numeric(multiplex::dhc(bds[[k]])[1])]))
                   }
                   else {
-                    mpnet <- multiplex::mnplx(net, dichot = FALSE, 
-                      directed = TRUE)
+                    mpnet <- multiplex::mnplx(net, directed = TRUE, 
+                      valued = TRUE)
                     ifelse(isTRUE(directed == FALSE) == TRUE, 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
@@ -1307,8 +1580,8 @@ function (net, layout = c("circ", "force", "stress", "conc",
                           as.numeric(multiplex::dhc(bds[[k]])[1])])), 
                       mdp[nrow(mdp) + 1, ] <- c((pars[1, 1] + 
                         pars[2, 1])/2L, (pars[1, 2] + pars[2, 
-                        2])/2L, multiplex::mnplx(netdrp, dichot = FALSE, 
-                        directed = FALSE)[as.numeric(multiplex::dhc(bds[[k]])[1]), 
+                        2])/2L, multiplex::mnplx(netdrp, directed = FALSE, 
+                        valued = TRUE)[as.numeric(multiplex::dhc(bds[[k]])[1]), 
                         as.numeric(multiplex::dhc(bds[[k]])[2])]))
                   }
                 }
@@ -1324,48 +1597,93 @@ function (net, layout = c("circ", "force", "stress", "conc",
             1) == TRUE, vlt <- lty, NA)
     }
     if (isTRUE(loops == TRUE) == TRUE) {
+        netdrpl <- netdrp
         if (isTRUE(swp == TRUE) == TRUE) {
             bdlp <- bd$loop[rev(seq_len(length(bd$loop)))]
-            if (isTRUE(valued == TRUE) == TRUE) {
-                netdrpl <- netdrp
-            }
-            else {
-                vecol <- vecol[rev(seq_len(length(vecol)))]
-                netdrpl <- netdrp[, , rev(seq_len(dim(netdrp)[3]))]
-            }
+            ifelse(isTRUE(flip == TRUE) == FALSE && is.na(dim(netdrp)[3]) == 
+                TRUE, NA, netdrpl <- netdrp[, , rev(seq_len(dim(netdrp)[3]))])
+            Ltl <- Lt[rev(seq_len(length(Lt)))]
         }
         else {
             bdlp <- bd$loop
-            netdrpl <- netdrp
+            Ltl <- Lt
         }
-        dz <- (rng(z) + abs(min(rng(z))))/(10L)
+        ifelse(isTRUE(length(lty) == 1) == TRUE, Ltl <- rep(lty, 
+            length(bdlp)), NA)
+        if (missing(vldist) == FALSE) {
+            if (isTRUE(abs(vldist) > cex[1]) == TRUE) {
+                ifelse(isTRUE(vldist < 0) == TRUE, vldist <- cex[1] * 
+                  -1L, vldist <- cex[1] * 1L)
+            }
+        }
+        else {
+            NA
+        }
         ndss <- nds
         ndss[, 1] <- ndss[, 1] * scl[1]
         ndss[, 2] <- ndss[, 2] * scl[2]
         if (isTRUE(z == 1L) == TRUE) {
             lp <- as.vector(which(diag(net) > 0))
             if (isTRUE(length(lp) > 0) == TRUE) {
+                if ((missing(coord) == FALSE || match.arg(layout) %in% 
+                  c("circ", "conc", "force", "stress", "rand")) && 
+                  isTRUE(flip == TRUE) == TRUE) {
+                  flipl <- vector(length = n)
+                  for (l in seq_len(length(angl))) {
+                    ifelse(isTRUE(180 < angl[lp[l]]) == TRUE, 
+                      flipl[lp[l]] <- TRUE, NA)
+                  }
+                  rm(l)
+                }
+                else {
+                  flipl <- vector(length = length(bdlp))
+                }
+                dz <- (rng(1) + abs(min(rng(1))))/(10L)
                 for (i in seq_len(length(lp))) {
                   if (isTRUE(n == 1L) == TRUE) {
                     dcx <- (cex[lp[i]]^2) * 0.00025
-                    lpsz <- (cex[lp[i]]^2) * 0.00015
+                    rds <- abs((cex[lp[i]]^2) * 0.00015)
                   }
                   else if (isTRUE(n < 3) == TRUE) {
-                    dcx <- (cex[lp[i]] * 0.0075)
-                    lpsz <- (cex[lp[i]] * 0.005) - (dz)
+                    dcx <- cex[lp[i]]/110L
+                    rds <- abs((cex[lp[i]] * 0.007) - dz)
                   }
                   else {
-                    dcx <- (cex[lp[i]] * 0.01)
-                    lpsz <- (cex[lp[i]] * 0.0075) - (dz)
+                    dcx <- cex[lp[i]]/100L
+                    rds <- abs((cex[lp[i]] * 0.0075) - dz)
                   }
-                  ifelse(isTRUE(length(lty) == 1) == TRUE, Ltl <- vlt, 
-                    Ltl <- Lt)
-                  ifelse(isTRUE(valued == TRUE) == TRUE, hc(ndss[lp[i], 
-                    1], ndss[lp[i], 2] + (dcx), lpsz, col = grDevices::adjustcolor(vecol, 
-                    alpha = alfa), lty = Ltl, lwd = diag(netdrpl)[lp[i]]), 
-                    hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
-                      lpsz, col = grDevices::adjustcolor(vecol, 
-                        alpha = alfa), lty = Ltl, lwd = lwd))
+                  ifelse(isTRUE(mirrorY == TRUE) == TRUE && isTRUE(flip == 
+                    TRUE) == TRUE && isTRUE(n > 1) == TRUE, flipl <- !flipl, 
+                    NA)
+                  if (isTRUE(flipl[lp[i]] == TRUE) == TRUE) {
+                    dcx <- dcx - (cex[lp[i]] * 0.011)
+                    if (missing(vldist) == FALSE) {
+                      dcx <- dcx - (vldist * 0.008)
+                    }
+                    else {
+                      ifelse(isTRUE(cex[lp[i]] > 5) == TRUE, 
+                        dcx <- dcx - ((cex[lp[i]]/2L) * 0.002), 
+                        NA)
+                    }
+                  }
+                  else {
+                    ifelse(missing(vldist) == FALSE, dcx <- dcx + 
+                      (vldist * 0.01), NA)
+                  }
+                  if (isTRUE(valued == TRUE) == TRUE) {
+                    lwl <- diag(netdrpl)[lp[i]]
+                  }
+                  else {
+                    if (isTRUE(Ltl == 1) == TRUE) {
+                      lwl <- lwd - 0.5
+                    }
+                    else {
+                      lwl <- lwd
+                    }
+                  }
+                  hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                    rds, col = grDevices::adjustcolor(vecol, 
+                      alpha = alfa), lty = Ltl, lwd = lwl, flip = flipl[lp[i]])
                 }
                 rm(i)
             }
@@ -1378,51 +1696,120 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 bwd2 <- 1L
             }
             else if (missing(bwd2) == FALSE) {
-                if (isTRUE(bwd2 < 1L) == TRUE && isTRUE(bwd2 == 
-                  0) == FALSE) {
-                  bwd2 <- 1L
+                if (isTRUE(bwd2 < 1) == TRUE && isTRUE(bwd2 > 
+                  0) == TRUE) {
+                  NA
                 }
-                else if (isTRUE(bwd2 > 10L) == TRUE) {
-                  bwd2 <- 10L
+                else if (isTRUE(bwd2 < 0) == TRUE) {
+                  bwd2 <- 0
                 }
-                if (isTRUE(bwd2 == 0) == TRUE) {
-                  dz <- rep(0, z)
+                else if (isTRUE(bwd2 > 4L) == TRUE) {
+                  ifelse(isTRUE(z > 2) == TRUE, bwd2 <- 2L, bwd2 <- 4L)
                 }
-                else {
-                  ifelse(isTRUE(valued == TRUE) == TRUE && isTRUE(max(net) > 
-                    1L) == TRUE, dz <- (bwd2 * 1L) * (rng(z) + 
-                    abs(min(rng(z))))/(5L), dz <- (bwd2 * 1L) * 
-                    (rng(z) + abs(min(rng(z))))/(10L))
-                }
+            }
+            if (isTRUE(bwd2 == 0) == TRUE | isTRUE(max(cex) < 
+                3) == TRUE) {
+                dz <- rep(0, z)
+            }
+            else {
+                ifelse(missing(bwd2) == TRUE, dz <- (rng(z) + 
+                  abs(min(rng(z))))/(10L), dz <- (bwd2) * (rng(z) + 
+                  abs(min(rng(z))))/(20L))
             }
             for (k in seq_len(length(bdlp))) {
                 lp <- as.numeric(unique(multiplex::dhc(bdlp)[k][[1]]))
                 if (isTRUE(length(lp) > 0) == TRUE) {
                   for (i in seq_len(length(lp))) {
-                    ifelse(isTRUE(cex[lp[i]] <= 3L) == TRUE | 
-                      isTRUE(n < 3) == TRUE, dz <- dz * 0.75, 
+                    if ((missing(coord) == FALSE || match.arg(layout) %in% 
+                      c("circ", "conc", "force", "stress", "rand")) && 
+                      isTRUE(flip == TRUE) == TRUE) {
+                      flipl <- vector(length = n)
+                      for (l in seq_len(length(angl))) {
+                        ifelse(isTRUE(180 < angl[lp[i]]) == TRUE, 
+                          flipl[k] <- TRUE, NA)
+                      }
+                      rm(l)
+                    }
+                    else {
+                      flipl <- vector(length = length(bdlp))
+                    }
+                    ifelse(isTRUE(mirrorY == TRUE) == TRUE && 
+                      isTRUE(flip == TRUE) == TRUE, flipl <- !flipl, 
                       NA)
                     if (isTRUE(n == 1L) == TRUE) {
                       dcx <- (cex[lp[i]]^2) * 0.00025
-                      lpsz <- abs((cex[lp[i]]^2) * 0.00015)
+                      rds <- abs((cex[lp[i]]^2) * 0.00015 - (dz))
                     }
                     else if (isTRUE(n < 3) == TRUE) {
                       dcx <- cex[lp[i]]/110L
-                      lpsz <- abs((cex[lp[i]] * 0.007) - dz[k])
+                      rds <- abs((cex[lp[i]] * 0.007) - dz[k])
                     }
                     else {
                       dcx <- cex[lp[i]]/100L
-                      lpsz <- abs((cex[lp[i]] * 0.0075) - dz[k])
+                      rds <- abs((cex[lp[i]] * 0.0075) - dz[k])
                     }
-                    ifelse(isTRUE(length(lty) == 1) == TRUE, 
-                      Ltl <- rep(lty, length(bdlp)), Ltl <- Lt)
-                    ifelse(isTRUE(valued == TRUE) == TRUE, hc(ndss[lp[i], 
-                      1], ndss[lp[i], 2] + (dcx), lpsz, col = grDevices::adjustcolor(vecol[k], 
-                      alpha = alfa), lty = Ltl[k], lwd = netdrpl[i, 
-                      i, k]), hc(ndss[lp[i], 1], ndss[lp[i], 
-                      2] + (dcx), lpsz, col = grDevices::adjustcolor(vecol[k], 
-                      alpha = alfa), lty = Ltl[k], lwd = (lwd[k] - 
-                      k)))
+                    if (isTRUE(flipl[k] == TRUE) == TRUE) {
+                      if (isTRUE(bwd2 > 0) == TRUE) {
+                        if (isTRUE(k == 1L) == TRUE) {
+                          dcx <- dcx - (cex[lp[i]] * 0.011)
+                        }
+                        else {
+                          rds <- rds * 0.85
+                          if (isTRUE(cex[lp[i]] < 3L) == TRUE) {
+                            dcx <- dcx - 0.5 * (k/1000L) - (cex[lp[i]] * 
+                              0.012)
+                          }
+                          else {
+                            dcx <- dcx - 2L * (k/1000L) - (cex[lp[i]] * 
+                              0.012)
+                          }
+                        }
+                      }
+                      else {
+                        rds <- rds * 0.85
+                        dcx <- dcx - (cex[lp[i]] * 0.011)
+                      }
+                      if (missing(vldist) == FALSE) {
+                        if (isTRUE(vldist < 0) == TRUE) {
+                          dcx <- dcx - (vldist * 0.004)
+                        }
+                        else {
+                          dcx <- dcx - (vldist * 0.01)
+                        }
+                      }
+                    }
+                    else if (isTRUE(flipl[k] == FALSE) == TRUE) {
+                      if (isTRUE(k > 1L) == TRUE && isTRUE(bwd2 > 
+                        0) == TRUE) {
+                        rds <- rds * 0.85
+                      }
+                      else {
+                        NA
+                      }
+                      if (missing(vldist) == FALSE) {
+                        if (isTRUE(vldist < 0) == TRUE) {
+                          dcx <- dcx + (vldist * 0.004)
+                        }
+                        else {
+                          dcx <- dcx + (vldist * 0.01)
+                        }
+                      }
+                    }
+                    if (isTRUE(valued == TRUE) == TRUE) {
+                      lwl <- netdrpl[i, i, k]
+                    }
+                    else {
+                      if (isTRUE(Ltl[k] == 1) == TRUE) {
+                        lwl <- lwd[k] - k
+                      }
+                      else {
+                        lwl <- lwd[k]
+                      }
+                    }
+                    hc(ndss[lp[i], 1], ndss[lp[i], 2] + (dcx), 
+                      rds, col = grDevices::adjustcolor(vecol[k], 
+                        alpha = alfa), lty = Ltl[k], lwd = lwl, 
+                      flip = flipl[k])
                   }
                   rm(i)
                 }
@@ -1493,15 +1880,20 @@ function (net, layout = c("circ", "force", "stress", "conc",
         else {
             ifelse(is.data.frame(sel) == TRUE, sel <- as.vector(unlist(sel, 
                 use.names = FALSE)), NA)
-            if (any(sel %in% lbs) == FALSE) {
-                options(warn = 0)
-                message("Values in \"sel\" are not found in \"net\".")
-                lbs <- rep("", length(lbs))
+            lbb <- lbs
+            lbs <- rep("", length(lbs))
+            vec <- vector()
+            if (all(sel %in% lbb) == FALSE) {
+                warning(paste("Values of ", sQuote("sel"), " are not found in ", 
+                  sQuote("net"), ".", sep = ""), call. = FALSE)
+                sel0 <- sel[which(sel %in% lbb)]
+                for (i in seq_len(length(sel0))) {
+                  vec <- append(vec, which(lbb %in% sel0[i]))
+                }
+                rm(i)
+                suppressWarnings(lbs[vec] <- sel0)
             }
             else {
-                lbb <- lbs
-                lbs <- rep("", length(lbs))
-                vec <- vector()
                 for (i in seq_len(length(sel))) {
                   vec <- append(vec, which(lbb %in% sel[i]))
                 }
@@ -1509,118 +1901,31 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 suppressWarnings(lbs[vec] <- sel)
             }
         }
-        options(warn = -1)
-        if (isTRUE(length(pos) == 1) == TRUE) {
-            if (isTRUE(pos == 0) == TRUE) {
-                if (missing(fstyle) == TRUE || (missing(fstyle) == 
-                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
-                  "bolditalic") == FALSE))) {
-                  graphics::text(ndss, labels = lbs, cex = fsize, 
-                    adj = 0.5, col = fcol)
-                }
-                else if (missing(fstyle) == FALSE) {
-                  if (isTRUE(fstyle == "italic") == TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(italic(.(x))))), cex = fsize, 
-                      adj = 0.5, col = fcol)
-                  }
-                  else if (isTRUE(fstyle == "bold") == TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(bold(.(x))))), cex = fsize, 
-                      adj = 0.5, col = fcol)
-                  }
-                  else if (isTRUE(fstyle == "bolditalic") == 
-                    TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(bolditalic(.(x))))), 
-                      cex = fsize, adj = 0.5, col = fcol)
-                  }
-                }
-            }
-            else {
-                if (missing(fstyle) == TRUE || (missing(fstyle) == 
-                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
-                  "bolditalic") == FALSE))) {
-                  graphics::text(ndss, lbs, cex = fsize, pos = pos, 
-                    col = fcol, offset = (cex/4L), adj = c(0.5, 
-                      1))
-                }
-                else if (missing(fstyle) == FALSE) {
-                  if (isTRUE(fstyle == "italic") == TRUE) {
-                    graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(italic(.(x))))), cex = fsize, 
-                      pos = pos, col = fcol, offset = (cex/4L), 
-                      adj = c(0.5, 1))
-                  }
-                  else if (isTRUE(fstyle == "bold") == TRUE) {
-                    graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(bold(.(x))))), cex = fsize, 
-                      pos = pos, col = fcol, offset = (cex/4L), 
-                      adj = c(0.5, 1))
-                  }
-                  else if (isTRUE(fstyle == "bolditalic") == 
-                    TRUE) {
-                    graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(bolditalic(.(x))))), 
-                      cex = fsize, pos = pos, col = fcol, offset = (cex/4L), 
-                      adj = c(0.5, 1))
-                  }
-                }
-            }
-        }
-        else if (isTRUE(length(pos) == n) == TRUE) {
-            if (missing(fstyle) == TRUE || (missing(fstyle) == 
-                FALSE && isTRUE(fstyle %in% c("italic", "bold", 
-                "bolditalic") == FALSE))) {
-                graphics::text(ndss, lbs, cex = fsize, pos = pos, 
-                  col = fcol[1], offset = (cex/4L), adj = c(0.5, 
-                    1))
-            }
-            else if (missing(fstyle) == FALSE) {
-                if (isTRUE(fstyle == "italic") == TRUE) {
-                  graphics::text(ndss, as.expression(lapply(lbs, 
-                    function(x) bquote(italic(.(x))))), cex = fsize, 
-                    pos = pos, col = fcol[1], offset = (cex/4L), 
-                    adj = c(0.5, 1))
-                }
-                else if (isTRUE(fstyle == "bold") == TRUE) {
-                  graphics::text(ndss, as.expression(lapply(lbs, 
-                    function(x) bquote(bold(.(x))))), cex = fsize, 
-                    pos = pos, col = fcol[1], offset = (cex/4L), 
-                    adj = c(0.5, 1))
-                }
-                else if (isTRUE(fstyle == "bolditalic") == TRUE) {
-                  graphics::text(ndss, as.expression(lapply(lbs, 
-                    function(x) bquote(bolditalic(.(x))))), cex = fsize, 
-                    pos = pos, col = fcol[1], offset = (cex/4L), 
-                    adj = c(0.5, 1))
-                }
-            }
-        }
-        else {
+        if (isTRUE(flgmlvl == TRUE) == TRUE) {
+            nn <- length(mlv$lbs$dm)
             if (isTRUE(pos[1] == 0) == TRUE) {
                 if (missing(fstyle) == TRUE || (missing(fstyle) == 
                   FALSE && isTRUE(fstyle %in% c("italic", "bold", 
                   "bolditalic") == FALSE))) {
-                  graphics::text(ndss, labels = lbs, cex = fsize, 
-                    adj = 0.5, col = fcol)
+                  graphics::text(ndss[seq_len(nn), ], labels = lbs[seq_len(nn)], 
+                    cex = fsize, adj = 0.5, col = fcol[1])
                 }
                 else if (missing(fstyle) == FALSE) {
                   if (isTRUE(fstyle == "italic") == TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(italic(.(x))))), cex = fsize, 
-                      adj = 0.5, col = fcol)
+                    graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(italic(.(w))))), cex = fsize, 
+                      adj = 0.5, col = fcol[1])
                   }
                   else if (isTRUE(fstyle == "bold") == TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(bold(.(x))))), cex = fsize, 
-                      adj = 0.5, col = fcol)
+                    graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(bold(.(w))))), cex = fsize, 
+                      adj = 0.5, col = fcol[1])
                   }
                   else if (isTRUE(fstyle == "bolditalic") == 
                     TRUE) {
-                    graphics::text(ndss, labels = as.expression(lapply(lbs, 
-                      function(x) bquote(bolditalic(.(x))))), 
-                      cex = fsize, adj = 0.5, col = fcol)
+                    graphics::text(ndss[seq_len(nn), ], labels = as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(bolditalic(.(w))))), 
+                      cex = fsize, adj = 0.5, col = fcol[1])
                   }
                 }
             }
@@ -1628,29 +1933,241 @@ function (net, layout = c("circ", "force", "stress", "conc",
                 if (missing(fstyle) == TRUE || (missing(fstyle) == 
                   FALSE && isTRUE(fstyle %in% c("italic", "bold", 
                   "bolditalic") == FALSE))) {
-                  graphics::text(ndss, lbs, cex = fsize, pos = pos[1], 
-                    col = fcol, offset = (cex/4L), adj = c(0.5, 
+                  graphics::text(ndss[seq_len(nn), ], lbs[seq_len(nn)], 
+                    cex = fsize, pos = pos[1], col = fcol[1], 
+                    offset = (cex/4L), adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(italic(.(w))))), cex = fsize, 
+                      pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(bold(.(w))))), cex = fsize, 
+                      pos = pos[1], col = fcol[1], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[seq_len(nn), ], as.expression(lapply(lbs[seq_len(nn)], 
+                      function(w) bquote(bolditalic(.(w))))), 
+                      cex = fsize, pos = pos[1], col = fcol[1], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
+            }
+            if (isTRUE(pos[2] == 0) == TRUE) {
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                    ], labels = lbs[(nn + 1L):dim(mlv$mlnet)[1]], 
+                    cex = fsize, adj = 0.5, col = fcol[2])
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(mlv$mlnet)[1]], function(w) bquote(italic(.(w))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(mlv$mlnet)[1]], function(w) bquote(bold(.(w))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], labels = as.expression(lapply(lbs[(nn + 
+                      1L):dim(mlv$mlnet)[1]], function(w) bquote(bolditalic(.(w))))), 
+                      cex = fsize, adj = 0.5, col = fcol[2])
+                  }
+                }
+            }
+            else {
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                    ], lbs[(nn + 1L):dim(mlv$mlnet)[1]], cex = fsize, 
+                    pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                    adj = c(0.5, 1))
+                }
+                else if (missing(fstyle) == FALSE) {
+                  if (isTRUE(fstyle == "italic") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(mlv$mlnet)[1]], 
+                      function(w) bquote(italic(.(w))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bold") == TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(mlv$mlnet)[1]], 
+                      function(w) bquote(bold(.(w))))), cex = fsize, 
+                      pos = pos[2], col = fcol[2], offset = (cex/4L), 
+                      adj = c(0.5, 1))
+                  }
+                  else if (isTRUE(fstyle == "bolditalic") == 
+                    TRUE) {
+                    graphics::text(ndss[(nn + 1L):dim(mlv$mlnet)[1], 
+                      ], as.expression(lapply(lbs[(nn + 1L):dim(mlv$mlnet)[1]], 
+                      function(w) bquote(bolditalic(.(w))))), 
+                      cex = fsize, pos = pos[2], col = fcol[2], 
+                      offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
+            }
+        }
+        else {
+            if (isTRUE(length(pos) == 1) == TRUE) {
+                if (isTRUE(pos == 0) == TRUE) {
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss, labels = lbs, cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(italic(.(z))))), cex = fsize, 
+                        adj = 0.5, col = fcol)
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(bold(.(z))))), cex = fsize, 
+                        adj = 0.5, col = fcol)
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(bolditalic(.(z))))), 
+                        cex = fsize, adj = 0.5, col = fcol)
+                    }
+                  }
+                }
+                else {
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss, lbs, cex = fsize, pos = pos, 
+                      col = fcol, offset = (cex/4L), adj = c(0.5, 
+                        1))
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(italic(.(z))))), cex = fsize, 
+                        pos = pos, col = fcol, offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(bold(.(z))))), cex = fsize, 
+                        pos = pos, col = fcol, offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(bolditalic(.(z))))), 
+                        cex = fsize, pos = pos, col = fcol, offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                  }
+                }
+            }
+            else if (isTRUE(length(pos) == n) == TRUE) {
+                if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                  FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                  "bolditalic") == FALSE))) {
+                  graphics::text(ndss, lbs, cex = fsize, pos = pos, 
+                    col = fcol[1], offset = (cex/4L), adj = c(0.5, 
                       1))
                 }
                 else if (missing(fstyle) == FALSE) {
                   if (isTRUE(fstyle == "italic") == TRUE) {
                     graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(italic(.(x))))), cex = fsize, 
-                      pos = pos[1], col = fcol, offset = (cex/4L), 
+                      function(z) bquote(italic(.(z))))), cex = fsize, 
+                      pos = pos, col = fcol[1], offset = (cex/4L), 
                       adj = c(0.5, 1))
                   }
                   else if (isTRUE(fstyle == "bold") == TRUE) {
                     graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(bold(.(x))))), cex = fsize, 
-                      pos = pos[1], col = fcol, offset = (cex/4L), 
+                      function(z) bquote(bold(.(z))))), cex = fsize, 
+                      pos = pos, col = fcol[1], offset = (cex/4L), 
                       adj = c(0.5, 1))
                   }
                   else if (isTRUE(fstyle == "bolditalic") == 
                     TRUE) {
                     graphics::text(ndss, as.expression(lapply(lbs, 
-                      function(x) bquote(bolditalic(.(x))))), 
-                      cex = fsize, pos = pos[1], col = fcol, 
+                      function(z) bquote(bolditalic(.(z))))), 
+                      cex = fsize, pos = pos, col = fcol[1], 
                       offset = (cex/4L), adj = c(0.5, 1))
+                  }
+                }
+            }
+            else {
+                if (isTRUE(pos[1] == 0) == TRUE) {
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss, labels = lbs, cex = fsize, 
+                      adj = 0.5, col = fcol)
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(italic(.(z))))), cex = fsize, 
+                        adj = 0.5, col = fcol)
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(bold(.(z))))), cex = fsize, 
+                        adj = 0.5, col = fcol)
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss, labels = as.expression(lapply(lbs, 
+                        function(z) bquote(bolditalic(.(z))))), 
+                        cex = fsize, adj = 0.5, col = fcol)
+                    }
+                  }
+                }
+                else {
+                  if (missing(fstyle) == TRUE || (missing(fstyle) == 
+                    FALSE && isTRUE(fstyle %in% c("italic", "bold", 
+                    "bolditalic") == FALSE))) {
+                    graphics::text(ndss, lbs, cex = fsize, pos = pos[1], 
+                      col = fcol, offset = (cex/4L), adj = c(0.5, 
+                        1))
+                  }
+                  else if (missing(fstyle) == FALSE) {
+                    if (isTRUE(fstyle == "italic") == TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(italic(.(z))))), cex = fsize, 
+                        pos = pos[1], col = fcol, offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bold") == TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(bold(.(z))))), cex = fsize, 
+                        pos = pos[1], col = fcol, offset = (cex/4L), 
+                        adj = c(0.5, 1))
+                    }
+                    else if (isTRUE(fstyle == "bolditalic") == 
+                      TRUE) {
+                      graphics::text(ndss, as.expression(lapply(lbs, 
+                        function(z) bquote(bolditalic(.(z))))), 
+                        cex = fsize, pos = pos[1], col = fcol, 
+                        offset = (cex/4L), adj = c(0.5, 1))
+                    }
                   }
                 }
             }
@@ -1676,11 +2193,15 @@ function (net, layout = c("circ", "force", "stress", "conc",
                   else {
                     if (missing(lbat) == FALSE) {
                       atts[which(diag(multiplex::mnplx(netd, 
-                        diag.incl = TRUE)) != 0)] <- lbat
+                        diag = TRUE)) != 0)] <- lbat
                     }
                     else {
                       dimnames(netd)[[3]] <- NULL
-                      neta <- multiplex::zbind(netd, att)
+                      ifelse(isTRUE(flgad == TRUE) == TRUE, neta <- suppressMessages(multiplex::zbind(netd, 
+                        att, force = TRUE)), neta <- multiplex::zbind(netd, 
+                        att))
+                      dimnames(neta)[[3]] <- c(dimnames(net)[[3]], 
+                        dimnames(att)[[3]])
                       clss <- multiplex::expos(multiplex::rel.sys(neta, 
                         att = (z + 1L):dim(neta)[3]), classes = TRUE)$Classes
                       attr(clss, "names")[which(attr(clss, "names") == 
@@ -1726,3 +2247,4 @@ function (net, layout = c("circ", "force", "stress", "conc",
     graphics::par(lend = 0)
     graphics::par(mai = omi)
 }
+

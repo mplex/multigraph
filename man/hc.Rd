@@ -7,7 +7,7 @@ internal function
 internal function
 }
 %\usage{
-%hc(x, y, r, nsteps = 900, ...)
+%hc(x, y, r, nsteps = 900, flip, ...)
 %}
 %
 \keyword{internal}

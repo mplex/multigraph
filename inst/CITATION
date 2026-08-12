@@ -1,6 +1,6 @@
 bibentry(bibtype = "book",
   title        = "Algebraic Analysis of Social Networks: Models, Methods and Applications Using R",
-  author       = person(given = c("J.A.R."),
+  author       = person(given = c("JAR"),
                         family = "Ostoic",
                         email = "multiplex@post.com"),
   publisher    = "Wiley",

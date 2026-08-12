@@ -1,17 +1,16 @@
 Package: multigraph
 Type: Package
 Title: Plot and Manipulate Multigraphs
-Version: 0.99-4
-Depends: R (>= 3.6.0), multiplex (>= 3.0.0)
-Imports: methods
-Date: 2024-05-14
+Version: 1.0
+Depends: R (>= 4.3.0), multiplex (>= 4.0)
+Date: 2026-08-12
 Authors@R: person(given = "Antonio", family = "Rivero Ostoic", role = c("aut", "cre"), email = "multiplex@post.com")
 Author: Antonio Rivero Ostoic [aut, cre]
 Maintainer: Antonio Rivero Ostoic <multiplex@post.com>
-Description: Functions to plot and manipulate multigraphs, signed and valued graphs, bipartite graphs, multilevel graphs, and Cayley graphs with various layout options. 
+Description: Functions to plot and manipulate multigraphs, signed and valued graphs, bipartite graphs, multilevel graphs, and Cayley colour graphs with various layout options. 
 URL: https://github.com/mplex/multigraph/
 BugReports: https://github.com/mplex/multigraph/issues/
 Repository: CRAN
 License: GPL-3
 NeedsCompilation: no
-Packaged: 2024-05-14 13:48:57 UTC; aost
+Packaged: 2026-08-12 10:01:33 UTC; AOST

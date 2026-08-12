@@ -1,9 +1,18 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 frcd <-
 function (net, seed = seed, maxiter, drp, scl, mov, ...) 
 {
-    if (isTRUE(is.data.frame(net) == TRUE) == TRUE) {
+    if (isTRUE("Multilevel" %in% attr(net, "class")) == TRUE) {
+        net <- net$mlnet
+    }
+    else if (is.list(net) == TRUE && isTRUE("net" %in% names(net)) == 
+        TRUE) {
+        net <- net$net
+    }
+    else if (isTRUE(is.data.frame(net) == TRUE) == TRUE) {
         net <- as.matrix(net)
     }
+    net[is.na(net)] <- 0L
     net <- replace(net, net == Inf, 0L)
     n <- dim(net)[1]
     ifelse(missing(maxiter) == TRUE, maxiter <- (60L + n), NA)
@@ -25,7 +34,7 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         lbs <- rownames(mat)
         rownames(nds) <- make.unique(lbs)
     }
-    cmps <- multiplex::comps(netd)
+    cmps <- multiplex::comps(netd, sort = TRUE)
     set.seed(seed)
     for (k in 1:length(cmps$com)) {
         if (is.null(cmps$com[[k]]) == FALSE) {
@@ -135,22 +144,33 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
             2]) - min(nds[, 2]))) * (rat))
         nds <- as.matrix((nds))
         ndst <- nds[which(nds[, 1] != 0), ]
-        tmpi <- popl(ni, seed = seed) * (ni/10L)
+        tmpi <- popl(ni, seed = seed) * (ni * 5L/(n - ni))
         if (is.null(cmps$com) == FALSE) {
+            tmpi[, 1] <- tmpi[, 1]/ni
+            tmpi[, 2] <- tmpi[, 2]/ni
             lcx <- ((tmpi[, 1]) - (min(ndst[, 1])))
             ifelse(isTRUE(rat > 0) == TRUE, lcy <- ((min(ndst[, 
                 2])) - abs(tmpi[, 2]) - 0), lcy <- ((max(ndst[, 
                 2])) + abs(tmpi[, 2]) + 0))
             ndst.chull <- grDevices::chull(ndst)
             ndst.chull <- ndst[ndst.chull, ]
-            ifelse(isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
+            if (isTRUE(length(which(ndst.chull[, 1] < mean(ndst.chull[, 
                 1]))) > length(which(ndst.chull[, 1] > mean(ndst.chull[, 
-                1])))) == TRUE, lcx <- lcx + abs(K * 0.5), lcx <- lcx * 
-                -1)
-            ifelse(isTRUE(length(which(ndst.chull[, 2] < mean(ndst.chull[, 
+                1])))) == TRUE) {
+                lcx <- lcx + abs(K * 0.5)
+            }
+            else {
+                lcx <- lcx * -(ni * 0.05)
+            }
+            if (isTRUE(length(which(ndst.chull[, 2] < mean(ndst.chull[, 
                 2]))) > length(which(ndst.chull[, 2] > mean(ndst.chull[, 
-                2])))) == TRUE, lcy <- lcy - abs(K * 0.5), lcy <- lcy * 
-                -1)
+                2])))) == TRUE) {
+                lcy <- lcy - abs(K * 0.5)
+            }
+            else {
+                ifelse(isTRUE(ni > 2L) == TRUE, lcy <- lcy * 
+                  -(ni * 0.05), lcy <- lcy * -(0.5))
+            }
         }
         else {
             lcx <- (tmpi[, 1])
@@ -177,3 +197,4 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
     }
     as.data.frame(nds)
 }
+

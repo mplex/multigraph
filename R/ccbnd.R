@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 ccbnd <-
 function (pares, r, b, vlt, cx, lwd, ecol, bw, alfa, fds, flgcx, 
     flgcr, hds, n) 
@@ -165,3 +166,4 @@ function (pares, r, b, vlt, cx, lwd, ecol, bw, alfa, fds, flgcx,
     rm(x)
     graphics::par(new = FALSE)
 }
+

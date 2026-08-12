@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 nrm <-
 function (x, digits = 3) 
 {
@@ -19,3 +20,4 @@ function (x, digits = 3)
         return(round((x - min(x))/(max(x) - min(x)), digits))
     }
 }
+

@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 popl <-
 function (n, seed = seed) 
 {
@@ -15,3 +16,4 @@ function (n, seed = seed)
     rm(k)
     return(cbind(ptsx, ptsy) - min(cbind(ptsx, ptsy)))
 }
+

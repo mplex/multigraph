@@ -1,207 +1,105 @@
 \name{ccgraph}
 \alias{ccgraph}
-
 \title{
-Cayley colour graph
+Cayley Colour Graph
 }
 \description{
-A function to create and manipulate bipartite Cayley colour graphs
+A function to create and manipulate Cayley colour graphs of semigroup structures.
 }
 \usage{
-ccgraph(x, main=NULL, seed=0, maxiter=100, alpha=c(1, 1, 1), scope, loops, 
-        collRecip, undRecip, showLbs, cex.main, conc, coord, clu, cex, lwd, 
-        pch, lty, bwd, bwd2, att, bg, mar, pos, asp, ecol, vcol, vcol0, lbs, 
-        col, lbat, swp, swp2, scl, mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, 
-        mirrorH, rot, hds, vedist, ffamily, fstyle, fsize, fcol, nr, gens, ...)
+ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1), 
+        scope, loops, collRecip, undRecip, showLbs, cex.main, col.main, font.main, 
+        conc, coord, clu, cex, lwd, pch, lty, bwd, bwd2, att, bg, mar, pos, asp, 
+        ecol, vcol, vcol0, lbs, col, lbat, swp, swp2, rot, vedist, vldist, 
+        mirrorX, mirrorY, mirrorD, mirrorL, mirrorV, mirrorH, ffamily, fstyle, 
+        fsize, fcol, scl, hds, nr, gens, flip, ...)
 }
-
 \arguments{
-  \item{x}{
-an algebraic structure, typically a \code{"Semigroup"} object class
-}
-  \item{main}{
-	(optional) title of the plot
-}
-  \item{seed}{
-	(optional) random seed number for the vertices' initial coordinates; ignored except for \code{force}, \code{stress} and \code{rand}
-}
-  \item{maxiter}{
-	(optional) maximum number of iterations in layout algorithms; ignored except for \code{force}, \code{stress} and \code{rand}
-}
-  \item{alpha}{
-	vector (vertex, edge, \code{bg}) with the alpha color transparency
-}
-  \item{scope}{
-   (optional) scope of the graph (see details)
-}
-  \item{loops}{
-	(optional, logical, and experimental) plot graph loops?
-}
-  \item{collRecip}{
-	(optional and logical) whether or not collapse reciprocated edges in the undirected graph
-}
-  \item{undRecip}{
-	(optional and logical) whether or not plot reciprocated edges as undirected
-}
-  \item{showLbs}{
-	(optional and logical) whether or not show the vertex labels when dimnames available
-}
-  \item{cex.main}{
-	(optional) size of the plot's title
-}
-  \item{conc}{
-	(optional and logical) whether the layout is concentric or not
-}
-  \item{coord}{
-	(optional) data frame with the coordinates of the vertices; if coordinates are given then the \code{layout} option is ignored
-}
-  \item{clu}{
-	(optional) clustering of the vertices (see \emph{details})
-}
-  \item{cex}{
-	(optional) size of the vertices
-}
-  \item{lwd}{
-	(optional) width of the edges; ignored if \code{valued} is set to \code{TRUE}
-}
-  \item{pch}{
-	(optional) symbol representing the vertices
-}
-  \item{lty}{
-	(optional) shape of the edges
-}
-  \item{bwd}{
-	(optional) width of the bundle edges. Ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size), and 
-	for \code{valued} a value greater than one is possible
-}
-  \item{bwd2}{
-	(optional) width of the bundle loop edges. 
-}
-  \item{att}{
-	(optional) a vector or an array representing the vertex attributes
-}
-  \item{bg}{
-	(optional) background color of the plot
-}
-  \item{mar}{
-	(optional) margins of the plot
-}
-  \item{pos}{
-	(optional) position of the vertices' labels (\code{0} means ``at the center of the vertex'')
-}
-  \item{asp}{
-	(optional) aspect ratio of the plot
-}
-  \item{ecol}{
-	(optional) color of the edges
-}
-  \item{vcol}{
-	(optional) color of the vertices
-}
-  \item{vcol0}{
-	(optional) color of the vertices' contour (only works for \code{pch 21} through \code{25}
-}
-  \item{lbs}{
-	(optional) vertex labels
-}
-  \item{col}{
-	(optional) alias for \code{vcol}
-}
-  \item{lbat}{
-	(optional) labels for the vertex attributes
-}
-  \item{swp}{
-	(optional and logical) whether or not to swap the bundle patterns
-}
-  \item{swp2}{
-	(optional and logical) whether or not to swap reciprocals
-}
-  \item{scl}{
-	(optional and experimental) numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of the graph's scale 
-}
-  \item{mirrorX}{
-	(optional) mirror of the \eqn{X} axis
-}
-  \item{mirrorY}{
-	(optional) mirror of the \eqn{Y} axis
-}
-  \item{mirrorD}{
-	(optional) mirror reflection across diagonal \eqn{Y=X}
-}
-  \item{mirrorL}{
-	(optional) mirror reflection across diagonal \eqn{Y=-X}
-}
-  \item{mirrorV}{
-	same as \code{mirrorX}
-}
-  \item{mirrorH}{
-	same as \code{mirrorY}
-}
-  \item{rot}{
-	(optional) clockwise rotation of the graph in degrees 
-}
-  \item{hds}{
-	(optional and experimental) arcs' head scale
-}
-  \item{vedist}{
-	(optional and experimental) a real number with vertex - edge distance
-}
-  \item{ffamily}{
-	the font family
-}
-  \item{fstyle}{
-	the font style
-}
-  \item{fsize}{
-	the font size
-}
-  \item{fcol}{
-	the font color
-}
-  \item{nr}{
-	for \code{conc} layout, number of radii
-}
-  \item{gens}{
-	(optional when absent) semigroup generators in \code{x}
-}
-  \item{\dots}{
-	Additional argument items (see e.g. \code{\link[graphics:par]{par}})
-}
+  \item{x}{An algebraic structure like a \sQuote{\code{Semigroup}} class object (cf. \code{\link[multiplex:semigroup]{semigroup}}).}
+  \item{main}{(optional) Main title of the plot graph.}
+  \item{seed}{(optional) Random seed number for initial coordinates of vertices.}
+  \item{maxiter}{(optional) Maximum number of iterations in layout algorithm.}
+  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{scope}{(optional) List with scope of graph, edge and vertex characteristics.}
+  \item{loops}{(optional and logical) Plot loops in graph?}
+  \item{collRecip}{(optional and logical) Collapse reciprocated edges in graph?}
+  \item{undRecip}{(optional and logical) Plot reciprocated edges as undirected?}
+  \item{showLbs}{(optional and logical) Show vertex labels in graph when available?}
+  \item{cex.main}{Font size of title in plot graph.}
+  \item{col.main}{Font colour of title in plot graph.}
+  \item{font.main}{Font family of title in plot graph.}
+  \item{conc}{(optional and logical) Is layout concentric?}
+  \item{coord}{(optional, ignored if \code{"conc"}) Two-column data frame of vertex coordinates in graph.}
+  \item{clu}{(optional) Clustering of vertices.}
+  \item{cex}{(optional) Vertex size.}
+  \item{lwd}{(optional) Width of edges.}
+  \item{pch}{(optional) Symbol for vertices.}
+  \item{lty}{(optional) Shape of edges.}
+  \item{bwd}{(optional, default \code{1}) Real number for width between bundle edges.}
+  \item{bwd2}{(optional, experimental) width of the bundle loop edges.}
+  \item{att}{(optional) Vector or array representing vertex attributes.}
+  \item{bg}{(optional) Background colour of plot graph.}
+  \item{mar}{(optional) Vector with margins for plot.}
+  \item{pos}{(optional) Position of labels from vertex:
+   \itemize{ 
+       \item {\code{1}}: Below
+       \item {\code{2}}: Left
+       \item {\code{3}}: Above
+       \item {\code{4}}: Right
+       \item {\code{0}}: Center
+      }}
+  \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
+  \item{ecol}{(optional) Colour of edges.}
+  \item{vcol}{(optional) Colour of vertices.}
+  \item{vcol0}{(optional) Colour of vertices contour.}
+  \item{lbs}{(optional) Vertex labels.}
+  \item{col}{(optional) Alias for \code{vcol}.}
+  \item{lbat}{(optional) Labels for vertex attributes.}
+  \item{swp}{(optional and logical) Swap bundle patterns?}
+  \item{swp2}{(optional and logical) Swap reciprocals?}
+  \item{rot}{(optional) Clockwise rotation in degrees on graph.}
+  \item{vedist}{(optional) Vertex--edge distance.}
+  \item{vldist}{(optional) Vertex--loop distance.}
+  \item{mirrorX}{(optional) Mirror by \eqn{X} axis.}
+  \item{mirrorY}{(optional) Mirror by \eqn{Y} axis.}
+  \item{mirrorD}{(optional) Mirror reflection across diagonal \eqn{Y=X}.}
+  \item{mirrorL}{(optional) Mirror reflection across diagonal \eqn{Y=-X}.}
+  \item{mirrorV}{\dQuote{Same as \code{mirrorX}}.}
+  \item{mirrorH}{\dQuote{Same as \code{mirrorY}}.}
+  \item{ffamily}{(optional) Font family of vertex labels in graph.}
+  \item{fstyle}{(optional) Font style of vertex labels in graph with options: \code{bold}, \code{italic}, \code{bolditalic}.}
+  \item{fsize}{(optional) Font size of vertex labels in graph.}
+  \item{fcol}{(optional) Font colour of text in graph vertices.}
+  \item{scl}{(optional) Numerical scalar (\eqn{x} and \eqn{y}) or vector (\eqn{x}, \eqn{y}) of graph scale.}
+  \item{hds}{(optional) Head scale for arcs.}
+  \item{nr}{(\code{conc} layout) Number of radii.}
+  \item{gens}{(optional when absent) Semigroup generators in \code{x}.}
+  \item{flip}{(optional and logical) Flip loops per \eqn{D}-class?}
+  \item{\dots}{Additional argument items.}
 }
 \details{
 The Cayley colour graph is a graphical representation of the relationships among relations in the relational structure of a given multiplex network. 
-Both nodes and directed edges represent string relations, and each shape (and color) corresponds to a specific generator relation of the semigroup structure.
-
+Both nodes and directed edges represent string relations, and each shape and colour corresponds to a specific generator relation of the semigroup structure.
 }
 \value{
 A plot of the semigroup or group structure.
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
-\author{
-Antonio Rivero Ostoic
-}
-%\note{
-%%  ~~further notes~~
-%}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
+%\references{} ~
+%\author{} ~
+%\note{} ~
+%\section{Warning }{....} ~
 \seealso{
 \code{\link[multiplex:semigroup]{semigroup}}, \code{\link{multigraph}}, \code{\link{frcd}}, \code{\link{conc}}
 }
-
-
 \examples{
-## Create an abstract semigroup from random data
+# Create an abstract semigroup from random data
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 1 ) )
 
 S <- semigroup(arr)
 
-## plot semigroup's Cayley graph
+# plot semigroup Cayley graph
 ccgraph(S)
 }
-\keyword{ graphics }
-\keyword{ math }
+\keyword{graphics}
+\keyword{math}

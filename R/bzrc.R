@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 bzrc <-
 function (pair, cex, elv = 0.25, lng, ...) 
 {
@@ -49,3 +50,4 @@ function (pair, cex, elv = 0.25, lng, ...)
     graphics::lines(b[, 1], b[, 2], ...)
     graphics::par(new = FALSE)
 }
+

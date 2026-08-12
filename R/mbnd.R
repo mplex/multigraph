@@ -1,24 +1,24 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 mbnd <-
-function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa, 
-    fds, flgcx, weighted, flgcr, hds, n) 
+function (pars, r, b, vlt, cx, lw, ecol, directed, bw, alfa, 
+    fds, flgcx, valued, flgcr, hds, n) 
 {
-    ifelse(isTRUE(nrow(pares) > 2L) == TRUE, pares <- pares[c(1, 
-        nrow(pares)), ], NA)
-    ifelse(isTRUE(ncol(pares) > 2L) == TRUE, pares <- pares[, 
-        1:2], NA)
-    angp <- atan2((pares[2, 2] - pares[1, 2]), (pares[2, 1] - 
-        pares[1, 1])) * (180L/pi)
-    if (isTRUE(pares[1, 1] != 0L | pares[1, 2] != 0L) == TRUE) {
-        xo <- 0L - pares[1, 1]
-        yo <- 0L - pares[1, 2]
-        orig <- pares
-        orig[, 1] <- pares[, 1] + xo
-        orig[, 2] <- pares[, 2] + yo
+    ifelse(isTRUE(nrow(pars) > 2L) == TRUE, pars <- pars[c(1, 
+        nrow(pars)), ], NA)
+    ifelse(isTRUE(ncol(pars) > 2L) == TRUE, pars <- pars[, 1:2], 
+        NA)
+    angp <- atan2((pars[2, 2] - pars[1, 2]), (pars[2, 1] - pars[1, 
+        1])) * (180L/pi)
+    if (isTRUE(pars[1, 1] != 0L | pars[1, 2] != 0L) == TRUE) {
+        xo <- 0L - pars[1, 1]
+        yo <- 0L - pars[1, 2]
+        orig <- pars
+        orig[, 1] <- pars[, 1] + xo
+        orig[, 2] <- pars[, 2] + yo
         orot <- xyrtb(orig, (0L - angp))
     }
-    else if (isTRUE(pares[1, 1] != 0L | pares[1, 2] != 0L) == 
-        FALSE) {
-        orot <- xyrtb(pares, (0L - angp))
+    else if (isTRUE(pars[1, 1] != 0L | pars[1, 2] != 0L) == FALSE) {
+        orot <- xyrtb(pars, (0L - angp))
     }
     angx <- abs(angp)
     if (isTRUE(angx >= 360L) == TRUE) {
@@ -40,18 +40,18 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
         ifelse(isTRUE(gx >= 90L) == TRUE, agx <- abs(90L - (gx%%90L)), 
             agx <- gx%%90L)
     }
-    if (isTRUE(weighted == FALSE) == TRUE) {
-        if (isTRUE(mean(lwd) < 6L) == TRUE) {
-            fds <- fds - (mean(lwd) * 4)
+    if (isTRUE(valued == FALSE) == TRUE) {
+        if (isTRUE(mean(lw) < 6L) == TRUE) {
+            fds <- fds - (mean(lw) * 4)
         }
-        else if (isTRUE(mean(lwd) > 15L) == TRUE) {
-            fds <- fds - (mean(lwd) * 2)
+        else if (isTRUE(mean(lw) > 15L) == TRUE) {
+            fds <- fds - (mean(lw) * 2)
         }
         else {
-            fds <- fds - (mean(lwd) * 2.5)
+            fds <- fds - (mean(lw) * 2.5)
         }
     }
-    ifelse(isTRUE(weighted == TRUE) == TRUE && isTRUE(mean(cx) < 
+    ifelse(isTRUE(valued == TRUE) == TRUE && isTRUE(mean(cx) < 
         2L) == TRUE, cx <- cx + (2L - mean(cx)), NA)
     d <- (rng(r) * ((bw * 1000L) * ((2L^(abs(sin(angp * (pi/180L)))))/1200L)) * 
         (mean(cx)/2L)) * ((30L + (agx * (6L/45L) * -1L))/100L)
@@ -61,8 +61,8 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
         orott[2, 1] <- orot[2, 1] - (cx[2]/(fds))
     }
     else if (isTRUE(flgcx == FALSE) == TRUE) {
-        ifelse(isTRUE(weighted == TRUE) == TRUE && isTRUE(mean(lwd) > 
-            2L) == TRUE, lc <- (max(lwd) * 0.1), lc <- 0)
+        ifelse(isTRUE(valued == TRUE) == TRUE && isTRUE(mean(lw) > 
+            2L) == TRUE, lc <- (max(lw) * 0.1), lc <- 0)
         orott[1, 1] <- ((cx[1] + lc)/(fds - 0)) - orot[1, 1]
         orott[2, 1] <- orot[2, 1] - ((cx[1] + lc)/fds)
     }
@@ -75,12 +75,12 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
     }
     rm(j)
     rrot <- xyrt(dat, as.numeric(angp))
-    if (isTRUE(pares[1, 1] != 0L | pares[1, 2] != 0L) == TRUE) {
+    if (isTRUE(pars[1, 1] != 0L | pars[1, 2] != 0L) == TRUE) {
         rrot[, 1] <- rrot[, 1] - xo
         rrot[, 2] <- rrot[, 2] - yo
     }
     for (i in 1:r) {
-        if (isTRUE(weighted == TRUE) == TRUE && isTRUE(directed == 
+        if (isTRUE(valued == TRUE) == TRUE && isTRUE(directed == 
             TRUE) == TRUE) {
             if (isTRUE(b[i] %in% multiplex::men(b)[1]) == TRUE) {
                 graphics::arrows(rrot[which(seq_len(nrow(dat))%%2L == 
@@ -88,7 +88,7 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
                   1L)[i], 2], rrot[which(seq_len(nrow(dat))%%2L == 
                   0L)[i], 1], rrot[which(seq_len(nrow(dat))%%2L == 
                   0L)[i], 2], code = 2, length = 0, angle = 0, 
-                  lty = vlt[i], lwd = lwd[i], col = grDevices::adjustcolor(ecol[i], 
+                  lty = vlt[i], lw = lw[i], col = grDevices::adjustcolor(ecol[i], 
                     alpha = alfa))
             }
             else if (isTRUE(b[i] %in% multiplex::men(b)[1]) == 
@@ -98,7 +98,7 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
                   1L)[i], 2], rrot[which(seq_len(nrow(dat))%%2L == 
                   0L)[i], 1], rrot[which(seq_len(nrow(dat))%%2L == 
                   0L)[i], 2], code = 1, length = 0, angle = 0, 
-                  lty = vlt[i], lwd = lwd[i], col = grDevices::adjustcolor(ecol[i], 
+                  lty = vlt[i], lw = lw[i], col = grDevices::adjustcolor(ecol[i], 
                     alpha = alfa))
             }
         }
@@ -107,7 +107,7 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
                 1L)[i], 1], rrot[which(seq_len(nrow(dat))%%2L == 
                 1L)[i], 2], rrot[which(seq_len(nrow(dat))%%2L == 
                 0L)[i], 1], rrot[which(seq_len(nrow(dat))%%2L == 
-                0L)[i], 2], lty = vlt[i], lwd = lwd[i], col = grDevices::adjustcolor(ecol[i], 
+                0L)[i], 2], lty = vlt[i], lw = lw[i], col = grDevices::adjustcolor(ecol[i], 
                 alpha = alfa))
         }
         if (isTRUE(directed == TRUE) == TRUE) {
@@ -121,18 +121,18 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
                 Hd <- data.frame(x = c(-0.7, -0.45, -0.7, 0.3), 
                   y = c(-0.5, 0, 0.5, 0)) * (hds)
             }
-            if (isTRUE(as.numeric(lwd[i]) < 7L) == TRUE) {
-                ifelse(isTRUE(as.numeric(lwd[i]) <= 1L) == TRUE, 
-                  Hd <- Hd * (as.numeric(lwd[i]))/((as.numeric(lwd[i]) * 
-                    8.571) + 30), Hd <- Hd * (as.numeric(lwd[i]))/((as.numeric(lwd[i]) * 
+            if (isTRUE(as.numeric(lw[i]) < 7L) == TRUE) {
+                ifelse(isTRUE(as.numeric(lw[i]) <= 1L) == TRUE, 
+                  Hd <- Hd * (as.numeric(lw[i]))/((as.numeric(lw[i]) * 
+                    8.571) + 30), Hd <- Hd * (as.numeric(lw[i]))/((as.numeric(lw[i]) * 
                     8.571) + 40))
             }
-            else if (isTRUE(as.numeric(lwd[i]) >= 15L) == TRUE) {
-                Hd <- Hd * (as.numeric(lwd[i]))/(as.numeric(lwd[i]) + 
+            else if (isTRUE(as.numeric(lw[i]) >= 15L) == TRUE) {
+                Hd <- Hd * (as.numeric(lw[i]))/(as.numeric(lw[i]) + 
                   120L)
             }
             else {
-                Hd <- Hd * (as.numeric(lwd[i]))/((as.numeric(lwd[i]) * 
+                Hd <- Hd * (as.numeric(lw[i]))/((as.numeric(lw[i]) * 
                   8.571) + 40)
             }
             if (isTRUE(i %in% flgcr) == TRUE) {
@@ -179,7 +179,7 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
             }
         }
         else {
-            NA
+            invisible(NA)
         }
     }
     rm(i)
@@ -187,3 +187,4 @@ function (pares, r, b, vlt, cx, lwd, ecol, directed, bw, alfa,
     rm(x)
     graphics::par(new = FALSE)
 }
+

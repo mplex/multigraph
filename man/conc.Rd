@@ -1,79 +1,58 @@
 \name{conc}
 \alias{conc}
 \title{
-Concentric layout
+Concentric Layout
 }
 \description{
-A function to compute the graph coordinated system with a concentric layout
+A function to compute the graph coordinated system with a concentric layout.
 }
 \usage{
-conc(net, nr, irot, inv, flip, mirror=c("N","X","Y","D","L"), ...)
+conc(net, nr, irot, inv, iflip, mirror = c("N", "X", "Y", "D", "L"), ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{net}{
-	an array representing the network relations
-}
-  \item{nr}{
-	a scalar with the number of radii, or a vector with the clustering of the actors.
-}
-  \item{irot}{
-	a scalar or vector with the ``internal rotation'' for each circle from closer to the center point to further away
-}
-  \item{inv}{
-	(optional and logical) should the circles be with an inverted ordering?
-}
-  \item{flip}{
-	(optional and logical) should the alternating circles be flipped?
-}
+  \item{net}{Array representing the network relations.}
+  \item{nr}{Scalar with number of radii, or a vector with clustering of actors.}
+  \item{irot}{Scalar or vector with \dQuote{internal rotation} for each circle from closer to center point to further away.}
+  \item{inv}{(optional and logical) Invert circles ordering?}
+  \item{iflip}{(optional and logical) Alternate circles flipping?}
   \item{mirror}{
-	mirror transformation
-
-\itemize{ 
-       \item \code{N} identity (default)
-       \item \code{X} reflection through the vertical center line
-       \item \code{Y} reflection through the horizontal center line
-       \item \code{D} reflection across diagonal \eqn{Y=X}
-       \item \code{L} reflection across diagonal \eqn{Y=-X}
-       }
-}
-  \item{\dots}{
-	Additional argument items 
-}
+     Mirror transformation:
+      \itemize{ 
+       \item \code{N} Identity (default)
+       \item \code{X} Reflection through the vertical center line
+       \item \code{Y} Reflection through the horizontal center line
+       \item \code{D} Reflection across diagonal \eqn{Y=X}
+       \item \code{L} Reflection across diagonal \eqn{Y=-X}
+     }}
+  \item{\dots}{Additional argument items.}
 }
 \details{
-In a Euclidean plane computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). 
+An \dQuote{Euclidean plane} computes the coordinated system with a concentric layout with at least two radii (unless \eqn{n = 1}). 
 In case that the number of radii is not specified in \code{nr}, approx. half of the vertices are located at one radius and half in another one.
 
-The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or factor vector.
+The clustering of the actors may be used to establish the location of the vertices in different radii as a numerical, character, or a factor vector.
 }
 \value{
 A data frame with a coordinated system with two columns representing the abscissa and the ordinate in a two-dimensional rectangular Cartesian coordinate system.
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
-\author{
-Antonio Rivero Ostoic
-}
-%\note{
-%%  ~~further notes~~
-%}
-
+%\references{} ~
+%\author{} ~
+%\note{} ~
+%\section{Warning }{....} ~
 \seealso{
 \code{\link{multigraph}}, \code{\link{bmgraph}}, \code{\link{frcd}}, \code{\link{stsm}}
 }
 \examples{
-## Create the data: two binary relations among three elements
+# Two binary relations among three elements
 arr <- round( replace( array(runif(18), c(3,3,2)), array(runif(18),
        c(3,3,2))>.5, 3 ) )
 
-## Coordinates for the concentric layout with two radii
+# Coordinates for the concentric layout with two radii
 coord <- conc(arr, nr = 2)
 
-## Plot multigraph with customized coordinates
+# Plot multigraph with customized coordinates
 multigraph(arr, coord = coord)
 
 }
-\keyword{ graphics }
-\keyword{ manip }
+\keyword{graphics}
+\keyword{manip}

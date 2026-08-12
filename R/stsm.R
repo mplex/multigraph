@@ -1,12 +1,20 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 stsm <-
 function (net, seed = seed, maxiter = 40, drp, jitter, method, 
     ...) 
 {
+    if (isTRUE("Multilevel" %in% attr(net, "class")) == TRUE) {
+        net <- net$mlnet
+    }
+    else if (isTRUE(is.data.frame(net) == TRUE) == TRUE) {
+        net <- as.matrix(net)
+    }
+    net <- replace(net, net == Inf, 0L)
     n <- dim(net)[1]
     ifelse(missing(drp) == FALSE && is.numeric(drp) == TRUE, 
         NA, drp <- 0)
     netd <- multiplex::mnplx(replace(net, net <= drp, 0), directed = FALSE, 
-        dichot = TRUE)
+        valued = FALSE)
     ifelse(is.null(rownames(netd)) == TRUE, lbs <- seq_len(n), 
         lbs <- rownames(netd))
     ifelse(missing(method) == TRUE, delta <- stats::dist(netd, 
@@ -119,6 +127,7 @@ function (net, seed = seed, maxiter = 40, drp, jitter, method,
         jitter(Xs, amount = (n/100))
     }
     else {
-        return(as.data.frame(Xs))
+        Xs
     }
 }
+

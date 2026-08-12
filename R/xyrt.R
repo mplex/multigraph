@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 xyrt <-
 function (pares, ang) 
 {
@@ -7,3 +8,4 @@ function (pares, ang)
         (pi/180L))
     return(invisible(cbind(xr, yr)))
 }
+

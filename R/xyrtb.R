@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 xyrtb <-
 function (pares, ang) 
 {
@@ -28,3 +29,4 @@ function (pares, ang)
     attr(tm, "dimnames") <- NULL
     return(invisible(tm))
 }
+

@@ -1,3 +1,4 @@
+## (GPL-3)  Antonio Rivero Ostoic, multiplex@post.com
 rng <-
 function (r) 
 {
@@ -12,3 +13,4 @@ function (r)
     }
     else stop("no negative values")
 }
+
