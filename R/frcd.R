@@ -34,7 +34,7 @@ function (net, seed = seed, maxiter, drp, scl, mov, ...)
         lbs <- rownames(mat)
         rownames(nds) <- make.unique(lbs)
     }
-    cmps <- multiplex::comps(netd, sort = TRUE)
+    cmps <- multiplex::comps(mat, sort = TRUE)
     set.seed(seed)
     for (k in 1:length(cmps$com)) {
         if (is.null(cmps$com[[k]]) == FALSE) {
