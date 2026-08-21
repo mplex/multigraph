@@ -14,13 +14,13 @@ Functions to create and network manipulate multigraphs, bipartite graphs, multil
      Type: \tab Package \cr
      Version: \tab 1.0 \cr
      Depends: \tab \CRANpkg{multiplex} (>= 4.0) \cr
-     Date: \tab 12 August 2026 \cr
+     Date: \tab 18 August 2026 \cr
      License: \tab GPL-3 \cr
   }
-The \pkg{multigraph} package contains functions to plot diverse types of graphs representing complex network structures that are dichotomous or valued. 
-For one-mode data, function \code{multigraph} depicts signed and valued multigraphs with loops, and bipartite graphs for affiliation networks uses function \code{bmgraph}. 
-Moreover, multilevel graphs that \dQuote{combine} one- and two-mode network data are represented with \code{mlgraph} function, 
-and Cayley colour graphs with \code{ccgraph}, which serve to depict relations among the ties in multiplex networks recorded in the algebraic object semigroup. 
+  The \pkg{multigraph} package provides functions for plotting complex network structures, including dichotomous and valued graphs. 
+  For one-mode data, \code{multigraph} displays signed and valued multigraphs with loops, whereas \code{bmgraph} represents bipartite graphs for affiliation networks. 
+  The \code{mlgraph} function visualizes multilevel graphs that \dQuote{combine} one- and two-mode network data. 
+  Cayley colour graphs are drawn with \code{ccgraph} to depict relations among ties in multiplex networks encoded in the associated algebraic semigroup structure.
 }
 \author{
 J. Antonio Rivero Ostoic

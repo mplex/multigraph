@@ -19,7 +19,7 @@ ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1),
   \item{main}{(optional) Main title of the plot graph.}
   \item{seed}{(optional) Random seed number for initial coordinates of vertices.}
   \item{maxiter}{(optional) Maximum number of iterations in layout algorithm.}
-  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{alpha}{Vector with the alpha colour transparencies for (vertex, edge, \code{bg}).}
   \item{scope}{(optional) List with scope of graph, edge and vertex characteristics.}
   \item{loops}{(optional and logical) Plot loops in graph?}
   \item{collRecip}{(optional and logical) Collapse reciprocated edges in graph?}
@@ -46,7 +46,7 @@ ccgraph(x, main = NULL, seed = 0, maxiter = 100, alpha = c(1, 1, 1),
        \item {\code{2}}: Left
        \item {\code{3}}: Above
        \item {\code{4}}: Right
-       \item {\code{0}}: Center
+       \item {\code{0}}: Centre
       }}
   \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
   \item{ecol}{(optional) Colour of edges.}

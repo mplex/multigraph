@@ -12,15 +12,15 @@ conc(net, nr, irot, inv, iflip, mirror = c("N", "X", "Y", "D", "L"), ...)
 \arguments{
   \item{net}{Array representing the network relations.}
   \item{nr}{Scalar with number of radii, or a vector with clustering of actors.}
-  \item{irot}{Scalar or vector with \dQuote{internal rotation} for each circle from closer to center point to further away.}
+  \item{irot}{Scalar or vector with \dQuote{internal rotation} for each circle from closer to centre point to further away.}
   \item{inv}{(optional and logical) Invert circles ordering?}
   \item{iflip}{(optional and logical) Alternate circles flipping?}
   \item{mirror}{
      Mirror transformation:
       \itemize{ 
        \item \code{N} Identity (default)
-       \item \code{X} Reflection through the vertical center line
-       \item \code{Y} Reflection through the horizontal center line
+       \item \code{X} Reflection through the vertical centre line
+       \item \code{Y} Reflection through the horizontal centre line
        \item \code{D} Reflection across diagonal \eqn{Y=X}
        \item \code{L} Reflection across diagonal \eqn{Y=-X}
      }}

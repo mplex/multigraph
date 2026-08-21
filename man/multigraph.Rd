@@ -66,17 +66,17 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
        \item {\code{2}}: Left
        \item {\code{3}}: Above
        \item {\code{4}}: Right
-       \item {\code{0}}: Center
+       \item {\code{0}}: Centre
       }}
   \item{bg}{(optional) Background colour of plot graph.}
-  \item{bg2}{(optional, for \code{values}) Background color.}
+  \item{bg2}{(optional, for \code{values}) Background colour.}
   \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
   \item{drp}{(optional) for \code{valued}) Drop values in  network less than specified.}
   \item{add}{(optional) Vector of vertices to add to graph.}
   \item{swp}{(optional and logical) Swap bundle patterns?}
-  \item{swp2}{(optional and logical) Swap reciprocals?}
+  \item{swp2}{(optional and logical) Swap reciprocal arcs?}
   \item{flip}{(optional and logical) Flip loops?}
-  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{alpha}{Vector with the alpha colour transparencies for (vertex, edge, \code{bg}).}
   \item{rot}{(optional) Clockwise rotation in degrees on graph.}
   \item{mirrorX}{(optional) Mirror by \eqn{X} axis.}
   \item{mirrorY}{(optional) Mirror by \eqn{Y} axis.}
@@ -106,22 +106,23 @@ multigraph(net, layout = c("circ", "force", "stress", "conc", "rand"), scope,
   \item{\dots}{Additional argument items.}
 }
 \details{
-Multigraphs are graphs having parallel edges depicting different types of relations in a network. By default, a circular layout is applied where each type of tie has a distinctive shape and gray color scale. 
-For better visualization, undirected multigraphs automatically collapse the reciprocal relations, and there is an argument to prevent this from happening. 
-It is possible to combine the symbols and colors of vertices by assigning a class to each network member in the clustering option. 
-Vertices can also have different sizes by specifying the argument with a vector with a length size similar to the network order.
+Multigraphs contain parallel edges that represent different relation types within a network. By default, the function uses a circular layout in which tie types are distinguished by shape and a grey colour scale. 
+For undirected multigraphs, reciprocal relations are collapsed automatically, although this behaviour can be disabled. 
+Vertex symbols and colours can be combined by assigning each network member to a class through the clustering option. 
+Vertex sizes can also be specified with a vector whose length matches the network order.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. 
-In this case, a vector made of lists and scalars or combinations of these is accepted for describing characteristics.
+Because the function accepts many arguments, these may be collected in a list and supplied through the \code{scope} option. 
+The list may include vectors, lists, scalars, or combinations of these to describe graph characteristics.
 
-The bundle width specified by \code{bwd} (and \code{bwd2} for loops) ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertices' size). For the \code{valued} option, numbers higher than one are possible. 
-Use \code{vedist} to adjust vertex--edge distance for large and dense networks.
+The bundle width \code{bwd}, and \code{bwd2} for loops, ranges from \code{0}, where edges are collapsed, to the default value of \code{1}, depending on vertex size. 
+Values above one are allowed when the \code{valued} option is used. 
+For large or dense networks, argument \code{vedist} adjusts the distance between vertices and edges.
 
-In some cases, such as when working with dynamic networks, it is needed to specify the ordering of the \dQuote{levels} of the clustering information given in \code{clu}, and this is done in argument \code{lclu}. 
+For some applications, such as dynamic networks, the ordering of clustering \dQuote{levels} in \code{clu} must be specified; this is done with argument \code{lclu}.
 
-If coordinates are given then the \code{layout} option is ignored.
+If coordinates are supplied, the \code{layout} option is ignored.
 
-When using \code{new} for plotting the graph with a background image, the previous plot(s), however, can require package functions having an equivalent command to \code{\link[graphics:plot.new]{graphics::plot.new()}}.
+When argument \code{new} is used to plot a graph with a background image, previous plots may need to be initialized with package functions equivalent to \code{\link[graphics:plot.new]{graphics::plot.new()}}.
 }
 \value{
 A plot of the network as a multigraph or a valued multigraph.

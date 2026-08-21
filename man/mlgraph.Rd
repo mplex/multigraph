@@ -31,7 +31,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
   \item{seed}{(optional, for \code{force}, \code{stress} and \code{rand}) Random seed number for initial coordinates of vertices.}
   \item{maxiter}{(optional when \code{seed}) Maximum number of iterations.}
   \item{directed}{(logical) Are graph edges in domain directed?}
-  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{alpha}{Vector with the alpha colour transparencies for (vertex, edge, \code{bg}).}
   \item{scope}{(optional) Scope of graph, edges, and vertices.}
   \item{collRecip}{(optional, logical and experimental) Collapse reciprocated edges in graph domain?}
   \item{lbs}{(optional) List of customized vertex labels for domain and codomain.}
@@ -40,7 +40,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
   \item{cex.main}{Font size of title in plot graph.}
   \item{col.main}{Font colour of title in plot graph.}
   \item{font.main}{Font family of title in plot graph.}
-  \item{coord}{(optional) Data frame with graph coordinates for vertices after binamial projection.}
+  \item{coord}{(optional) Data frame with graph coordinates for vertices after binomial projection.}
   \item{clu}{(optional) Clustering of vertices as a list of vectors with integers or \code{NULL} (see \emph{details}).}
   \item{cex}{(optional) Vertex size.}
   \item{lwd}{(optional, ignored for \code{valued}) Width of edges.}
@@ -57,7 +57,7 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
        \item {\code{2}}: Left
        \item {\code{3}}: Above
        \item {\code{4}}: Right
-       \item {\code{0}}: Center
+       \item {\code{0}}: Centre
       }}
   \item{asp}{(optional, \code{asp=NA} cover whole canvas) Aspect ratio of plot.}
   \item{ecol}{(optional) Colour of edges by type in domain and codomain.}
@@ -92,18 +92,18 @@ mlgraph(net, layout = c("circ", "force", "stress", "rand", "conc", "bip"), main 
   \item{\dots}{Additional argument items.}
 }
 \details{
-Multilevel graphs depend on multilevel class objects, and they are graphs that serve to represent networks with different \dQuote{levels} such as different domains in the network structure. 
-A characteristic of multilevel networks is the existence of ties within and across domains.
+Multilevel graphs represent networks with multiple \dQuote{levels}, such as distinct domains within a network structure. 
+These networks may include ties both within and between domains.
 
-Since this function can handle a large number of arguments, these can be stored as a list object that is passed through the \code{scope} option. 
-In this case, a lists made of vectors and scalars or combinations of these can be passed for rendering.
+Because this function accepts many arguments, they may be collected in a list and supplied through the \code{scope} option. 
+The list can contain vectors, scalars, or combinations of both for rendering.
 
-The bundle width specified by \code{bwd} and \code{bwd2} ranges from \code{0} (edges collapsed) to the default \code{1} (depending on the vertex size). 
-For the \code{valued} option, a number greater than one is possible.
+The bundle widths \code{bwd} and \code{bwd2} range from \code{0}, where edges are collapsed, to the default value of \code{1}, depending on vertex size. 
+Values greater than one are allowed when \code{valued} option is used.
 
-In a multilevel structure, argument \code{clu} is to class network members, 
-and it is possible to class all members of the domain or co-domain into a single class by setting the vector to \code{NULL}. 
-Similarly, \code{NULL} in argument \code{nr} for the \code{conc} layout implies the use of two radii, one for each domain.
+In multilevel structures, argument \code{clu} serves to assign network members to classes. 
+Setting the corresponding vector to \code{NULL} places all members of a domain or codomain in a single class. 
+Likewise, setting argument \code{nr} to \code{NULL} in the \code{conc} layout uses two radii, one for each domain.
 }
 \value{
 A plot of the multilevel graph structure for the network.

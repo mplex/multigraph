@@ -33,7 +33,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "CA", "force", "rand", "
       }}
   \item{scope}{(optional) List with scope of graph, edge and vertex characteristics.}
   \item{coord}{(optional, ignores \code{layout}) Two-column data frame of vertex coordinates in graph.}
-  \item{alpha}{Vector with the alpha color transparencies for (vertex, edge, \code{bg}).}
+  \item{alpha}{Vector with the alpha colour transparencies for (vertex, edge, \code{bg}).}
   \item{showLbs}{(optional and logical) Show vertex labels in graph when available?}
   \item{showAtts}{(optional and logical) Show vertex attribute labels in graph?}
   \item{att}{(optional) Vector or array representing vertex attributes.}
@@ -52,7 +52,7 @@ bmgraph(net, layout = c("bip", "bip3", "bip3e", "bipc", "CA", "force", "rand", "
        \item {\code{2}}: Left
        \item {\code{3}}: Above
        \item {\code{4}}: Right
-       \item {\code{0}}: Center
+       \item {\code{0}}: Centre
       }}
   \item{lwd}{(optional, ignored for \code{valued}) Width of edges.}
   \item{lty}{(optional) Shape of edges.}
